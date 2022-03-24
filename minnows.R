@@ -59,5 +59,6 @@ nrow(minnows.blobs) #10377
 counts.trim <- table(minnows.blobs$scientific_name)
 length(counts.trim) #111
 length(counts.trim[counts.trim > 10]) #51
+sum(counts.trim[counts.trim > 10]) #10167
 
 write.csv(minnows.blobs, "minnows.selected.csv")
