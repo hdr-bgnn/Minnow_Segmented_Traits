@@ -8,8 +8,22 @@ library(dplyr)
 library(ggplot2)
 
 ####LOAD DATA----
+
+## already segmented images from Maruf
 ml.fish.data <- read.csv("fish.meta.qual.tax.csv", header = TRUE) #images that have already run through the ML algorithm
-image.data <- read.csv("Image_Metadata_v1.1_20220315_131256.csv", header = TRUE) #images with metadata
+
+##image metadata and image quality metadata from Yasin
+image.data <- read.csv("Image_Metadata_v1_20211206_151152.csv", header = TRUE) #images with metadata
+image.quality <- read.csv("Image_Quality_Metadata_v1_20211206_151204.csv", header = TRUE)
+
+##combing metadata
+#link on image.data$file_name and image.quality$image_name
+
+##select based on the following criteria:
+#facing left
+#only INHS, UWZM
+#contrast?
+#minnows
 
 #extract only the Minnows
 minnows <- image.data[image.data$family == "Cyprinidae",] %>% drop_na()
