@@ -25,6 +25,20 @@ image.quality <- read.csv("Image_Quality_Metadata_v1_20211206_151204.csv", heade
 #contrast?
 #minnows
 
+images.keep <- image.quality[image.quality$family == "Cyprinidae" &
+                              image.quality$specimen_viewing == "left" &
+                              image.quality$straight_curved == "straight"&
+                              image.quality$brightness == "normal" &
+                              image.quality$color_issues == "none" &
+                              image.quality$has_ruler == "True" &
+                              image.quality$if_overlapping == "False" &
+                              image.quality$if_focus == "True" &
+                              image.quality$has_ruler == "True",] 
+
+nrow(images.keep[images.keep$if_background_uniform == "True",]) #4814
+
+nrow(images.keep) #13848
+
 #extract only the Minnows
 minnows <- image.data[image.data$family == "Cyprinidae",] %>% drop_na()
 minnow.noDupe <- minnows[!duplicated(minnows$catalog_id),] %>% drop_na() #get rid of duplicates
