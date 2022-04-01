@@ -41,6 +41,8 @@ nrow(images.keep) #13848
 
 images.minnows <- merge(images.keep, image.data, by.x = "image_name", by.y = "original_file_name")
 
+write.csv(images.minnows, "minnow.images.for.segmenting.csv")
+
 #extract only the Minnows
 minnows <- image.data[image.data$family == "Cyprinidae",] %>% drop_na()
 minnow.noDupe <- minnows[!duplicated(minnows$catalog_id),] %>% drop_na() #get rid of duplicates
