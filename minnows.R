@@ -39,6 +39,8 @@ nrow(images.keep[images.keep$if_background_uniform == "True",]) #4814
 
 nrow(images.keep) #13848
 
+images.minnows <- merge(images.keep, image.data, by.x = "image_name", by.y = "original_file_name")
+
 #extract only the Minnows
 minnows <- image.data[image.data$family == "Cyprinidae",] %>% drop_na()
 minnow.noDupe <- minnows[!duplicated(minnows$catalog_id),] %>% drop_na() #get rid of duplicates
