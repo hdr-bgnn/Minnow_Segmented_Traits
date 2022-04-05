@@ -16,11 +16,11 @@ R code was used to filter out fish images matching some criteria:
 
 List of criteria chosen :
 
-family == "Cyprinidae" 
-specimen_viewing == "left" 
-straight_curved == "straight" 
-brightness == "normal" 
-color_issues == "none" 
-has_ruler == "True" 
-if_overlapping == "False" 
-if_focus == "True"
+* family == "Cyprinidae" 
+* specimen_viewing == "left" 
+* straight_curved == "straight" 
+* brightness == "normal" 
+* color_issues == "none" 
+* has_ruler == "True" 
+* if_overlapping == "False" 
+* if_focus == "True"
