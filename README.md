@@ -28,9 +28,25 @@ List of criteria chosen :
 * if_parts_visible == "True"
 * fins_folded_oddly == "False"
 * at least 10 images per species
+* from either INHS or UWMZ institutions
 
-The resulting dataset hs 65 species and 10145 images.
+The resulting dataset hs 50 species and 8791 images.
 
-We ignored if_background_uniform == "True" because it reduced the sample size too much (3268 records)
+We ignored if_background_uniform == "True" because it reduced the sample size too much.
 
 The resulting dataset was then merged with the Image_Metadata_v1_20211206_151152.csv.
+
+### 2- Creation of minnows.selected.from.ML.csv
+
+R code (Minnows.R) was used to filter out high quality, minnow segmented images resulting from a machine learning set up using the fish.meta.qual.tax.csv (the combined violation tables with Image_Metadata_v1_20211206_151152.csv and Image_Quality_Metadata_v1_202111206_151204.csv).
+
+List of criteria chosen :
+
+* family == "Cyprinidae" 
+* removed duplicates
+* from either INHS or UWMZ institutions
+* specimen_viewing == "left" 
+* CC.HEAD == 1
+* CC.EYE == 1
+
+This dataset is defunct and will likely be removed.
