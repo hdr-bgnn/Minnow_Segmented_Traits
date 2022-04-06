@@ -39,20 +39,25 @@ images.keep <- image.quality[image.quality$family == "Cyprinidae" &
 
 nrow(images.keep) #10312
 
-table.sp <- images.keep %>%
-  group_by(scientific_name) %>%
+nrow(images.keep[images.keep$if_background_uniform == "True",]) #3533
+
+images.minnows <- merge(images.keep, image.data, by.x = "image_name", by.y = "original_file_name")
+
+institutions <- c("INHS", "UWMZ") #no uwmz
+images.minnows.trim <- images.minnows[images.minnows$institution %in% institutions,]
+nrow(images.minnows.trim) #8965
+
+table.sp <- images.minnows.trim %>%
+  group_by(scientific_name.x) %>%
   summarise(sample.size = n())
-nrow(table.sp) #115 sp
+nrow(table.sp) #93 sp
 
-table.sp.10 <- table.sp$scientific_name[table.sp$sample.size > 10]
-length(table.sp.10) #65 sp
+table.sp.10 <- table.sp$scientific_name.x[table.sp$sample.size > 10]
+length(table.sp.10) #50 sp
 
-images.keep.10 <- images.keep[images.keep$scientific_name %in% table.sp.10,]
-nrow(images.keep.10) #10145
+images.minnows.10 <- images.minnows.trim[images.minnows.trim$scientific_name.x %in% table.sp.10,]
+nrow(images.minnows.10) #8791
 
-nrow(images.keep.10[images.keep.10$if_background_uniform == "True",]) #3268
-
-images.minnows <- merge(images.keep.10, image.data, by.x = "image_name", by.y = "original_file_name")
 
 write.csv(images.minnows, "minnow.images.for.segmenting.csv")
 
