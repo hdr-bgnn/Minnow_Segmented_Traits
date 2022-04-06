@@ -33,13 +33,26 @@ images.keep <- image.quality[image.quality$family == "Cyprinidae" &
                               image.quality$has_ruler == "True" &
                               image.quality$if_overlapping == "False" &
                               image.quality$if_focus == "True" &
-                              image.quality$has_ruler == "True",] 
+                              image.quality$if_missing_parts == "False" &
+                              image.quality$if_parts_visible == "True" &
+                              image.quality$fins_folded_oddly == "False",] 
 
-nrow(images.keep[images.keep$if_background_uniform == "True",]) #4814
+nrow(images.keep) #10312
 
-nrow(images.keep) #13848
+table.sp <- images.keep %>%
+  group_by(scientific_name) %>%
+  summarise(sample.size = n())
+nrow(table.sp) #115 sp
 
-images.minnows <- merge(images.keep, image.data, by.x = "image_name", by.y = "original_file_name")
+table.sp.10 <- table.sp$scientific_name[table.sp$sample.size > 10]
+length(table.sp.10) #65 sp
+
+images.keep.10 <- images.keep[images.keep$scientific_name %in% table.sp.10,]
+nrow(images.keep.10) #10145
+
+nrow(images.keep.10[images.keep.10$if_background_uniform == "True",]) #3268
+
+images.minnows <- merge(images.keep.10, image.data, by.x = "image_name", by.y = "original_file_name")
 
 write.csv(images.minnows, "minnow.images.for.segmenting.csv")
 
