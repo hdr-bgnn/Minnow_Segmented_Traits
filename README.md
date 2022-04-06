@@ -12,7 +12,7 @@ The minnow.selected.csv file was derived from the fish.meta.qual.tax.csv, and fi
 
 ### 1- Creation of minnow.images.for.segmenting.csv
 
-R code was used to filter out fish images matching some criteria:
+R code (Minnows.R) was used to filter out high quality, minnow images using the Image_Quality_Metadata_v1_202111206_151204.csv matching the following criteria:
 
 List of criteria chosen :
 
@@ -24,3 +24,13 @@ List of criteria chosen :
 * has_ruler == "True" 
 * if_overlapping == "False" 
 * if_focus == "True"
+* if_missing_parts == "False"
+* if_parts_visible == "True"
+* fins_folded_oddly == "False"
+* at least 10 images per species
+
+The resulting dataset hs 65 species and 10145 images.
+
+We ignored if_background_uniform == "True" because it reduced the sample size too much (3268 records)
+
+The resulting dataset was then merged with the Image_Metadata_v1_20211206_151152.csv.
