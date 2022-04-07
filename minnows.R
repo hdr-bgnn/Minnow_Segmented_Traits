@@ -58,6 +58,11 @@ length(table.sp.10) #50 sp
 images.minnows.10 <- images.minnows.trim[images.minnows.trim$scientific_name.x %in% table.sp.10,]
 nrow(images.minnows.10) #8791
 
+table.gen <- images.minnows.10 %>%
+  group_by(genus.x) %>%
+  summarise(sample.size = n())
+nrow(table.gen) #4
+unique(images.minnows.10$genus.x)
 
 write.csv(images.minnows.10, "minnow.images.for.segmenting.csv")
 
