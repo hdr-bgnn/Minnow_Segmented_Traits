@@ -59,7 +59,7 @@ images.minnows.10 <- images.minnows.trim[images.minnows.trim$scientific_name.x %
 nrow(images.minnows.10) #8791
 
 
-write.csv(images.minnows, "minnow.images.for.segmenting.csv")
+write.csv(images.minnows.10, "minnow.images.for.segmenting.csv")
 
 #extract only the Minnows
 minnows <- image.data[image.data$family == "Cyprinidae",] %>% drop_na()
