@@ -30,7 +30,7 @@ List of criteria chosen :
 * at least 10 images per species
 * from either INHS or UWMZ institutions
 
-The resulting dataset hs 50 species and 8791 images.
+**The resulting dataset hs 50 species and 8791 images.**
 
 We ignored if_background_uniform == "True" because it reduced the sample size too much.
 
