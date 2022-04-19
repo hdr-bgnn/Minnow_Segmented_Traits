@@ -24,6 +24,8 @@ image.quality <- read.csv("Image_Quality_Metadata_v1_20211206_151204.csv", heade
 #only INHS, UWZM
 #contrast?
 #minnows
+#must have "original_file_name"
+#get rid of dupes!! image metadata has multiple users, so duplicates per fish
 
 images.keep <- image.quality[image.quality$family == "Cyprinidae" &
                               image.quality$specimen_viewing == "left" &
@@ -41,7 +43,7 @@ nrow(images.keep) #10312
 
 nrow(images.keep[images.keep$if_background_uniform == "True",]) #3533
 
-images.minnows <- merge(images.keep, image.data, by.x = "image_name", by.y = "original_file_name")
+images.minnows <- merge(image.data, images.keep, by.x = "original_file_name", by.y = "image_name")
 
 institutions <- c("INHS", "UWMZ") #no uwmz
 images.minnows.trim <- images.minnows[images.minnows$institution %in% institutions,]
@@ -64,7 +66,11 @@ table.gen <- images.minnows.10 %>%
 nrow(table.gen) #4
 unique(images.minnows.10$genus.x)
 
-write.csv(images.minnows.10, "minnow.images.for.segmenting.csv")
+#get rid of dupes
+images.minnows.clean <- images.minnows.10[unique(images.minnows.10$original_file_name),]
+nrow(images.minnows.clean) #6366
+
+write.csv(images.minnows.clean, "minnow.images.for.segmenting.csv")
 
 #extract only the Minnows
 minnows <- image.data[image.data$family == "Cyprinidae",] %>% drop_na()
