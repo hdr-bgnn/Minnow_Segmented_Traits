@@ -67,7 +67,7 @@ nrow(table.gen) #4
 unique(images.minnows.10$genus.x)
 
 #get rid of dupes
-images.minnows.clean <- images.minnows.10[unique(images.minnows.10$original_file_name),]
+images.minnows.clean <- images.minnows.10[!duplicated(images.minnows.10$original_file_name),]
 nrow(images.minnows.clean) #6366
 
 write.csv(images.minnows.clean, "minnow.images.for.segmenting.csv")
