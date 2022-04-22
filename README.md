@@ -28,7 +28,9 @@ List of criteria chosen :
 * if_parts_visible == "True"
 * fins_folded_oddly == "False"
 * at least 10 images per species
-* from either INHS or UWMZ institutions
+* from either INHS or UWZM institutions
+    - Note: there currently is not any image quality metadata for UWZM, so this institution is omitted
+* no duplicated original_file_names
 
 **The resulting dataset hs 50 species and 8791 images.**
 
