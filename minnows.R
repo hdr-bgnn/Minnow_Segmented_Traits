@@ -45,7 +45,7 @@ nrow(images.keep[images.keep$if_background_uniform == "True",]) #3533
 
 images.minnows <- merge(image.data, images.keep, by.x = "original_file_name", by.y = "image_name")
 
-institutions <- c("INHS", "UWMZ") #no uwmz
+institutions <- c("INHS", "UWZM") #no uwzm
 images.minnows.trim <- images.minnows[images.minnows$institution %in% institutions,]
 nrow(images.minnows.trim) #8965
 
