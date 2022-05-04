@@ -70,6 +70,8 @@ unique(images.minnows.10$genus.x)
 images.minnows.clean <- images.minnows.10[!duplicated(images.minnows.10$original_file_name),]
 nrow(images.minnows.clean) #6366
 
+unique(images.minnows.clean$fish_number)
+
 write.csv(images.minnows.clean, "minnow.images.for.segmenting.csv")
 
 #extract only the Minnows
