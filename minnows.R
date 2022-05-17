@@ -16,6 +16,10 @@ ml.fish.data <- read.csv("fish.meta.qual.tax.csv", header = TRUE) #images that h
 image.data <- read.csv("Image_Metadata_v1_20211206_151152.csv", header = TRUE) #images with metadata
 image.quality <- read.csv("Image_Quality_Metadata_v1_20211206_151204.csv", header = TRUE)
 
+#get list of all Minnows for Yasin to add metadata (location, basin info)
+minnows.all <- image.data[image.data$family == "Cyprinidae",]
+write.csv(minnows.all, "minnows.all.csv")
+
 ##combing metadata
 #link on image.data$file_name and image.quality$image_name
 
@@ -67,10 +71,10 @@ nrow(table.gen) #4
 unique(images.minnows.10$genus.x)
 
 #get rid of dupes
+unique(images.minnows.clean$fish_number)
+
 images.minnows.clean <- images.minnows.10[!duplicated(images.minnows.10$original_file_name),]
 nrow(images.minnows.clean) #6366
-
-unique(images.minnows.clean$fish_number)
 
 write.csv(images.minnows.clean, "minnow.images.for.segmenting.csv")
 
