@@ -1,5 +1,5 @@
 # minnowTraits
-Using trait segmentation to understand minnow trait evolution across an ecological gradient
+Using trait segmentation to understand minnow trait evolution across an ecological gradient.
 
 ## Minnow image selection
 Images were previously segmented using machine learning (<a href="https://github.com/hdr-bgnn/BGNN-trait-segmentation">BGNN trait segementation</a>).
@@ -52,3 +52,7 @@ List of criteria chosen :
 * CC.EYE == 1
 
 This dataset is defunct and will likely be removed.
+
+### 3- Minnow trait selection
+
+![Minnow Traits](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow%20Traits.pdf)
