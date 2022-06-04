@@ -38,7 +38,7 @@ We ignored if_background_uniform == "True" because it reduced the sample size to
 
 The resulting dataset was then merged with the Image_Metadata_v1_20211206_151152.csv.
 
-### 2- Minnow trait selection
+## Minnow trait selection
 
 ![Minnow Landmarks](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow%20Landmarks.png)
 ![Minnow Measurements](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow%20Length%20Traits.png)
