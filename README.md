@@ -38,21 +38,42 @@ We ignored if_background_uniform == "True" because it reduced the sample size to
 
 The resulting dataset was then merged with the Image_Metadata_v1_20211206_151152.csv.
 
-### 2- Creation of minnows.selected.from.ML.csv
+### 2- Minnow trait selection
 
-R code (Minnows.R) was used to filter out high quality, minnow segmented images resulting from a machine learning set up using the fish.meta.qual.tax.csv (the combined violation tables with Image_Metadata_v1_20211206_151152.csv and Image_Quality_Metadata_v1_202111206_151204.csv).
+![Minnow Landmarks](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow%20Landmarks.png)
+![Minnow Measurements](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow%20Length%20Traits.png)
 
-List of criteria chosen :
+#### Which traits & why
+(subject to change)
 
-* family == "Cyprinidae" 
-* removed duplicates
-* from either INHS or UWMZ institutions
-* specimen_viewing == "left" 
-* CC.HEAD == 1
-* CC.EYE == 1
+**Standard length** (edge of head to beginning of caudal fin along nose line) [done in Nagel & Simons 2012 where they showed DNA aligned with morphological data for Nocomis; also done in Burress et al. 2016 looking at benthic-pelagic transition in NA minnows]
 
-This dataset is defunct and will likely be removed.
+**Eye size to head size (area)** (use pixels and convert using scale bar) This would be useful if we can get even a qualitative measure of how turbid the waters are. Area from the segmentation is different from the area researchers tend to take, however.
 
-### 3- Minnow trait selection
+**Length from back of head to end of caudal peduncle** (back of head in white to beginning of caudal fin on dorsal side)
 
-![Minnow Traits](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow%20Traits.pdf)
+**Eye diameter** (anterior-posterior length of eye segmentation) [Burress et al. 2016]
+
+**Head length** (tip of snout to posterior tip of opercle) (anterior-posterior length of head segmentation) [Burress et al. 2016]
+
+**Head depth** (length of head dorso-ventrally measured from head/trunk junction ventrally to end of preopercle (?)) [Burress et al. 2016]
+
+**Snout length** (anterior tip of head to anterior eye) [Burress et al. 2016]
+
+**Fin and eye positions** (a series of landmarks; we can use the segmentation to our advantage: [Armbruster 2012]
+
+1. Anterior portion of head
+2. Posterior-dorsal edge of head
+3. Anterior insertion of dorsal fin
+4. Posterior insertion of dorsal fin which may not be possible
+5. Anterior-dorsal caudal fin connection with the trunk
+6. Posterior caudal fin connection with trunk
+7. Anterior-ventral caudal fin connection with trunk
+8. Posterior anal fin insertion with may not be possible
+9. Anterior anal fin insertion
+10. Anterior pelvic fin insertion
+11. Anterior pectoral fin insertion
+12. Posterior part of head segmentation
+13. posterior of eye
+14. anterior of eye
+15. Ventral part of head, where it connects with the trunk)
