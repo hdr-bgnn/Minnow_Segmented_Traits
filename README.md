@@ -32,7 +32,7 @@ List of criteria chosen :
     - Note: there currently is not any image quality metadata for UWZM, so this institution is omitted
 * no duplicated original_file_names
 
-**The resulting dataset hs 50 species and 6366 images.**
+**The resulting dataset of 50 species and 6366 images.**
 
 We ignored if_background_uniform == "True" because it reduced the sample size too much.
 
