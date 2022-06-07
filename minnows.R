@@ -13,23 +13,12 @@ library(ggplot2)
 image.data <- read.csv("Image_Metadata_v1_20211206_151152.csv", header = TRUE) #images with metadata
 image.quality <- read.csv("Image_Quality_Metadata_v1_20211206_151204.csv", header = TRUE)
 
-#get list of all Minnows for Yasin to add metadata (location, basin info)
-minnows.all <- image.data[image.data$family == "Cyprinidae",]
-write.csv(minnows.all, "minnows.all.csv", row.names = FALSE)
-
 ##combing metadata
 #link on image.data$file_name and image.quality$image_name
+#must have "original_file_name" for snakemake
 
-##select based on the following criteria:
-#facing left
-#only INHS, UWZM
-#contrast?
-#minnows
-#must have "original_file_name"
-#get rid of dupes!! image metadata has multiple users, so duplicates per fish
-
-images.keep <- image.quality[image.quality$family == "Cyprinidae" &
-                             image.quality$specimen_viewing == "left" &
+images.keep <- image.quality[image.quality$family == "Cyprinidae" & #Minnows
+                             image.quality$specimen_viewing == "left" & #facing left
                              image.quality$straight_curved == "straight"&
                              image.quality$brightness == "normal" &
                              image.quality$color_issues == "none" &
@@ -46,24 +35,28 @@ nrow(images.keep[images.keep$if_background_uniform == "True",]) #3533
 
 images.minnows <- merge(image.data, images.keep, by.x = "original_file_name", by.y = "image_name")
 
+#only INHS, UWZM
 institutions <- c("INHS", "UWZM") #no uwzm
 images.minnows.trim <- images.minnows[images.minnows$institution %in% institutions,]
 nrow(images.minnows.trim) #8965
 
-#get rid of dupes
 unique(images.minnows.trim$fish_number) #should be 1; don't want multiple fish per images because currently don't have a good way to keep metadata
 
+#get rid of dupes!! image metadata has multiple users, so duplicates per fish
 images.minnows.clean <- images.minnows.trim[!duplicated(images.minnows.trim$original_file_name),]
 nrow(images.minnows.clean) #6482
 
+#get sample size (number of images per species)
 table.sp <- images.minnows.clean %>%
   group_by(scientific_name.x) %>%
   summarise(sample.size = n())
 nrow(table.sp) #93 sp
 
+#retain only species for which there are 10 images
 table.sp.10 <- table.sp$scientific_name.x[table.sp$sample.size >= 10]
 length(table.sp.10) #41 sp
 
+#trim dataset to match species with at least 10 species
 images.minnows.10 <- images.minnows.clean[images.minnows.clean$scientific_name.x %in% table.sp.10,]
 nrow(images.minnows.10) #6302
 
@@ -73,56 +66,5 @@ table.gen <- images.minnows.10 %>%
 nrow(table.gen) #4
 unique(images.minnows.10$genus.x)
 
+#write dataset without index
 write.csv(images.minnows.10, "minnow.images.for.segmenting.csv", row.names = FALSE)
-
-#extract only the Minnows
-minnows <- image.data[image.data$family == "Cyprinidae",] %>% drop_na()
-minnow.noDupe <- minnows[!duplicated(minnows$catalog_id),] %>% drop_na() #get rid of duplicates
-
-minnows.ml <- ml.fish.data[ml.fish.data$family == "Cyprinidae",] %>% drop_na()
-minnows.ml.noDupe <- minnows.ml[!duplicated(minnows.ml$catalog_id),] %>% drop_na()
-
-#get counts
-nrow(minnows) #42382
-nrow(minnow.noDupe) #23750 #WHY SO MANY DUPLICATES??
-
-nrow(minnows.ml) #19232
-nrow(minnows.ml.noDupe) #11925 #WHY SO MANY DUPLICATES??
-
-##focus only on the outputs from the ML
-counts <- table(minnows.ml.noDupe$scientific_name)
-length(counts) #134
-length(counts[counts > 10]) #62
-
-####TRIM DATASET----
-#select out only INHS and UWZM because they are the most consistent
-institutions <- c("INHS", "UWZM")
-minnows.trim <- minnows.ml.noDupe[minnows.ml.noDupe$institution.y %in% institutions, ] %>% drop_na()
-nrow(minnows.trim) #11340
-
-#get counts
-minnow.counts <- table(minnows.trim$scientific_name) 
-length(minnow.counts) #111 sp
-length(minnow.counts[minnow.counts > 10]) #53
-
-## now look at "good quality" images
-# left facing
-# correct number of blobs, especially for eye and head
-
-#only minnows facing left
-minnows.left <- minnows.trim[minnows.trim$specimen_viewing == "left",] %>% drop_na()
-nrow(minnows.left) #11037
-counts.left <- table(minnows.left$scientific_name)
-length(counts.left) #111
-length(counts.left[counts.left > 10]) #53
-
-#only segmented images with one blob for head and eye (i.e., only found one head and one eye)
-minnows.blobs <- minnows.left[minnows.left$CC.HEAD == 1 &
-                              minnows.left$CC.EYE == 1,] %>% drop_na()
-nrow(minnows.blobs) #10377
-counts.trim <- table(minnows.blobs$scientific_name)
-length(counts.trim) #111
-length(counts.trim[counts.trim > 10]) #51
-sum(counts.trim[counts.trim > 10]) #10167
-
-write.csv(minnows.blobs, "minnows.selected.csv")
