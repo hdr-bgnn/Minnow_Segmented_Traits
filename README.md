@@ -10,7 +10,7 @@ We used the combined violation tables merged with the image quality metadata and
 The minnow.selected.csv file was derived from the fish.meta.qual.tax.csv, and filtered on institution.y == “INHS”, specimen.viewing == “left”, as well as only one “blob” for the head and the eye (CC.HEAD == 1, CC.EYE == 1). 
 
 
-### 1- Creation of minnow.images.for.segmenting.csv
+### 1- Creation of minnow.filtered.from.imagequalitymetadata_7Jun2022.csv
 
 R code (Minnows.R) was used to filter out high quality, minnow images using the Image_Quality_Metadata_v1_202111206_151204.csv matching the following criteria:
 
