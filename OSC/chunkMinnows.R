@@ -1,9 +1,9 @@
-df <- read.csv("../minnow.filtered.from.imagequalitymetadata_7Jun2022.csv", header = TRUE)
+df <- read.csv("Files/minnow.filtered.from.imagequalitymetadata_17Jun2022.csv", header = TRUE)
 
-source("../OSC/chunkData.R")
+source("OSC/chunkData.R")
 
-starts <- c(1, 1001, 2001, 3001, 4001, 5001, 6001)
-ends <- c(1000, 2000, 3000, 4000, 5000, 6000, nrow(df))
+starts <- seq(1, nrow(df), 1000)
+ends <- c(seq(1000, nrow(df), 1000), nrow(df))
 #one day I'll be clever enough not to do this.
 
 for(i in 1:length(starts)){

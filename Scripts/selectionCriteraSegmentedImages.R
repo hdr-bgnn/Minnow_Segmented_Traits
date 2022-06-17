@@ -1,3 +1,18 @@
+# selection of the segmented images for analyses
+# Meghan Balk 
+# balk@battelleecology.org
+
+library(rjson)
+
+#get list of file names
+files <- list.files(pattern = '*.json')
+
+#turn into csv
+#rbind
+combo <- lapply(files, as.data.frame(fromJSON)) %>% bind_rows()
+#test
+lapply("INHS_FISH_003752_presence.json", as.data.frame(fromJSON)) %>% bind_rows()
+
 go thorugh all files
 open into json
 compile into one json file
