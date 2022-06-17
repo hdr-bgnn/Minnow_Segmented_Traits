@@ -9,29 +9,36 @@ files <- list.files(pattern = '*.json')
 
 #turn into csv
 #rbind
-combo <- lapply(files, as.data.frame(fromJSON)) %>% bind_rows()
-#test
-lapply("INHS_FISH_003752_presence.json", as.data.frame(fromJSON)) %>% bind_rows()
 
-go thorugh all files
-open into json
-compile into one json file
-then export into csv
+json_df <- function(jfile){
+  input <- fromJSON(file = jfile)
+  df <- as.data.frame(input)
+  return(df)
+}
 
-https://www.tutorialspoint.com/r/r_json_files.htm
+#test with one  file
+test <- json_df(jfile = "INHS_FISH_003752_presence.json")
+str(test)
 
-#post-processing code
-create tools notebook in OSC
+presence.df <- lapply(files, json_df) %>% bind_rows()
 
-clone repo onto OSC and open jupyter notebook there
-on daashboard go to jupyter notebook and launch; create jupyter notebook folder w folder
-change kernel and configure w R
+#test that it is the same as Thibault
+#Thibault used the following images: 62362, 99358, 103219, 106768, 47892, 25022, 24324, 56883, 43105, 95766
+tt.df <- read.csv("https://raw.githubusercontent.com/hdr-bgnn/minnowTraits/main/Jupyter_Notebook/output.csv",
+                  header = TRUE)
 
-go to active job
+#differences in outputs....
+tt.df <- tt.df[,-1]
+names(presence.df) <- gsub(x = names(presence.df), pattern = "\\.", replacement = "_")  
 
-when writing code, can test if import is empty or not
+colnames(tt.df)
+colnames(presence.df)
+setdiff(colnames(tt.df), colnames(presence.df))
+setdiff(tt.df, presence.df)
+
+write.csv(presence.df, "presence.absence.matrix.csv", row.names = FALSE)
 
 
-for analyses: 
-  - % blob by trait and then by sp
-  - create coefficient of variation
+#for analyses: 
+#  - % blob by trait and then by sp
+#  - create coefficient of variation
