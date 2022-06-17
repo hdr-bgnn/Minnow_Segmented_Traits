@@ -3,8 +3,12 @@
 # balk@battelleecology.org
 
 library(rjson)
+library(tidyr)
+library(dplyr)
 
 #get list of file names
+#path is in the OSC 
+setwd("/fs/ess/PAS2136/BGNN/Minnows/Morphology/Presence/")
 files <- list.files(pattern = '*.json')
 
 #turn into csv
@@ -35,6 +39,9 @@ colnames(tt.df)
 colnames(presence.df)
 setdiff(colnames(tt.df), colnames(presence.df))
 setdiff(tt.df, presence.df)
+
+#return to GitHub directory
+setwd("/users/PAS2136/balkm/minnowTraits/Files")
 
 write.csv(presence.df, "presence.absence.matrix.csv", row.names = FALSE)
 
