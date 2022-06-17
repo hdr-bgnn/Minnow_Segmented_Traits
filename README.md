@@ -29,12 +29,13 @@ List of criteria chosen :
 * if_missing_parts == "False"
 * if_parts_visible == "True"
 * fins_folded_oddly == "False"
-* at least 10 images per species
 * from either INHS or UWZM institutions
     - Note: there currently is not any image quality metadata for UWZM, so this institution is omitted
 * no duplicated original_file_names
+* removed any images that had an empty file or where the URL did not resolve
+* at least 10 images per species
 
-**The resulting dataset of 41 species and 6302 images.**
+**The resulting dataset of 41 species and 6300 images.**
 
 We ignored if_background_uniform == "True" because it reduced the sample size too much.
 
