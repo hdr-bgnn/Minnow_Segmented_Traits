@@ -57,6 +57,10 @@ length(unique(images.minnows.trim$scientific_name.x)) #93
 unique(images.minnows.trim$fish_number) 
 #should be 1; don't want multiple fish per images because currently don't have a good way to keep metadata
 
+##ask if url is empty and remove if it is
+#download_image.sh
+
+
 #get sample size (number of images per species)
 table.sp <- images.minnows.trim %>%
   group_by(scientific_name.x) %>%
