@@ -106,7 +106,25 @@ df.fin.85.samp <- df.fin.85 %>%
   group_by(scientific_name) %>%
   summarise(sample = n())
 
-nrow(df.fin.85.samp[df.fin.85.samp$sample > 10,]) #38
+nrow(df.fin.85.samp[df.fin.85.samp$sample >= 10,]) #39
+keep.10 <- df.fin.85.samp$scientific_name[df.fin.85.samp$sample >= 10]
+
+df.fin.85.trim <- df.fin.85[df.fin.85$scientific_name %in% keep.10,]
+nrow(df.fin.85.trim) #5009
+
+#visualize remaining data
+df.fin.85.samp.trim <- df.fin.85.samp[df.fin.85.samp$sample >= 10,] %>% as.data.frame()
+ggplot(data = df.fin.85.samp.trim, aes(x = sample)) +
+  geom_density(col = "blue") +
+  geom_rug(sides = "b", col = "blue") +
+  ggtitle("Distribution of sampling per species") +
+  scale_x_continuous(breaks = c(seq(0, 1000, 50)),
+                     name = 'Sample Size') + 
+  scale_y_continuous(name = 'Density') + 
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black"))
+
+  
 
 #about the data
 stats <- df %>%
@@ -264,6 +282,5 @@ nrow(presence.meta[presence.meta$dorsal_fin_percentage == 0,]) #13
 #  - % blob by trait and then by sp
 #  - create coefficient of variation
 
-#visualize data
 ggplot(data = presence.meta) +
   geom_density(aes(x = dorsal_fin_percentage, fill = scientific_name))
