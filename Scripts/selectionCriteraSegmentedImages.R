@@ -57,6 +57,10 @@ write.csv(presence.df, "presence.absence.matrix.csv", row.names = FALSE)
 presence.df <- read.csv("/users/PAS2136/balkm/minnowTraits/Files/presence.absence.matrix.csv", 
                         header = TRUE)
 
+names(presence.df) <- gsub(x = names(presence.df), 
+                           pattern = "\\.", 
+                           replacement = "_")  
+
 #combine with metadata to get taxonomic heirarchy
 meta.df <- read.csv("/users/PAS2136/balkm/minnowTraits/Files/Image_Metadata_v1_20211206_151152.csv", header = TRUE)
 colnames(meta.df)
@@ -82,10 +86,27 @@ no.abs <- df[apply(df, 1, function(row) all(row !=0 )), ]  # Remove zero-rows
 nrow(df) - nrow(no.abs) #40
 
 ## how many have all fins?
-#trim to just fin %
-df.fin.per <- select(df, contains("percentage"))
-perf <- df.fin.per[apply(df.fin.per, 1, function(row) all(row == 1)),]
-nrow(perf) #2439
+df.fin.per <- select(df, c("scientific_name", contains("percentage")))
+df.fin.per$total <- rowSums(df.fin.per[ , 2:9], na.rm=TRUE)
+nrow(df.fin.per[df.fin.per$total > 8,]) #none are perfect
+
+## how many have fins with an 85% blob?
+df.fin.85 <- df.fin.per[df.fin.per$head_percentage > .85 &
+                        df.fin.per$eye_percentage > .85 &
+                        df.fin.per$trunk_percentage > .85 &
+                        df.fin.per$dorsal_fin_percentage > .85 &
+                        df.fin.per$caudal_fin_percentage > .85 &
+                        df.fin.per$anal_fin_percentage > .85 &
+                        df.fin.per$pelvic_fin_percentage > .85 &
+                        df.fin.per$pectoral_fin_percentage > .85,]
+nrow(df.fin.85) #5026
+length(unique(df.fin.85$scientific_name)) #41
+#how many images per species
+df.fin.85.samp <- df.fin.85 %>%
+  group_by(scientific_name) %>%
+  summarise(sample = n())
+
+nrow(df.fin.85.samp[df.fin.85.samp$sample > 10,]) #38
 
 #about the data
 stats <- df %>%
