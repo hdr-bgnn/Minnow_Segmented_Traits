@@ -6,6 +6,7 @@ library(rjson)
 library(tidyr)
 library(dplyr)
 library(ggplot2)
+library(RColorBrewer)
 
 #get list of file names
 #path is in the OSC 
@@ -53,8 +54,11 @@ setwd("/users/PAS2136/balkm/minnowTraits/Files")
 
 write.csv(presence.df, "presence.absence.matrix.csv", row.names = FALSE)
 
+presence.df <- read.csv("/users/PAS2136/balkm/minnowTraits/Files/presence.absence.matrix.csv", 
+                        header = TRUE)
+
 #combine with metadata to get taxonomic heirarchy
-meta.df <- read.csv("Image_Metadata_v1_20211206_151152.csv", header = TRUE)
+meta.df <- read.csv("/users/PAS2136/balkm/minnowTraits/Files/Image_Metadata_v1_20211206_151152.csv", header = TRUE)
 colnames(meta.df)
 meta.df$original_file_name <- gsub(meta.df$original_file_name,
                                    pattern = ".jpg",
@@ -77,24 +81,46 @@ df <- select(presence.meta, - c("adipos_fin_number", "adipos_fin_percentage",
 no.abs <- df[apply(df, 1, function(row) all(row !=0 )), ]  # Remove zero-rows
 nrow(df) - nrow(no.abs) #40
 
+## how many have all fins?
+#trim to just fin %
+df.fin.per <- select(df, contains("percentage"))
+perf <- df.fin.per[apply(df.fin.per, 1, function(row) all(row == 1)),]
+nrow(perf) #2439
+
 #about the data
 stats <- df %>%
   summarise(min.head = min(head_percentage),
             max.head = max(head_percentage),
-            min.trunk = min(trunk_percentage),
-            max.trunk = max(trunk_percentage),
+            avg.head = mean(head_percentage),
+            sd.head = sd(head_percentage),
             min.eye = min(eye_percentage),
             max.eye = max(eye_percentage),
+            avg.eye = mean(eye_percentage),
+            sd.eye = sd(eye_percentage),
+            min.trunk = min(trunk_percentage),
+            max.trunk = max(trunk_percentage),
+            avg.trunk = mean(trunk_percentage),
+            sd.trunk = sd(trunk_percentage),
             min.dor = min(dorsal_fin_percentage),
             max.dor = max(dorsal_fin_percentage),
+            avg.dor = mean(dorsal_fin_percentage),
+            sd.dor = sd(dorsal_fin_percentage),
             min.caud = min(caudal_fin_percentage),
             max.caud = max(caudal_fin_percentage),
+            avg.caud = mean(caudal_fin_percentage),
+            sd.caud = sd(caudal_fin_percentage),
             min.anal = min(anal_fin_percentage),
             max.anal = max(anal_fin_percentage),
+            avg.anal = mean(anal_fin_percentage),
+            sd.anal = sd(anal_fin_percentage),
             min.pelv = min(pelvic_fin_percentage),
             max.pelv = max(pelvic_fin_percentage),
+            avg.pelv = mean(pelvic_fin_percentage),
+            sd.pelv = sd(pelvic_fin_percentage),
             min.pect = min(pectoral_fin_percentage),
-            max.pect = max(pectoral_fin_percentage))
+            max.pect = max(pectoral_fin_percentage),
+            avg.pect = mean(pectoral_fin_percentage),
+            sd.pect = sd(pectoral_fin_percentage))
 #most percentages are between .8 adn 1
 #only caudal fin is low (0.45 as the smallest blob)
 
@@ -103,24 +129,47 @@ stats.sp <- df %>%
   summarise(sample = n(),
             min.head = min(head_percentage),
             max.head = max(head_percentage),
-            min.trunk = min(trunk_percentage),
-            max.trunk = max(trunk_percentage),
+            avg.head = mean(head_percentage),
+            sd.head = sd(head_percentage),
             min.eye = min(eye_percentage),
             max.eye = max(eye_percentage),
+            avg.eye = mean(eye_percentage),
+            sd.eye = sd(eye_percentage),
+            min.trunk = min(trunk_percentage),
+            max.trunk = max(trunk_percentage),
+            avg.trunk = mean(trunk_percentage),
+            sd.trunk = sd(trunk_percentage),
             min.dor = min(dorsal_fin_percentage),
             max.dor = max(dorsal_fin_percentage),
+            avg.dor = mean(dorsal_fin_percentage),
+            sd.dor = sd(dorsal_fin_percentage),
             min.caud = min(caudal_fin_percentage),
             max.caud = max(caudal_fin_percentage),
+            avg.caud = mean(caudal_fin_percentage),
+            sd.caud = sd(caudal_fin_percentage),
             min.anal = min(anal_fin_percentage),
             max.anal = max(anal_fin_percentage),
+            avg.anal = mean(anal_fin_percentage),
+            sd.anal = sd(anal_fin_percentage),
             min.pelv = min(pelvic_fin_percentage),
             max.pelv = max(pelvic_fin_percentage),
+            avg.pelv = mean(pelvic_fin_percentage),
+            sd.pelv = sd(pelvic_fin_percentage),
             min.pect = min(pectoral_fin_percentage),
-            max.pect = max(pectoral_fin_percentage)) %>%
+            max.pect = max(pectoral_fin_percentage),
+            avg.pect = mean(pectoral_fin_percentage),
+            sd.pect = sd(pectoral_fin_percentage)) %>%
   as.data.frame()
 
 #make a heat map
-row.names(stats.sp) <- stats.sp$scientific_name
+#need to have matrix in the order we already want
+#need to label rows
+stats.sp.sort <- stats.sp[order(stats.sp$sample, decreasing = TRUE),]
+row.names(stats.sp.sort) <- paste(stats.sp.sort$scientific_name, " (", stats.sp.sort$sample, ")", sep = "")
+#head, eye, trunk, dorsal, caudal, anal, pelvic, pectoral
+colnames(stats.sp.sort) #these are in the correct order
+
+#all stats
 stats.sp.trim <- stats.sp[,-c(1:2)]
 stats.sp.trim <- as.matrix(stats.sp.trim)
 
@@ -129,6 +178,52 @@ hm <- heatmap(stats.sp.trim,
               labCol = colnames(stats.sp.trim), 
               main = "Heat Map")
 
+#average
+stats.sp.avg <- select(stats.sp.sort, contains("avg."))
+colnames(stats.sp.avg) #in correct order
+stats.sp.avg <- as.matrix(stats.sp.avg)
+
+min(stats.sp.avg) #smallest % is 81.5%
+#coloring scheme #yellow to red
+my_colors <- colorRampPalette(c("#FFFFCC", "#800026"))
+#pal <- colorRampPalette(brewer.pal(9, "YlOrRd"))(5)
+length(seq(.8, 1, .05)) #want 5 colors
+
+hm.avg <- heatmap(stats.sp.avg,
+                  labRow = rownames(stats.sp.avg),
+                  labCol = colnames(stats.sp.avg),
+                  Rowv = NA, Colv = NA, #no dendrograms
+                  col = my_colors(5),
+                  #breaks = color_breaks,
+                  margins = c(5, 10),
+                  main = "Heat Map of Average % of Biggest Blob")
+legend(x = "right", 
+       legend = c("0.80", "0.85", "0.90", "0.95", "1.00"),
+       fill = my_colors(5))
+
+#sd
+stats.sp.sd <- select(stats.sp.sort, contains("sd."))
+stats.sp.sd <- as.matrix(stats.sp.sd)
+colnames(stats.sp.sd) #in correct order
+
+
+min(stats.sp.sd) #smallest 0
+max(stats.sp.sd) #max is 0.34
+#coloring scheme #yellow to red
+my_colors <- colorRampPalette(c("#FFFFCC", "#800026"))
+#pal <- colorRampPalette(brewer.pal(9, "YlOrRd"))
+length(seq(0, 0.35, .05)) #want 8 colors
+
+hm.sd <- heatmap(stats.sp.sd,
+                  labRow = rownames(stats.sp.sd),
+                  labCol = colnames(stats.sp.sd),
+                  Rowv = NA, Colv = NA, #no dendrograms
+                  col = my_colors(8),
+                  margins = c(5, 10),
+                  main = "Heat Map of Standard Deviation % of Blobs")
+legend(x = "right", 
+       legend = c("0.00", "0.05", "0.10", "0.15", "0.20", "0.25", "0.30", "0.35"),
+       fill = my_colors(8))
 
 stats.sp$min.caud #only see four small numbers
 small.num.caud <- sort(stats.sp$min.caud, decreasing = FALSE)
