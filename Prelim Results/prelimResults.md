@@ -6,7 +6,7 @@
 # Preliminary Results
 
 - only 40 images have at least one missing trait
-- X images have all traits found
+- 2439 images have all traits found
 - Created heat maps of:
   - average blob size of the largest blob of images within a species
   - standard deviation of blob sizes of images within a species
