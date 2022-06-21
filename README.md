@@ -1,6 +1,27 @@
 # minnowTraits
 Using trait segmentation to understand minnow trait evolution across an ecological gradient.
 
+## Folder Organization
+
+*Scripts*
+- code used for image selection
+
+*Files*
+- contains files used in the code
+
+*OSC*
+- files used to upload to the OSC for the <a href="https://github.com/hdr-bgnn/BGNN_Snakemake">Snakemake workflow</a>
+
+*PDFs*
+- papers relevant to the trait selection
+
+*Traits*
+- csv for trait selection and definition
+- images to describe trait selection
+
+*Prelim Results*
+- contains plots from preliminary statistics
+
 ## Minnow image selection
 Images were previously segmented using machine learning (<a href="https://github.com/hdr-bgnn/BGNN-trait-segmentation">BGNN trait segementation</a>).
 
