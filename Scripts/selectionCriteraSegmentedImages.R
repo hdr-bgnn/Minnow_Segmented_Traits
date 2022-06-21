@@ -112,6 +112,26 @@ keep.10 <- df.fin.85.samp$scientific_name[df.fin.85.samp$sample >= 10]
 df.fin.85.trim <- df.fin.85[df.fin.85$scientific_name %in% keep.10,]
 nrow(df.fin.85.trim) #5009
 
+#.95 
+df.fin.95 <- df.fin.per[df.fin.per$head_percentage > .95 &
+                        df.fin.per$eye_percentage > .95 &
+                        df.fin.per$trunk_percentage > .95 &
+                        df.fin.per$dorsal_fin_percentage > .95 &
+                        df.fin.per$caudal_fin_percentage > .95 &
+                        df.fin.per$anal_fin_percentage > .95 &
+                        df.fin.per$pelvic_fin_percentage > .95 &
+                        df.fin.per$pectoral_fin_percentage > .95,]
+nrow(df.fin.95) #4663
+
+length(unique(df.fin.95$scientific_name)) #41
+#how many images per species
+df.fin.95.samp <- df.fin.95 %>%
+  group_by(scientific_name) %>%
+  summarise(sample = n())
+
+nrow(df.fin.95.samp[df.fin.95.samp$sample >= 10,]) #39
+
+
 #visualize remaining data
 df.fin.85.samp.trim <- df.fin.85.samp[df.fin.85.samp$sample >= 10,] %>% as.data.frame()
 ggplot(data = df.fin.85.samp.trim, aes(x = sample)) +
