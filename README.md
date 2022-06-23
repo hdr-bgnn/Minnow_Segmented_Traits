@@ -58,11 +58,19 @@ The resulting dataset was then merged with the Image_Metadata_v1_20211206_151152
 
 ### Selection of which segmented images to analyze
 
-**This section describes the selection criteria used to select which segmented images to analyze, and the creation of X.csv using minnowSelectionImageQualityMetadata.R code.**
+Each segmented image has the following traits: trunk, head, eye, dorsal fin, caudal fin, anal fin, pelvic fin, and pectoral fin. For each segmented trait, there may be more than one "blob", or group of pixels identifying a trait. We created a matrix of <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Files/presence.absence.matrix.csv"> presence.absence.matrix.csv</a>.
+
+We removed images where a trait was missing. That removed only 40 images.
+
+For each trait, we counted the number of blobs and the percentage of the largest blob. We analyzed this matrix using the <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Scripts/selectionCriteraSegmentedImages.R">selectiuonCriteriaSegmentedImages.R</a> in Scripts and results can be found in the folder Preliminary Results.
+
+Based on these results, we chose a criteria of blob size of 95% (that is, the biggest blob is 95% of the sum of all the blobs for a trait).
+
+This results in 39 species and 4,663 images.
 
 ### Analyses on segmented images
 
-**This section describes the analyses used on the X.csv file using X.R code. Results and figures from these analyses are in the folder "Results".**
+*This section describes the analyses used on the X.csv file using X.R code. Results and figures from these analyses are in the folder "Results".*
 
 ## Minnow trait selection
 
