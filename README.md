@@ -74,6 +74,8 @@ This results in 39 species and 4,663 images.
 
 ## Minnow trait selection
 
+These images contain all the traits discussed by our team. The next section outlines which traits we are focusing on for this study.
+
 ![Minnow Landmarks](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow%20Landmarks.png)
 ![Minnow Measurements](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow%20Length%20Traits.png)
 
