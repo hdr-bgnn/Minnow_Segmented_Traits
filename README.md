@@ -71,17 +71,17 @@ This results in 39 species and 4,663 images.
 
 ### Analyses on segmented images
 
-*This section describes the analyses used on the X.csv file using X.R code. Results and figures from these analyses are in the folder "Results".*
+*This section will describe the analyses*
 
 ## Minnow trait selection
 
-These images contain all the traits discussed by our team. The next section outlines which traits we are focusing on for this study.
+These images below contain all the traits discussed by our team. This section outlines which traits we are focusing on for this study. We have created descriptions of the traits for <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/MinnowMeasurements%20(trimmed%2028Jun2022).csv">measurements</a> and <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/MinnowLandmarks%20(trimmed%2028Jun2022).csv">landmarks</a>.
 
-![Minnow Landmarks](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow%20Landmarks.png)
-![Minnow Measurements](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow%20Length%20Traits.png)
-
-#### Which traits & why
+### Which traits & why
 (subject to change)
+
+#### Measurements
+![Minnow Measurements](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow%20Length%20Traits%20(trimmed%2028Jun2022).png)
 
 **Standard length (SL)**: edge of head to beginning of caudal fin along nose line. [done in Nagel & Simons 2012 where they showed DNA aligned with morphological data for Nocomis; also done in Burress et al. 2016 looking at benthic-pelagic transition in NA minnows]
 
@@ -97,7 +97,9 @@ These images contain all the traits discussed by our team. The next section outl
 
 **Snout length or preorbital depth (pOD)**: anterior tip of head to anterior eye. [Burress et al. 2016]
 
+#### Landmarks
 **Fin and eye positions**: a series of landmarks[Armbruster 2012]; we can use the segmentation to our advantage:
+![Minnow Landmarks](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow%20Landmarks%20(trimmed%2028Jun2022).png)
 
 1. Anterior portion of head
 2. Posterior-dorsal edge of head
@@ -114,3 +116,4 @@ These images contain all the traits discussed by our team. The next section outl
 13. posterior of eye
 14. anterior of eye
 15. Ventral part of head, where it connects with the trunk)
+
