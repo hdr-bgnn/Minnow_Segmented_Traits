@@ -113,7 +113,7 @@ These images below contain all the traits discussed by our team. This section ou
 10. Anterior pelvic fin insertion
 11. Anterior pectoral fin insertion
 12. Posterior part of head segmentation
-13. posterior of eye
-14. anterior of eye
-15. Ventral part of head, where it connects with the trunk)
+13. Ventral part of head, where it connects with the trunk)
+14. posterior of eye
+15. anterior of eye
 
