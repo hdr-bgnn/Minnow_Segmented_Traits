@@ -83,21 +83,21 @@ These images contain all the traits discussed by our team. The next section outl
 #### Which traits & why
 (subject to change)
 
-**Standard length** (edge of head to beginning of caudal fin along nose line) [done in Nagel & Simons 2012 where they showed DNA aligned with morphological data for Nocomis; also done in Burress et al. 2016 looking at benthic-pelagic transition in NA minnows]
+**Standard length (SL)**: edge of head to beginning of caudal fin along nose line. [done in Nagel & Simons 2012 where they showed DNA aligned with morphological data for Nocomis; also done in Burress et al. 2016 looking at benthic-pelagic transition in NA minnows]
 
-**Eye size to head size (area)** (use pixels and convert using scale bar) This would be useful if we can get even a qualitative measure of how turbid the waters are. Area from the segmentation is different from the area researchers tend to take, however.
+**Eye area (EA) to head area (HAt or HAp) (EHA; a relationship of EA/HAt or EA/HAp)**: This would be useful if we can get even a qualitative measure of how turbid the waters are. Area from the segmentation is different from the area researchers tend to take, however.
 
-**Length from back of head to end of caudal peduncle** (back of head in white to beginning of caudal fin on dorsal side)
+**Length from back of head to end of caudal peduncle (HCL)**: back of head in white to beginning of caudal fin on dorsal side.
 
-**Eye diameter** (anterior-posterior length of eye segmentation) [Burress et al. 2016]
+**Eye diameter (ED)**: anterior-posterior length of eye segmentation. [Burress et al. 2016]
 
-**Head length** (tip of snout to posterior tip of opercle) (anterior-posterior length of head segmentation) [Burress et al. 2016]
+**Head length (HL)**: tip of snout to posterior tip of opercle; anterior-posterior length of head segmentation. [Burress et al. 2016]
 
-**Head depth** (length of head dorso-ventrally measured from head/trunk junction ventrally to end of preopercle (?)) [Burress et al. 2016]
+**Head depth (HD)**: length of head dorso-ventrally measured from head/trunk junction ventrally to end of preopercle. [Burress et al. 2016]
 
-**Snout length** (anterior tip of head to anterior eye) [Burress et al. 2016]
+**Snout length or preorbital depth (pOD)**: anterior tip of head to anterior eye. [Burress et al. 2016]
 
-**Fin and eye positions** (a series of landmarks; we can use the segmentation to our advantage: [Armbruster 2012]
+**Fin and eye positions**: a series of landmarks[Armbruster 2012]; we can use the segmentation to our advantage:
 
 1. Anterior portion of head
 2. Posterior-dorsal edge of head
