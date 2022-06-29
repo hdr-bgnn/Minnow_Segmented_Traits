@@ -13,7 +13,7 @@ head length,HL,distance,length from the anterior-most (left-most) part of the he
 head depth,HD,distance,length from the dorsal-most (top) part of the head (landmark #2) to the ventral-most (bottom) part of the head (landmark #13),
 snout length or preorbital depth,pOD,distance,length from the anterior-most (left-most) part of the eye (landmark #14) to the anterior-most (left-most)part of the head (landmark #1),
 eye diameter,ED,distance,length across the eye along the anterior-posterior (left-right) axis (landmarks #14 & #15),
-eye height through midline of eye,EH,distance,length from the centroid of the eye (landmark #18) to the ventral (bottom) of the head following the line from the centroid,
+eye height through midline of eye,EHm,distance,length from the centroid of the eye (landmark #18) to the ventral (bottom) of the head following the line from the centroid,
 postorbital length,PoL,distance,length from the posterior-most (right-most) part of the eye (landmark #15) to the posterior-most (right-most) part of the head (landmark #12),
 "head height, through midline of eye",HH,distance,length along the dorsal-ventral axis (top-bottom) along the centroid of the eye,
 pre-pelvic length, pPvL,distance,length from the anterior-most (left-most) part of the pelvic fin to the anterior-most (left-most) part of the head,
