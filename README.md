@@ -1,5 +1,5 @@
 # minnowTraits
-Using trait segmentation to understand minnow trait evolution across an ecological gradient.
+Using machine learning segmentation model to accelerate trait extraction from images.
 
 ## Folder Organization
 
