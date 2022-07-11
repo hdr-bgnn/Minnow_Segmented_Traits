@@ -27,10 +27,14 @@ Using machine learning segmentation model to accelerate trait extraction from im
 The fish images are from the Great Lakes Invasives Network (<a href="https://glin.com/">GLIN</a>) and stored on the Tulane server. We're using images specifically from the <a href="https://inhs.illinois.edu/">Illinois Natural History Survey</a> (<a href="http://www.tubri.org/HDR/INHS/">INHS images</a>) and from the <a href="https://uwzm.integrativebiology.wisc.edu/">University of Wisconsin Zoological Museum</a> (<a href="http://www.tubri.org/HDR/UWZM/">UWZM images</a>).
 
 ### Selection of images to run through the workflow
+    
+**This section describes the creation of minnow.filtered.from.imagequalitymetadata_7Jun2022.csv using minnowSelectionImageQualityMetadata.R**    
+R code (Minnows.R) was used to filter out high quality, minnow images using:
 
-**This section describes the creation of minnow.filtered.from.imagequalitymetadata_7Jun2022.csv using minnowSelectionImageQualityMetadata.R**
+- Image_Quality_Metadata_v1_202111206_151204.csv : list of fish, url species information
+- Image_Metadata_v1_20211206_151152.csv. : List of quality metadata including manually extracted information on the quality of the images and their content.
 
-R code (Minnows.R) was used to filter out high quality, minnow images using the Image_Quality_Metadata_v1_202111206_151204.csv (downloaded from <a href="https://bgnn.tulane.edu/hdrweb/hdr/imagemetadata/">here</a>) matching the following criteria:
+Those two lists are download from [Tulane sever](https://bgnn.tulane.edu/hdrweb/hdr/imagemetadata/). The lists have been generated using [the tulane worflow](https://bgnn.tulane.edu/. 
 
 List of criteria chosen :
 
