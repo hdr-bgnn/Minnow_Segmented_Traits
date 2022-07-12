@@ -10,8 +10,16 @@ library(RColorBrewer)
 
 #get list of file names
 #path is in the OSC 
-setwd("/fs/ess/PAS2136/BGNN/Minnows/Morphology/Presence/")
-files <- list.files(pattern = '*.json')
+args = commandArgs(trailingOnly=TRUE)
+if (length(args) != 3) {
+    stop("Received wrong number of arguments.")
+}
+presence.json.directory <- args[1]
+image.metadata.csv <- args[2]
+output.matrix.csv.path <- args[3] # presence.absence.matrix.csv
+
+files <- list.files(path = presence.json.directory, pattern = '*.json', full.names = TRUE)
+
 
 #turn into csv
 #rbind
@@ -26,7 +34,7 @@ json_df <- function(jfile){
 }
 
 #test with one  file
-test.file <- "INHS_FISH_003752_presence.json"
+test.file <- file.path(presence.json.directory, "INHS_FISH_003752_presence.json")
 test <- json_df(jfile = test.file)
 str(test)
 
@@ -49,20 +57,18 @@ colnames(tt.df)
 colnames(presence.df)
 setdiff(colnames(tt.df), colnames(presence.df))
 
-#return to GitHub directory
-setwd("/users/PAS2136/balkm/minnowTraits/Files")
+write.csv(presence.df, output.matrix.csv.path, row.names = FALSE)
 
-write.csv(presence.df, "presence.absence.matrix.csv", row.names = FALSE)
-
-presence.df <- read.csv("/users/PAS2136/balkm/minnowTraits/Files/presence.absence.matrix.csv", 
-                        header = TRUE)
+# skipping the rest of the script for now due to errors when processing very few files
+if(FALSE) {
 
 names(presence.df) <- gsub(x = names(presence.df), 
                            pattern = "\\.", 
                            replacement = "_")  
 
 #combine with metadata to get taxonomic heirarchy
-meta.df <- read.csv("/users/PAS2136/balkm/minnowTraits/Files/Image_Metadata_v1_20211206_151152.csv", header = TRUE)
+meta.df <- read.csv(image.metadata.csv, header = TRUE)
+
 colnames(meta.df)
 meta.df$original_file_name <- gsub(meta.df$original_file_name,
                                    pattern = ".jpg",
@@ -304,3 +310,5 @@ nrow(presence.meta[presence.meta$dorsal_fin_percentage == 0,]) #13
 
 ggplot(data = presence.meta) +
   geom_density(aes(x = dorsal_fin_percentage, fill = scientific_name))
+
+}

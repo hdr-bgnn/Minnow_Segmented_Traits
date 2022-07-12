@@ -9,9 +9,17 @@ library(ggplot2)
 
 ####LOAD DATA----
 
+args = commandArgs(trailingOnly=TRUE)
+if (length(args) != 3) {
+    stop("Received wrong number of arguments.")
+}
+image.data.path <- args[1]    # eg. Image_Metadata_v1_20211206_151152.csv
+image.quality.path <- args[2] # eg. Image_Quality_Metadata_v1_20211206_151204.csv
+output.path <- args[3]        # eg. minnow.filtered.from.imagequalitymetadata_DATE.csv
+
 ##image metadata and image quality metadata from Yasin
-image.data <- read.csv("Image_Metadata_v1_20211206_151152.csv", header = TRUE) #images with metadata
-image.quality <- read.csv("Image_Quality_Metadata_v1_20211206_151204.csv", header = TRUE)
+image.data <- read.csv(image.data.path, header = TRUE) #images with metadata
+image.quality <- read.csv(image.quality.path, header = TRUE)
 
 ##combing metadata
 #link on image.data$file_name and image.quality$image_name
@@ -85,7 +93,9 @@ test1 <- images.minnows.trim[1:10,]
 ##INHS_FISH_33814.jpg
 test2 <- images.minnows.trim[images.minnows.trim$original_file_name == "INHS_FISH_33814.jpg" |
                              images.minnows.trim$path == "http://www.tubri.org/HDR/INHS/INHS_FISH_65294.jpg",]
-  
+
+images.minnows.trim <- head(images.minnows.trim, n=200)
+
 empty <- c()
 for(i in 1:nrow(images.minnows.trim)){
   if(!isTRUE(valid_url(images.minnows.trim$path[i]))){
@@ -122,4 +132,4 @@ nrow(table.gen) #4
 unique(images.minnows.10$genus.x)
 
 #write dataset without index
-write.csv(images.minnows.10, "minnow.filtered.from.imagequalitymetadata_DATE.csv", row.names = FALSE)
+write.csv(images.minnows.10, output.path, row.names = FALSE)
