@@ -81,10 +81,7 @@ This results in 39 species and 4,663 images.
 
 These images below contain all the traits discussed by our team. This section outlines which traits we are focusing on for this study. We have created descriptions of the traits for <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/MinnowMeasurements%20(trimmed%2028Jun2022).csv">measurements</a> and <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/MinnowLandmarks%20(trimmed%2028Jun2022).csv">landmarks</a>.
 
-### Which traits & why
-(subject to change)
-
-#### Measurements
+### Measurements
 ![Minnow Measurements](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow%20Length%20Traits%20(trimmed%2012Jul2022).png)
 
 **Standard length (SL)**: edge of head to beginning of caudal fin along nose line. [done in Nagel & Simons 2012 where they showed DNA aligned with morphological data for Nocomis; also done in Burress et al. 2016 looking at benthic-pelagic transition in NA minnows]
@@ -97,7 +94,7 @@ These images below contain all the traits discussed by our team. This section ou
 
 **Snout length or preorbital depth (pOD)**: anterior tip of head to anterior eye. [Burress et al. 2016]
 
-#### Landmarks
+### Landmarks
 **Fin and eye positions**: a series of landmarks[Armbruster 2012]; we can use the segmentation to our advantage:
 ![Minnow Landmarks](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow%20Landmarks%20(trimmed%2012Jul2022).png)
 
