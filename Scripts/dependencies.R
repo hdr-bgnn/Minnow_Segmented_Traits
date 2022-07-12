@@ -11,4 +11,4 @@
 #RColorBrewer 1.1.2
 #stringr 1.4.0
 
-install.packages(c("devtools", "rjson", "tidyr", "dplyr", "ggplot2", "RColorBrewer", "stingr"))
+install.packages(c("devtools", "rjson", "tidyr", "dplyr", "ggplot2", "RColorBrewer", "stringr"))
