@@ -147,7 +147,7 @@ df.fin.95.samp.dist <- ggplot(data = df.fin.95.samp.trim, aes(x = sample)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black"))
 
-ggsave(df.fin.95.samp.dist, file = "df.fin.95.samp.dist.png", width = 14, height = 20, units = "cm")
+ggsave(df.fin.95.samp.dist, file = "df.fin.95.samp.dist.png", width = 20, height = 15, units = "cm")
 
 #about the data
 stats <- df %>%
