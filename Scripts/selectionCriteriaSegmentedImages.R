@@ -133,8 +133,10 @@ nrow(df.fin.95.samp[df.fin.95.samp$sample >= 10,]) #39
 
 
 #visualize remaining data
-df.fin.85.samp.trim <- df.fin.85.samp[df.fin.85.samp$sample >= 10,] %>% as.data.frame()
-ggplot(data = df.fin.85.samp.trim, aes(x = sample)) +
+setwd("/users/PAS2136/balkm/minnowTraits/Prelim Results/")
+
+df.fin.95.samp.trim <- df.fin.95.samp[df.fin.95.samp$sample >= 10,] %>% as.data.frame()
+df.fin.95.samp.dist <- ggplot(data = df.fin.95.samp.trim, aes(x = sample)) +
   geom_density(col = "blue") +
   geom_rug(sides = "b", col = "blue") +
   ggtitle("Distribution of sampling per species") +
@@ -144,7 +146,9 @@ ggplot(data = df.fin.85.samp.trim, aes(x = sample)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black"))
 
-  
+##save the image
+png("df.fin.95.samp.png")
+df.fin.95.samp.dist
 
 #about the data
 stats <- df %>%
@@ -259,6 +263,8 @@ hm.avg <- heatmap(stats.sp.avg,
 legend(x = "right", 
        legend = c("0.80", "0.85", "0.90", "0.95", "1.00"),
        fill = my_colors(5))
+
+savePlot()
 
 #sd
 stats.sp.sd <- select(stats.sp.sort, contains("sd."))
