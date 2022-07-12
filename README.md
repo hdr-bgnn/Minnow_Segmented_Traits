@@ -85,39 +85,26 @@ These images below contain all the traits discussed by our team. This section ou
 (subject to change)
 
 #### Measurements
-![Minnow Measurements](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow%20Length%20Traits%20(trimmed%2028Jun2022).png)
+![Minnow Measurements](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow%20Length%20Traits%20(trimmed%2012Jul2022).png)
 
 **Standard length (SL)**: edge of head to beginning of caudal fin along nose line. [done in Nagel & Simons 2012 where they showed DNA aligned with morphological data for Nocomis; also done in Burress et al. 2016 looking at benthic-pelagic transition in NA minnows]
 
-**Eye area (EA) to head area (HAt or HAp) (EHA; a relationship of EA/HAt or EA/HAp)**: This would be useful if we can get even a qualitative measure of how turbid the waters are. Area from the segmentation is different from the area researchers tend to take, however.
-
-**Length from back of head to end of caudal peduncle (HCL)**: back of head in white to beginning of caudal fin on dorsal side.
+**Head length (HL)**: tip of snout to posterior tip of opercle; anterior-posterior length of head segmentation. [Burress et al. 2016]
 
 **Eye diameter (ED)**: anterior-posterior length of eye segmentation. [Burress et al. 2016]
 
-**Head length (HL)**: tip of snout to posterior tip of opercle; anterior-posterior length of head segmentation. [Burress et al. 2016]
-
-**Head depth (HD)**: length of head dorso-ventrally measured from head/trunk junction ventrally to end of preopercle. [Burress et al. 2016]
+**Head depth (HD)**: vertical distance of head dorso-ventrally through the center of the eye. [Burress et al. 2016]
 
 **Snout length or preorbital depth (pOD)**: anterior tip of head to anterior eye. [Burress et al. 2016]
 
 #### Landmarks
 **Fin and eye positions**: a series of landmarks[Armbruster 2012]; we can use the segmentation to our advantage:
-![Minnow Landmarks](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow%20Landmarks%20(trimmed%2028Jun2022).png)
+![Minnow Landmarks](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow%20Landmarks%20(trimmed%2012Jul2022).png)
 
 1. Anterior portion of head
-2. Posterior-dorsal edge of head
-3. Anterior insertion of dorsal fin
-4. Posterior insertion of dorsal fin which may not be possible
-5. Anterior-dorsal caudal fin connection with the trunk
 6. Posterior caudal fin connection with trunk
-7. Anterior-ventral caudal fin connection with trunk
-8. Posterior anal fin insertion with may not be possible
-9. Anterior anal fin insertion
-10. Anterior pelvic fin insertion
-11. Anterior pectoral fin insertion
 12. Posterior part of head segmentation
-13. Ventral part of head, where it connects with the trunk)
 14. posterior of eye
 15. anterior of eye
+18. centroid of eye
 
