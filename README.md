@@ -27,10 +27,14 @@ Using machine learning segmentation model to accelerate trait extraction from im
 The fish images are from the Great Lakes Invasives Network (<a href="https://glin.com/">GLIN</a>) and stored on the Tulane server. We're using images specifically from the <a href="https://inhs.illinois.edu/">Illinois Natural History Survey</a> (<a href="http://www.tubri.org/HDR/INHS/">INHS images</a>) and from the <a href="https://uwzm.integrativebiology.wisc.edu/">University of Wisconsin Zoological Museum</a> (<a href="http://www.tubri.org/HDR/UWZM/">UWZM images</a>).
 
 ### Selection of images to run through the workflow
+    
+**This section describes the creation of minnow.filtered.from.imagequalitymetadata_7Jun2022.csv using minnowSelectionImageQualityMetadata.R**    
+R code (Minnows.R) was used to filter out high quality, minnow images using:
 
-**This section describes the creation of minnow.filtered.from.imagequalitymetadata_7Jun2022.csv using minnowSelectionImageQualityMetadata.R**
+- Image_Quality_Metadata_v1_202111206_151204.csv : list of fish, url species information
+- Image_Metadata_v1_20211206_151152.csv. : List of quality metadata including manually extracted information on the quality of the images and their content.
 
-R code (Minnows.R) was used to filter out high quality, minnow images using the Image_Quality_Metadata_v1_202111206_151204.csv (downloaded from <a href="https://bgnn.tulane.edu/hdrweb/hdr/imagemetadata/">here</a>) matching the following criteria:
+Those two lists are download from [Tulane sever](https://bgnn.tulane.edu/hdrweb/hdr/imagemetadata/). The lists have been generated using [the tulane worflow](https://bgnn.tulane.edu/. 
 
 List of criteria chosen :
 
@@ -77,43 +81,27 @@ This results in 39 species and 4,663 images.
 
 These images below contain all the traits discussed by our team. This section outlines which traits we are focusing on for this study. We have created descriptions of the traits for <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/MinnowMeasurements%20(trimmed%2028Jun2022).csv">measurements</a> and <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/MinnowLandmarks%20(trimmed%2028Jun2022).csv">landmarks</a>.
 
-### Which traits & why
-(subject to change)
-
-#### Measurements
-![Minnow Measurements](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow%20Length%20Traits%20(trimmed%2028Jun2022).png)
+### Measurements
+![Minnow Measurements](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow%20Length%20Traits%20(trimmed%2012Jul2022).png)
 
 **Standard length (SL)**: edge of head to beginning of caudal fin along nose line. [done in Nagel & Simons 2012 where they showed DNA aligned with morphological data for Nocomis; also done in Burress et al. 2016 looking at benthic-pelagic transition in NA minnows]
 
-**Eye area (EA) to head area (HAt or HAp) (EHA; a relationship of EA/HAt or EA/HAp)**: This would be useful if we can get even a qualitative measure of how turbid the waters are. Area from the segmentation is different from the area researchers tend to take, however.
-
-**Length from back of head to end of caudal peduncle (HCL)**: back of head in white to beginning of caudal fin on dorsal side.
+**Head length (HL)**: tip of snout to posterior tip of opercle; anterior-posterior length of head segmentation. [Burress et al. 2016]
 
 **Eye diameter (ED)**: anterior-posterior length of eye segmentation. [Burress et al. 2016]
 
-**Head length (HL)**: tip of snout to posterior tip of opercle; anterior-posterior length of head segmentation. [Burress et al. 2016]
-
-**Head depth (HD)**: length of head dorso-ventrally measured from head/trunk junction ventrally to end of preopercle. [Burress et al. 2016]
+**Head depth (HD)**: vertical distance of head dorso-ventrally through the center of the eye. [Burress et al. 2016]
 
 **Snout length or preorbital depth (pOD)**: anterior tip of head to anterior eye. [Burress et al. 2016]
 
-#### Landmarks
+### Landmarks
 **Fin and eye positions**: a series of landmarks[Armbruster 2012]; we can use the segmentation to our advantage:
-![Minnow Landmarks](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow%20Landmarks%20(trimmed%2028Jun2022).png)
+![Minnow Landmarks](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow%20Landmarks%20(trimmed%2012Jul2022).png)
 
 1. Anterior portion of head
-2. Posterior-dorsal edge of head
-3. Anterior insertion of dorsal fin
-4. Posterior insertion of dorsal fin which may not be possible
-5. Anterior-dorsal caudal fin connection with the trunk
 6. Posterior caudal fin connection with trunk
-7. Anterior-ventral caudal fin connection with trunk
-8. Posterior anal fin insertion with may not be possible
-9. Anterior anal fin insertion
-10. Anterior pelvic fin insertion
-11. Anterior pectoral fin insertion
 12. Posterior part of head segmentation
-13. Ventral part of head, where it connects with the trunk)
 14. posterior of eye
 15. anterior of eye
+18. centroid of eye
 

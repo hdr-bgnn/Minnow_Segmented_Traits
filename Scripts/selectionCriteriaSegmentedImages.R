@@ -7,6 +7,7 @@ library(tidyr)
 library(dplyr)
 library(ggplot2)
 library(RColorBrewer)
+library(reshape2)
 
 #get list of file names
 #path is in the OSC 
@@ -133,8 +134,10 @@ nrow(df.fin.95.samp[df.fin.95.samp$sample >= 10,]) #39
 
 
 #visualize remaining data
-df.fin.85.samp.trim <- df.fin.85.samp[df.fin.85.samp$sample >= 10,] %>% as.data.frame()
-ggplot(data = df.fin.85.samp.trim, aes(x = sample)) +
+setwd("/users/PAS2136/balkm/minnowTraits/Prelim Results/")
+
+df.fin.95.samp.trim <- df.fin.95.samp[df.fin.95.samp$sample >= 10,] %>% as.data.frame()
+df.fin.95.samp.dist <- ggplot(data = df.fin.95.samp.trim, aes(x = sample)) +
   geom_density(col = "blue") +
   geom_rug(sides = "b", col = "blue") +
   ggtitle("Distribution of sampling per species") +
@@ -144,7 +147,7 @@ ggplot(data = df.fin.85.samp.trim, aes(x = sample)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black"))
 
-  
+ggsave(df.fin.95.samp.dist, file = "df.fin.95.samp.dist.png", width = 20, height = 15, units = "cm")
 
 #about the data
 stats <- df %>%
@@ -242,23 +245,38 @@ stats.sp.avg <- select(stats.sp.sort, contains("avg."))
 colnames(stats.sp.avg) #in correct order
 stats.sp.avg <- as.matrix(stats.sp.avg)
 
-min(stats.sp.avg) #smallest % is 81.5%
-#coloring scheme #yellow to red
-my_colors <- colorRampPalette(c("#FFFFCC", "#800026"))
-#pal <- colorRampPalette(brewer.pal(9, "YlOrRd"))(5)
-length(seq(.8, 1, .05)) #want 5 colors
+# min(stats.sp.avg) #smallest % is 81.5%
+# #coloring scheme #yellow to red
+# my_colors <- colorRampPalette(c("#FFFFCC", "#800026"))
+# #pal <- colorRampPalette(brewer.pal(9, "YlOrRd"))(5)
+# length(seq(.8, 1, .05)) #want 5 colors
+# 
+# hm.avg <- heatmap(stats.sp.avg,
+#                   labRow = rownames(stats.sp.avg),
+#                   labCol = colnames(stats.sp.avg),
+#                   Rowv = NA, Colv = NA, #no dendrograms
+#                   col = my_colors(5),
+#                   #breaks = color_breaks,
+#                   margins = c(5, 10),
+#                   main = "Heat Map of Average % of Biggest Blob")
+# legend(x = "right", 
+#        legend = c("0.80", "0.85", "0.90", "0.95", "1.00"),
+#        fill = my_colors(5))
 
-hm.avg <- heatmap(stats.sp.avg,
-                  labRow = rownames(stats.sp.avg),
-                  labCol = colnames(stats.sp.avg),
-                  Rowv = NA, Colv = NA, #no dendrograms
-                  col = my_colors(5),
-                  #breaks = color_breaks,
-                  margins = c(5, 10),
-                  main = "Heat Map of Average % of Biggest Blob")
-legend(x = "right", 
-       legend = c("0.80", "0.85", "0.90", "0.95", "1.00"),
-       fill = my_colors(5))
+melt_stats_avg <- melt(stats.sp.avg)
+head(melt_stats_avg)
+
+hm.avg <- ggplot(melt_stats_avg, aes(Var2, Var1)) +
+  geom_tile(aes(fill = value), color = "white") +
+  scale_fill_gradient(low = "#FFFFCC", high = "#800026") + 
+  labs( x = "Trait", 
+        y = "Species (n)",
+        title = "Heat Map of Average % of Biggest Blob") + 
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) + 
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black"))
+
+ggsave(hm.avg, file = "heatmap.avg.blob.png", width = 14, height = 20, units = "cm")
 
 #sd
 stats.sp.sd <- select(stats.sp.sort, contains("sd."))
@@ -266,23 +284,40 @@ stats.sp.sd <- as.matrix(stats.sp.sd)
 colnames(stats.sp.sd) #in correct order
 
 
-min(stats.sp.sd) #smallest 0
-max(stats.sp.sd) #max is 0.34
-#coloring scheme #yellow to red
-my_colors <- colorRampPalette(c("#FFFFCC", "#800026"))
-#pal <- colorRampPalette(brewer.pal(9, "YlOrRd"))
-length(seq(0, 0.35, .05)) #want 8 colors
+# min(stats.sp.sd) #smallest 0
+# max(stats.sp.sd) #max is 0.34
+# #coloring scheme #yellow to red
+# my_colors <- colorRampPalette(c("#FFFFCC", "#800026"))
+# #pal <- colorRampPalette(brewer.pal(9, "YlOrRd"))
+# length(seq(0, 0.35, .05)) #want 8 colors
+# 
+# hm.sd <- heatmap(stats.sp.sd,
+#                   labRow = rownames(stats.sp.sd),
+#                   labCol = colnames(stats.sp.sd),
+#                   Rowv = NA, Colv = NA, #no dendrograms
+#                   col = my_colors(8),
+#                   margins = c(5, 10),
+#                   main = "Heat Map of Standard Deviation % of Blobs")
+# legend(x = "right", 
+#        legend = c("0.00", "0.05", "0.10", "0.15", "0.20", "0.25", "0.30", "0.35"),
+#        fill = my_colors(8))
 
-hm.sd <- heatmap(stats.sp.sd,
-                  labRow = rownames(stats.sp.sd),
-                  labCol = colnames(stats.sp.sd),
-                  Rowv = NA, Colv = NA, #no dendrograms
-                  col = my_colors(8),
-                  margins = c(5, 10),
-                  main = "Heat Map of Standard Deviation % of Blobs")
-legend(x = "right", 
-       legend = c("0.00", "0.05", "0.10", "0.15", "0.20", "0.25", "0.30", "0.35"),
-       fill = my_colors(8))
+
+melt_stats_sd <- melt(stats.sp.sd)
+head(melt_stats_sd)
+
+hm.asd <- ggplot(melt_stats_avg, aes(Var2, Var1)) +
+  geom_tile(aes(fill = value), color = "white") +
+  scale_fill_gradient(low = "#FFFFCC", high = "#800026") + 
+  labs( x = "Trait", 
+        y = "Species (n)",
+        title = "Heat Map of Standard Deviation % of Biggest Blob") + 
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) + 
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black"))
+
+ggsave(hm.avg, file = "heatmap.sd.blob.png", width = 14, height = 20, units = "cm")
+
 
 stats.sp$min.caud #only see four small numbers
 small.num.caud <- sort(stats.sp$min.caud, decreasing = FALSE)
