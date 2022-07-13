@@ -1,7 +1,7 @@
-﻿type,landmarkNumber,terminology,position,anatomicalDefinition,codeDefinition
-landmark,1,Tip of snout,anterior-most (left-most) part of head,,
-landmark,6,End of vertebral column,midline of caudal fin,,
-landmark,12,Most dorsal point of operculum,posterior-most (right-most) part of head,,
-landmark,14,anterior-most (left-most) part of eye,anterior-most (left-most) part of eye,,
-landmark,15,posterior-most (right-most) part of eye,posterior-most (right-most) part of eye,,
-landmark,18,center of eye,centroid of eye,,
+﻿type,landmarkNumber,terminology,position
+landmark,1,Tip of snout,anterior-most (left-most) part of head
+landmark,6,End of vertebral column,midline of caudal fin
+landmark,12,Most dorsal point of operculum,posterior-most (right-most) part of head
+landmark,14,anterior-most (left-most) part of eye,anterior-most (left-most) part of eye
+landmark,15,posterior-most (right-most) part of eye,posterior-most (right-most) part of eye
+landmark,18,center of eye,centroid of eye
