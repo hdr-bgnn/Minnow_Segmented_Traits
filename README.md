@@ -96,7 +96,9 @@ These images below contain all the traits discussed by our team. This section ou
 
 ### Landmarks
 **Fin and eye positions**: a series of landmarks[Armbruster 2012]; we can use the segmentation to our advantage:
-![Minnow Landmarks](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow%20Landmarks%20(trimmed%2012Jul2022).png)
+![Minnow Landmarks](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow%20Landmarks%20(1-18).png)
+
+#### We are only focusing on the following landmarks for this project:
 
 1. Anterior portion of head
 6. Posterior caudal fin connection with trunk
