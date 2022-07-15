@@ -1,7 +1,7 @@
 # minnowTraits
 We use a segmentation model to extract morphological traits from minnows (Family: Cyprinidae). We expand upon work already done by BGNN, including metadata collection (by the <a href="https://bgnn.tulane.edu/">Tulane Team</a> and Drexel Team, see <a href="https://link.springer.com/chapter/10.1007/978-3-030-71903-6_1">Leipzig et al. 2021</a>, <a href="https://ieeexplore.ieee.org/abstract/document/9651834?casa_token=gzgYa9cfbZAAAAAA:mFhU1Wc4bkBbL066-2Iwsec-eY2u_1h4FfgoDgGMnNqS5NLOTsJ0Jn78GOzU7tbbz4J-sw">Pepper et al. 2021</a>, and <a href="https://www.researchsquare.com/article/rs-1506561/latest.pdf">Narnani et al. 2022</a>) and a segementation model developed by the Virginia Tech Team. We incorporate these tools into the BGNN_Snakemake, develop new morphology extraction tools with the help of the Tulane Team, and present a case study.
 
-![minnowTraits_workflow](https://github.com/hdr-bgnn/minnowTraits/blob/main/minnowTrait_workflow.png)
+![minnowTraits_workflow](https://github.com/hdr-bgnn/minnowTraits/blob/main/minnowTraits_workflow.png)
 
 ## Goals
 
@@ -89,9 +89,9 @@ This results in 39 species and 4,663 images.
 These images below contain all the traits discussed by our team. This section outlines which traits we are focusing on for this study. We have created descriptions of the traits for <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/MinnowMeasurements%20(trimmed%2028Jun2022).csv">measurements</a> and <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/MinnowLandmarks%20(trimmed%2028Jun2022).csv">landmarks</a>.
 
 ### Measurements
-![Minnow Measurements](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow_Measurements_12Jul2022.png)
+![Minnow Measurements](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow_Measurements_Burress_et_al_2019_v1.png)
 
-All traits except head depth through the midline of the eye (HD_1) were done using both landmarks (with suffix "_lm") and a bounding box (with suffix "_bbox"). See <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow_Measurements_Burress_et_al_2019.csv">Minnow_Measurements_Burress_et_al_2019_v1.csv</a> for descriptions of the measurements.
+All traits except head depth through the midline of the eye (HD_1) were done using both landmarks (with suffix "_lm") and a bounding box (with suffix "_bbox"). See <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow_Measurements_Burress_et_al_2019.csv">Minnow_Measurements_Burress_et_al_2019.csv</a> for descriptions of the measurements.
 
 **Standard length (SL)**: edge of head to beginning of caudal fin along nose line[ <a href="https://www.sciencedirect.com/science/article/abs/pii/S1055790312000668">Nagel & Simons 2012</a>; <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/jeb.13024">Burress et al. 2016</a>].
 
