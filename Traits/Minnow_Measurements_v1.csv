@@ -1,0 +1,13 @@
+﻿trait,abbreviation,type,anatomicalDefinition,codeDefinition
+Standard Length using landmarks,SL_lm,distance,length from the tip of the snout (landmark #1) to the posterior-most part of trunk that meets the caudal fin (landmark #6),
+Eye Area ,EA,area,Area of eye,
+Head Area,HA,area,Area of the head +eye ,
+Eye Diameter,ED,distance,equivalent diameter (diameter corresponding the circle of the same area),
+Head Length using landmarks,HL_lm,distance,length from the anterior-most (left-most) part of the head (landmark #1) to the posterior-most (right-most) part of the head (landmark #12),
+PreOrbital Depth using landmarks,pOD_lm,distance,length from the anterior-most (left-most) part of the eye (landmark #14) to the anterior-most (left-most)part of the head (landmark #1),
+,,,,
+Standard Length using boundin box,SL_bbox,distance,length of the bounding box of the mask created with head eye and trunk,
+Head Length using bounding box,HL_bbox,distance,length of the bounding box of the head mask,
+Head Depth usign eye,HD_eye,distance,length from the dorsal-most (top) part of the head to the ventral-most (bottom) part of the head through the midline of the eye (landmark #18),
+Eye Diameter using bounding  box,ED_bbox,distance,length of the bounding of the eye mask,
+preOrbital Depth using bounding box,pOD_bbox,distance,length between left boundary of the head bbox and the left boundary of the eye bbox,
