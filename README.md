@@ -27,24 +27,24 @@ Using machine learning segmentation model to accelerate trait extraction from im
 The fish images are from the Great Lakes Invasives Network (<a href="https://glin.com/">GLIN</a>) and stored on the Tulane server. We're using images specifically from the <a href="https://inhs.illinois.edu/">Illinois Natural History Survey</a> (<a href="http://www.tubri.org/HDR/INHS/">INHS images</a>) and from the <a href="https://uwzm.integrativebiology.wisc.edu/">University of Wisconsin Zoological Museum</a> (<a href="http://www.tubri.org/HDR/UWZM/">UWZM images</a>).
 
 ### Selection of images to run through the workflow
-    
+
 **This section describes the creation of minnow.filtered.from.imagequalitymetadata_7Jun2022.csv using minnowSelectionImageQualityMetadata.R**    
 R code (Minnows.R) was used to filter out high quality, minnow images using:
 
 - Image_Quality_Metadata_v1_202111206_151204.csv : list of fish, url species information
 - Image_Metadata_v1_20211206_151152.csv. : List of quality metadata including manually extracted information on the quality of the images and their content.
 
-Those two lists are download from <a href="https://bgnn.tulane.edu/hdrweb/hdr/imagemetadata/">Tulane sever</a>. The lists have been generated using the <a href="https://bgnn.tulane.edu/">Tulane worflow</a>. 
+Those two lists are download from <a href="https://bgnn.tulane.edu/hdrweb/hdr/imagemetadata/">Tulane sever</a>. The lists have been generated using the <a href="https://bgnn.tulane.edu/">Tulane worflow</a>.
 
 List of criteria chosen :
 
-* family == "Cyprinidae" 
-* specimen_viewing == "left" 
-* straight_curved == "straight" 
-* brightness == "normal" 
-* color_issues == "none" 
-* has_ruler == "True" 
-* if_overlapping == "False" 
+* family == "Cyprinidae"
+* specimen_viewing == "left"
+* straight_curved == "straight"
+* brightness == "normal"
+* color_issues == "none"
+* has_ruler == "True"
+* if_overlapping == "False"
 * if_focus == "True"
 * if_missing_parts == "False"
 * if_parts_visible == "True"
@@ -97,7 +97,9 @@ These images below contain all the traits discussed by our team. This section ou
 ### Landmarks
 **Fin and eye positions**: a series of landmarks [<a href="https://www.biotaxa.org/Zootaxa/article/view/zootaxa.3586.1.3/44599">Armbruster 2012</a>]; we can use the segmentation to our advantage:
 
-![Minnow Landmarks](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow%20Landmarks%20(trimmed%2012Jul2022).png)
+![Minnow Landmarks](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow%20Landmarks%20(1-18).png)
+
+#### We are only focusing on the following landmarks for this project:
 
 1. Anterior portion of head
 6. Posterior caudal fin connection with trunk
@@ -105,4 +107,3 @@ These images below contain all the traits discussed by our team. This section ou
 14. posterior of eye
 15. anterior of eye
 18. centroid of eye
-
