@@ -1,6 +1,6 @@
 ﻿trait,abbreviation,type,description,
 "head area, triangle", HA_t,area,"area of head as outlined by three points: tip of snout (landmark #1), back of head (landmark #2), and ventral portion of head (landmark #13)",
-"head area, pixels", HA_m,area,area of head based on the mask that segments the head and eye,
+head area using the mask, HA_m,area,area of head based on the mask that segments the head and eye,
 "tail area, quadrilateral", TA,area,"area of tail (peduncle) as outlined by four points: Ventral insertion of the caudal fin (landmark #7), Dorsal insertion of the caudal fin (landmark #5), posterior-most (right-most) insertion point of anal fin (#8), and posterior-most (right-most) insertion point of dorsal fin (landmark #4)",
 eye area to head area, EHA,area,ratio of eye area to head area,
 total length, TL,distance,length from the tip of the snout to the posterior-most part of the caudal fin,
@@ -23,7 +23,7 @@ dorsal fin base length,DBL,distance,length from the anterior-most (left-most) in
 pelvic fin base length, PvBL,distance,length from the anterior-most (left-most) insertion of the pelvic fin (landmark #10) to the posterior-most (right-most) insertion of the pelvic fin,
 trunk length,TrL,distance,length from the posterior-most (right-most) part of the head (landmark #12) to the posterior-most (right-most) part of the trunk (landmark #6),
 head-to-trunk ratio, HTrL,distance,ratio of the head length to the trunk length,
-eye area, EA_m,area,area of the eye based on the msk that segments the eye,
+eye area using the mask, EA_m,area,area of the eye based on the msk that segments the eye,
 caudal peduncle length, CPL,distance,length of the peduncle from the posterior-most (right-most) insertion of the anal fin (landmark #8) to the posterior-most (right-most) part of trunk (landmark #6),
 dorsal fin area, DA,area,area of the dorsal fin (pixels),
 dorsal fin length, DL,distance,length from the anterior-most (left-most) insertion of the dorsal fin (landmark #3) to the posterior-most (right-most) insertion of the dorsal fin (landmark #4),
@@ -44,5 +44,5 @@ eye position, Ep,angle,do not understand the angle,
 head (snout) angle, Sa,angle,do not understand the angle,
 caudal angle, Ca,angle,do not understand the angle,
 eye projection, Epr,angle,do not understand the angle,
-fish angle,Fa_lm,angle,angle of the tilt of the fish from horizontal,angle between the SL_lm and  and the horizontal line of the image
-fish angle,Fa_pca,angle,angle of the tilt of the fish from horizontal,angle between the pca through the midline and the horizontal line of the image
+fish angle using landmarks,Fa_lm,angle,angle of the tilt of the fish from horizontal,angle between the SL (using landmarks) and  and the horizontal line of the image
+fish angle using PCA,Fa_pca,angle,angle of the tilt of the fish from horizontal,angle between the pca through the midline and the horizontal line of the image
