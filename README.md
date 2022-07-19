@@ -1,6 +1,8 @@
 # minnowTraits
 Using machine learning segmentation model to accelerate trait extraction from images.
 
+For instructions on how to run the entire pipeline see [RUNNING.md](RUNNING.md).
+
 ## Folder Organization
 
 *Scripts*
