@@ -1,4 +1,4 @@
-# Running minnowTraits pipeline
+# Running minnowTraits workflow
 
 ## Requirements
 - [Snakemake](https://snakemake.readthedocs.io/) 6.1.1+ 
@@ -15,9 +15,19 @@ conda create -n snakemake -c bioconda -c conda-forge snakemake -y
 ```
 See [snakemake install docs](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) for more installation options.
 
+## Configure Input
+By default the workflow uses CSV files included in this repo as input.
+
+The [config/config.yaml](config/config.yaml) file defines the input files used.
+- image_metadata - `Image Metadata` CSV file path
+- image_quality_metadata - `Image Quality Metadata` CSV file path
+
+See [bgnn.tulane.edu](https://bgnn.tulane.edu/) for column details for the two input CSV files.
+
+
 ## Running
 
-On the OSC cluster the pipeline can be run with Slurm by running:
+On the OSC cluster the workflow can be run with Slurm by running:
 ```
 sbatch run-pipeline.sh
 ```
