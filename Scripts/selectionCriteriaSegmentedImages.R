@@ -124,6 +124,8 @@ df.fin.95 <- df.fin.per[df.fin.per$head_percentage > .95 &
                         df.fin.per$pectoral_fin_percentage > .95,]
 nrow(df.fin.95) #4663
 
+##how many when specifying it to the Burress paper?
+
 length(unique(df.fin.95$scientific_name)) #41
 #how many images per species
 df.fin.95.samp <- df.fin.95 %>%
