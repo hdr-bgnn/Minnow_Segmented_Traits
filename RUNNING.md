@@ -21,6 +21,13 @@ On the OSC cluster the pipeline can be run with Slurm by running:
 ```
 sbatch run-pipeline.sh
 ```
+By default 10 jobs will be run at the same time.
+To customize how many jobs are run at the same time pass the number of jobs as an argument.
+For example to run 20 jobs at the same time run:
+```
+sbatch run-pipeline.sh 20
+```
+
 If using a different account the `--account` parameter will need to be adjusted in run-pipeline.sh and config/config.yaml.
 
 Assuming snakemake is installed you can run without Slurm and 1 job by running:
