@@ -2,10 +2,7 @@
 # Meghan Balk 
 # balk@battelleecology.org
 
-library(stringr)
-library(tidyr)
-library(dplyr)
-library(ggplot2)
+renv::init()
 
 ####LOAD DATA----
 

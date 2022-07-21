@@ -2,12 +2,7 @@
 # Meghan Balk 
 # balk@battelleecology.org
 
-library(rjson)
-library(tidyr)
-library(dplyr)
-library(ggplot2)
-library(RColorBrewer)
-library(reshape2)
+revn::init()
 
 #get list of file names
 #path is in the OSC 
