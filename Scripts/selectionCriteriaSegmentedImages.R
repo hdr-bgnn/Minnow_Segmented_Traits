@@ -289,15 +289,19 @@ df.fin.95 <- df.fin.per[df.fin.per$head_percentage > .95 &
                         df.fin.per$pelvic_fin_percentage > .95 &
                         df.fin.per$pectoral_fin_percentage > .95,]
 nrow(df.fin.95) #4663
+length(unique(df.fin.95$scientific_name)) #41
+
+sort(table(df.fin.95$scientific_name)) #3 species have under 10 samples; lose 20 images
+
+##how much does the total dataset get reduced for the 3 segmented traits at a 95% cut off?
+df.fin.95.3 <- df.fin.per[df.fin.per$head_percentage > .95 &
+                          df.fin.per$eye_percentage > .95 &
+                          df.fin.per$trunk_percentage > .95,]
+nrow(df.fin.95.3) #6205; a lot more!
+length(unique(df.fin.95.3$scientific_name)) #41
 
 #how is sampling?
-sampling.95 <- as.data.frame(sort(table(df.fin.95$scientific_name)))
-colnames(sampling.95) <- c("Scientific_Name", "Sample_Size")
-nrow(sampling.95) #41 sp
-#lose 3 species because sampling is below 10, a total of 20 images
-
-#save those with min 10 samples for SM
-sampling.95.10 <- sampling.95[sampling.95$Sample_Size >= 10,]
-nrow(sampling.95.10) #38 sp
-sum(sampling.95.10$Sample_Size) #4643
-write.csv(sampling.95, "sampling.minnows.95.blob.csv", row.names = FALSE)
+sampling.95.3 <- as.data.frame(sort(table(df.fin.95.3$scientific_name)))
+colnames(sampling.95.3) <- c("Scientific_Name", "Sample_Size")
+nrow(sampling.95) #41 sp; don't lose any!
+write.csv(sampling.95.3, "sampling.minnows.95.blob.3.traits.csv", row.names = FALSE)
