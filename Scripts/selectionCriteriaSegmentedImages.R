@@ -34,37 +34,25 @@ str(test)
 presence.df <- lapply(files, json_df) %>% 
   dplyr::bind_rows()
 
+#column names have a mix of "_" and ".", standardize to all being "_"
 names(presence.df) <- gsub(x = names(presence.df), 
                            pattern = "\\.", 
                            replacement = "_")  
 
-#test that it is the same as Thibault
-#Thibault used the following images: 62362, 99358, 103219, 106768, 47892, 25022, 24324, 56883, 43105, 95766
-tt.df <- read.csv("https://raw.githubusercontent.com/hdr-bgnn/minnowTraits/main/Jupyter_Notebook/output.csv",
-                  header = TRUE)
 
-#differences in outputs....
-colnames(tt.df)[colnames(tt.df) == "X"] <- "file_name"
-
-colnames(tt.df)
-colnames(presence.df)
-setdiff(colnames(tt.df), colnames(presence.df))
-
+#write dataframe to Files directory
 #return to GitHub directory
-setwd("/users/PAS2136/balkm/minnowTraits/Files")
-
+setwd("GitHub/BGNN/minnowTraits/Files")
 write.csv(presence.df, "presence.absence.matrix.csv", row.names = FALSE)
 
-presence.df <- read.csv("/users/PAS2136/balkm/minnowTraits/Files/presence.absence.matrix.csv", 
+#read presence absence dataframe
+presence.df <- read.csv("presence.absence.matrix.csv", 
                         header = TRUE)
 
-names(presence.df) <- gsub(x = names(presence.df), 
-                           pattern = "\\.", 
-                           replacement = "_")  
-
-#combine with metadata to get taxonomic heirarchy
-meta.df <- read.csv("/users/PAS2136/balkm/minnowTraits/Files/Image_Metadata_v1_20211206_151152.csv", header = TRUE)
+#combine with metadata to get taxonomic hierarchy
+meta.df <- read.csv("Image_Metadata_v1_20211206_151152.csv", header = TRUE)
 colnames(meta.df)
+#remove ".jpg" from file name to more easily align with file name in presence.df
 meta.df$original_file_name <- gsub(meta.df$original_file_name,
                                    pattern = ".jpg",
                                    replacement = "")
@@ -77,6 +65,9 @@ nrow(presence.meta)
 length(unique(presence.meta$scientific_name))
 
 #get rid of columns we don't need
+#not using adipose fin for minnows
+#not using fin rays for minnows
+#not using information about dimensions of the image
 df <- select(presence.meta, - c("adipos_fin_number", "adipos_fin_percentage",
                                 "caudal_fin_ray_number", "caudal_fin_ray_percentage",
                                 "alt_fin_ray_number", "alt_fin_ray_percentage",
@@ -91,53 +82,14 @@ df.fin.per <- select(df, c("scientific_name", contains("percentage")))
 df.fin.per$total <- rowSums(df.fin.per[ , 2:9], na.rm=TRUE)
 nrow(df.fin.per[df.fin.per$total > 8,]) #none are perfect
 
-## how many have fins with an 85% blob?
-df.fin.85 <- df.fin.per[df.fin.per$head_percentage > .85 &
-                        df.fin.per$eye_percentage > .85 &
-                        df.fin.per$trunk_percentage > .85 &
-                        df.fin.per$dorsal_fin_percentage > .85 &
-                        df.fin.per$caudal_fin_percentage > .85 &
-                        df.fin.per$anal_fin_percentage > .85 &
-                        df.fin.per$pelvic_fin_percentage > .85 &
-                        df.fin.per$pectoral_fin_percentage > .85,]
-nrow(df.fin.85) #5026
-length(unique(df.fin.85$scientific_name)) #41
-#how many images per species
-df.fin.85.samp <- df.fin.85 %>%
+#sampling of data
+df.fin.per.sample <- df.fin.per %>%
   group_by(scientific_name) %>%
-  summarise(sample = n())
+  summarize(sample = n()) %>%
+  as.data.frame()
 
-nrow(df.fin.85.samp[df.fin.85.samp$sample >= 10,]) #39
-keep.10 <- df.fin.85.samp$scientific_name[df.fin.85.samp$sample >= 10]
-
-df.fin.85.trim <- df.fin.85[df.fin.85$scientific_name %in% keep.10,]
-nrow(df.fin.85.trim) #5009
-
-#.95 
-df.fin.95 <- df.fin.per[df.fin.per$head_percentage > .95 &
-                        df.fin.per$eye_percentage > .95 &
-                        df.fin.per$trunk_percentage > .95 &
-                        df.fin.per$dorsal_fin_percentage > .95 &
-                        df.fin.per$caudal_fin_percentage > .95 &
-                        df.fin.per$anal_fin_percentage > .95 &
-                        df.fin.per$pelvic_fin_percentage > .95 &
-                        df.fin.per$pectoral_fin_percentage > .95,]
-nrow(df.fin.95) #4663
-
-length(unique(df.fin.95$scientific_name)) #41
-#how many images per species
-df.fin.95.samp <- df.fin.95 %>%
-  group_by(scientific_name) %>%
-  summarise(sample = n())
-
-nrow(df.fin.95.samp[df.fin.95.samp$sample >= 10,]) #39
-
-
-#visualize remaining data
-setwd("/users/PAS2136/balkm/minnowTraits/Prelim Results/")
-
-df.fin.95.samp.trim <- df.fin.95.samp[df.fin.95.samp$sample >= 10,] %>% as.data.frame()
-df.fin.95.samp.dist <- ggplot(data = df.fin.95.samp.trim, aes(x = sample)) +
+#visualize sampling data
+df.fin.per.sample.dist <- ggplot(data = df.fin.per.sample, aes(x = sample)) +
   geom_density(col = "blue") +
   geom_rug(sides = "b", col = "blue") +
   ggtitle("Distribution of sampling per species") +
@@ -147,7 +99,9 @@ df.fin.95.samp.dist <- ggplot(data = df.fin.95.samp.trim, aes(x = sample)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black"))
 
-ggsave(df.fin.95.samp.dist, file = "df.fin.95.samp.dist.png", width = 20, height = 15, units = "cm")
+ggsave(df.fin.per.sample.dist, file = "presence.absence.sample.dist.png", 
+       width = 20, height = 15, units = "cm",
+       path = "../Prelim Results/")
 
 #about the data
 stats <- df %>%
@@ -183,8 +137,6 @@ stats <- df %>%
             max.pect = max(pectoral_fin_percentage),
             avg.pect = mean(pectoral_fin_percentage),
             sd.pect = sd(pectoral_fin_percentage))
-#most percentages are between .8 adn 1
-#only caudal fin is low (0.45 as the smallest blob)
 
 stats.sp <- df %>%
   group_by(scientific_name) %>%
@@ -245,24 +197,6 @@ stats.sp.avg <- select(stats.sp.sort, contains("avg."))
 colnames(stats.sp.avg) #in correct order
 stats.sp.avg <- as.matrix(stats.sp.avg)
 
-# min(stats.sp.avg) #smallest % is 81.5%
-# #coloring scheme #yellow to red
-# my_colors <- colorRampPalette(c("#FFFFCC", "#800026"))
-# #pal <- colorRampPalette(brewer.pal(9, "YlOrRd"))(5)
-# length(seq(.8, 1, .05)) #want 5 colors
-# 
-# hm.avg <- heatmap(stats.sp.avg,
-#                   labRow = rownames(stats.sp.avg),
-#                   labCol = colnames(stats.sp.avg),
-#                   Rowv = NA, Colv = NA, #no dendrograms
-#                   col = my_colors(5),
-#                   #breaks = color_breaks,
-#                   margins = c(5, 10),
-#                   main = "Heat Map of Average % of Biggest Blob")
-# legend(x = "right", 
-#        legend = c("0.80", "0.85", "0.90", "0.95", "1.00"),
-#        fill = my_colors(5))
-
 melt_stats_avg <- melt(stats.sp.avg)
 head(melt_stats_avg)
 
@@ -276,37 +210,21 @@ hm.avg <- ggplot(melt_stats_avg, aes(Var2, Var1)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black"))
 
-ggsave(hm.avg, file = "heatmap.avg.blob.png", width = 14, height = 20, units = "cm")
+ggsave(hm.avg, file = "heatmap.avg.blob.png", 
+       width = 14, height = 20, units = "cm",
+       path = "../Prelim Results/")
+
+min(melt_stats_avg$value) #81 is smallest average size
 
 #sd
 stats.sp.sd <- select(stats.sp.sort, contains("sd."))
 stats.sp.sd <- as.matrix(stats.sp.sd)
 colnames(stats.sp.sd) #in correct order
 
-
-# min(stats.sp.sd) #smallest 0
-# max(stats.sp.sd) #max is 0.34
-# #coloring scheme #yellow to red
-# my_colors <- colorRampPalette(c("#FFFFCC", "#800026"))
-# #pal <- colorRampPalette(brewer.pal(9, "YlOrRd"))
-# length(seq(0, 0.35, .05)) #want 8 colors
-# 
-# hm.sd <- heatmap(stats.sp.sd,
-#                   labRow = rownames(stats.sp.sd),
-#                   labCol = colnames(stats.sp.sd),
-#                   Rowv = NA, Colv = NA, #no dendrograms
-#                   col = my_colors(8),
-#                   margins = c(5, 10),
-#                   main = "Heat Map of Standard Deviation % of Blobs")
-# legend(x = "right", 
-#        legend = c("0.00", "0.05", "0.10", "0.15", "0.20", "0.25", "0.30", "0.35"),
-#        fill = my_colors(8))
-
-
 melt_stats_sd <- melt(stats.sp.sd)
 head(melt_stats_sd)
 
-hm.asd <- ggplot(melt_stats_avg, aes(Var2, Var1)) +
+hm.sd <- ggplot(melt_stats_avg, aes(Var2, Var1)) +
   geom_tile(aes(fill = value), color = "white") +
   scale_fill_gradient(low = "#FFFFCC", high = "#800026") + 
   labs( x = "Trait", 
@@ -316,22 +234,14 @@ hm.asd <- ggplot(melt_stats_avg, aes(Var2, Var1)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black"))
 
-ggsave(hm.avg, file = "heatmap.sd.blob.png", width = 14, height = 20, units = "cm")
+ggsave(hm.avg, file = "heatmap.sd.blob.png", 
+       width = 14, height = 20, units = "cm",
+       path = "../Prelim Results/")
 
-
-stats.sp$min.caud #only see four small numbers
-small.num.caud <- sort(stats.sp$min.caud, decreasing = FALSE)
-smallest.caud <- small.num.caud[1:4]
-stats.sp[stats.sp$min.caud %in% smallest.caud,]
-#N. atherinoides, N. boops, N. heterodon, N. texanus
-#sample sizes vary wildly (in order): 610, 188, 31, 97
-#also have other small %
+max(melt_stats_sd$value) #.34 largest standard deviation
 
 #a lot of species are missing fins, like dorsal, anal, pelvic, pectoral
 #caudal, eye, trunk perform the best
-
-nrow(presence.meta[presence.meta$dorsal_fin_percentage == 0,]) #13
-
 
 #for analyses: 
 #  - % blob by trait and then by sp
@@ -339,3 +249,59 @@ nrow(presence.meta[presence.meta$dorsal_fin_percentage == 0,]) #13
 
 ggplot(data = presence.meta) +
   geom_density(aes(x = dorsal_fin_percentage, fill = scientific_name))
+
+
+
+#remove species that have 0 for traits we are using: head, eye, trunk
+df.fin.0 <- df.fin.per[df.fin.per$head_percentage > 0 &
+                       df.fin.per$eye_percentage > 0 &
+                       df.fin.per$trunk_percentage > 0,]
+
+nrow(df.fin.per) #6297
+nrow(df.fin.0) #6297, no loss
+
+#reduce to species in Burress et al paper
+burress <- read.csv("Previous Fish Measurements - Burress et al. 2016.csv", header = TRUE)
+b.sp <- unique(burress$Species)
+
+df.fin.burress <- df.fin.0[df.fin.0$scientific_name %in% b.sp,]
+nrow(df.fin.burress) #446
+
+#based on visualizations above, we decided to keep .95 blobs; only for the traits we care about
+df.fin.b.95 <- df.fin.burress[df.fin.burress$head_percentage > .95 &
+                              df.fin.burress$eye_percentage > .95 &
+                              df.fin.burress$trunk_percentage > .95,]
+nrow(df.fin.b.95) #445 images
+length(unique(df.fin.b.95$scientific_name)) #8 species
+
+#how is the sampling for these species?
+b.sampling <- as.data.frame(table(df.fin.b.95$scientific_name))
+colnames(b.sampling) <- c("Scientific_Name", "Sample_Size")
+write.csv(b.sampling, "sampling.species.in.Burress.csv", row.names = FALSE)
+
+##how much does the total dataset get reduced if all traits are at a 95% cut off?
+df.fin.95 <- df.fin.per[df.fin.per$head_percentage > .95 &
+                        df.fin.per$eye_percentage > .95 &
+                        df.fin.per$trunk_percentage > .95 &
+                        df.fin.per$dorsal_fin_percentage > .95 &
+                        df.fin.per$caudal_fin_percentage > .95 &
+                        df.fin.per$anal_fin_percentage > .95 &
+                        df.fin.per$pelvic_fin_percentage > .95 &
+                        df.fin.per$pectoral_fin_percentage > .95,]
+nrow(df.fin.95) #4663
+length(unique(df.fin.95$scientific_name)) #41
+
+sort(table(df.fin.95$scientific_name)) #3 species have under 10 samples; lose 20 images
+
+##how much does the total dataset get reduced for the 3 segmented traits at a 95% cut off?
+df.fin.95.3 <- df.fin.per[df.fin.per$head_percentage > .95 &
+                          df.fin.per$eye_percentage > .95 &
+                          df.fin.per$trunk_percentage > .95,]
+nrow(df.fin.95.3) #6205; a lot more!
+length(unique(df.fin.95.3$scientific_name)) #41
+
+#how is sampling?
+sampling.95.3 <- as.data.frame(sort(table(df.fin.95.3$scientific_name)))
+colnames(sampling.95.3) <- c("Scientific_Name", "Sample_Size")
+nrow(sampling.95) #41 sp; don't lose any!
+write.csv(sampling.95.3, "sampling.minnows.95.blob.3.segments.csv", row.names = FALSE)

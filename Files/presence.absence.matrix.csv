@@ -1,4 +1,4 @@
-"dorsal_fin.number","dorsal_fin.percentage","adipos_fin.number","adipos_fin.percentage","caudal_fin.number","caudal_fin.percentage","anal_fin.number","anal_fin.percentage","pelvic_fin.number","pelvic_fin.percentage","pectoral_fin.number","pectoral_fin.percentage","head.number","head.percentage","eye.number","eye.percentage","caudal_fin_ray.number","caudal_fin_ray.percentage","alt_fin_ray.number","alt_fin_ray.percentage","trunk.number","trunk.percentage","file.name"
+"dorsal_fin_number","dorsal_fin_percentage","adipos_fin_number","adipos_fin_percentage","caudal_fin_number","caudal_fin_percentage","anal_fin_number","anal_fin_percentage","pelvic_fin_number","pelvic_fin_percentage","pectoral_fin_number","pectoral_fin_percentage","head_number","head_percentage","eye_number","eye_percentage","caudal_fin_ray_number","caudal_fin_ray_percentage","alt_fin_ray_number","alt_fin_ray_percentage","trunk_number","trunk_percentage","file_name"
 1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,2,0.992120507069956,"INHS_FISH_000742"
 1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,"INHS_FISH_000757"
 1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,"INHS_FISH_000835"
