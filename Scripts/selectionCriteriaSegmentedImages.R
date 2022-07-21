@@ -275,7 +275,9 @@ nrow(df.fin.b.95) #445 images
 length(unique(df.fin.b.95$scientific_name)) #8 species
 
 #how is the sampling for these species?
-table(df.fin.b.95$scientific_name)
+b.sampling <- as.data.frame(table(df.fin.b.95$scientific_name))
+colnames(b.sampling) <- c("Scientific_Name", "Sample_Size")
+write.csv(b.sampling, "sampling.species.in.Burress.csv", row.names = FALSE)
 
 ##how much does the total dataset get reduced if all traits are at a 95% cut off?
 df.fin.95 <- df.fin.per[df.fin.per$head_percentage > .95 &
@@ -289,5 +291,13 @@ df.fin.95 <- df.fin.per[df.fin.per$head_percentage > .95 &
 nrow(df.fin.95) #4663
 
 #how is sampling?
-sort(table(df.fin.95$scientific_name))
+sampling.95 <- as.data.frame(sort(table(df.fin.95$scientific_name)))
+colnames(sampling.95) <- c("Scientific_Name", "Sample_Size")
+nrow(sampling.95) #41 sp
 #lose 3 species because sampling is below 10, a total of 20 images
+
+#save those with min 10 samples for SM
+sampling.95.10 <- sampling.95[sampling.95$Sample_Size >= 10,]
+nrow(sampling.95.10) #38 sp
+sum(sampling.95.10$Sample_Size) #4643
+write.csv(sampling.95, "sampling.minnows.95.blob.csv", row.names = FALSE)
