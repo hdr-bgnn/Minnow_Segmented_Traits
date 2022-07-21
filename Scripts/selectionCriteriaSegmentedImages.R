@@ -304,4 +304,4 @@ length(unique(df.fin.95.3$scientific_name)) #41
 sampling.95.3 <- as.data.frame(sort(table(df.fin.95.3$scientific_name)))
 colnames(sampling.95.3) <- c("Scientific_Name", "Sample_Size")
 nrow(sampling.95) #41 sp; don't lose any!
-write.csv(sampling.95.3, "sampling.minnows.95.blob.3.traits.csv", row.names = FALSE)
+write.csv(sampling.95.3, "sampling.minnows.95.blob.3.segments.csv", row.names = FALSE)

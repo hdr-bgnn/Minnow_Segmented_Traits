@@ -13,6 +13,21 @@ library(ggplot2)
 image.data <- read.csv("Image_Metadata_v1_20211206_151152.csv", header = TRUE) #images with metadata
 image.quality <- read.csv("Image_Quality_Metadata_v1_20211206_151204.csv", header = TRUE)
 
+##load species from Burress et al. 2016
+burress <- read.csv("Previous Fish Measurements - Burress et al. 2016.csv", header = TRUE)
+b.sp <- unique(burress$Species)
+
+#get rid of dupes!! image metadata has multiple users, so duplicates per fish
+image.data <- image.data[!duplicated(image.data$original_file_name),]
+
+#how many species and images in image metadata?
+nrow(image.data) #109289
+length(unique(image.data$scientific_name)) #13619
+
+#now reduce to burress
+nrow(image.data[image.data$scientific_name %in% b.sp,]) #7393
+length(unique(image.data$scientific_name[image.data$scientific_name %in% b.sp])) #22
+
 ##combing metadata
 #link on image.data$file_name and image.quality$image_name
 #must have "original_file_name" for snakemake
@@ -21,6 +36,10 @@ image.quality <- read.csv("Image_Quality_Metadata_v1_20211206_151204.csv", heade
 minnow.quality <-  image.quality[image.quality$family == "Cyprinidae",]
 nrow(minnow.quality) #20510
 length(unique(minnow.quality$scientific_name)) #166
+
+##compared to Burress
+nrow(minnow.quality[minnow.quality$scientific_name %in% b.sp,]) #1890
+length(unique(minnow.quality$scientific_name[minnow.quality$scientific_name %in% b.sp])) #22
 
 minnow.keep <- minnow.quality[minnow.quality$specimen_viewing == "left" & #facing left
                               minnow.quality$straight_curved == "straight"&
@@ -36,6 +55,10 @@ minnow.keep <- minnow.quality[minnow.quality$specimen_viewing == "left" & #facin
 nrow(minnow.keep) #10312
 length(unique(minnow.keep$scientific_name)) #115
 
+#for burress
+nrow(minnow.keep[minnow.keep$scientific_name %in% b.sp,]) #1013
+length(unique(minnow.keep$scientific_name[minnow.keep$scientific_name %in% b.sp])) #20
+
 #we lose a lot of species when we include this
 nrow(minnow.keep[minnow.keep$if_background_uniform == "True",]) #3533
 length(unique(minnow.keep$scientific_name[minnow.keep$if_background_uniform == "True"])) #99
@@ -43,18 +66,19 @@ length(unique(minnow.keep$scientific_name[minnow.keep$if_background_uniform == "
 #merge subset of image quality metadata with the image metadata
 images.minnows <- merge(image.data, minnow.keep, by.x = "original_file_name", by.y = "image_name")
 
-#get rid of dupes!! image metadata has multiple users, so duplicates per fish
-images.minnows.clean <- images.minnows[!duplicated(images.minnows$original_file_name),]
-nrow(images.minnows.clean) #7811
-
 #only INHS, UWZM
 institutions <- c("INHS", "UWZM") #no uwzm
-images.minnows.trim <- images.minnows.clean[images.minnows.clean$institution %in% institutions,]
-nrow(images.minnows.trim) #6482
+images.minnows.trim <- images.minnows[images.minnows$institution %in% institutions,]
+nrow(images.minnows.trim) #8965
 length(unique(images.minnows.trim$scientific_name.x)) #93
 
 unique(images.minnows.trim$fish_number) 
 #should be 1; don't want multiple fish per images because currently don't have a good way to keep metadata
+
+##compared to burress
+nrow(images.minnows.trim[images.minnows.trim$scientific_name.x %in% b.sp,]) #8965
+length(unique(images.minnows.trim$scientific_name.x[images.minnows.trim$scientific_name.x %in% b.sp])) #93
+
 
 ##ask if url is empty and remove if it is
 #1) see if url resolves
