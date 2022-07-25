@@ -89,9 +89,9 @@ This results in 39 species and 4,663 images.
 These images below contain all the traits discussed by our team. This section outlines which traits we are focusing on for this study. We have created descriptions of the traits for <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/MinnowMeasurements%20(trimmed%2028Jun2022).csv">measurements</a> and <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/MinnowLandmarks%20(trimmed%2028Jun2022).csv">landmarks</a>.
 
 ### Measurements
-![Minnow Measurements](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow_Measurements_Burress_et_al_2019.png)
+![Minnow Measurements](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow_Measurements_Burress_et_al_2017.png)
 
-All traits except head depth through the midline of the eye (HD_1) were done using both landmarks (with suffix "_lm") and a bounding box (with suffix "_bbox"). See <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow_Measurements_Burress_et_al_2019.csv">Minnow_Measurements_Burress_et_al_2019.csv</a> for descriptions of the measurements.
+All traits except head depth through the midline of the eye (HD_1) were done using both landmarks (with suffix "_lm") and a bounding box (with suffix "_bbox"). See <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow_Measurements_Burress_et_al_2017.csv">Minnow_Measurements_Burress_et_al_2017.csv</a> for descriptions of the measurements.
 
 **Standard length (SL)**: edge of head to beginning of caudal fin along nose line[ <a href="https://www.sciencedirect.com/science/article/abs/pii/S1055790312000668">Nagel & Simons 2012</a>; <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/jeb.13024">Burress et al. 2016</a>].
 
@@ -106,9 +106,9 @@ All traits except head depth through the midline of the eye (HD_1) were done usi
 ### Landmarks
 **Fin and eye positions**: a series of landmarks [<a href="https://www.biotaxa.org/Zootaxa/article/view/zootaxa.3586.1.3/44599">Armbruster 2012</a>]; we can use the segmentation to our advantage:
 
-![Minnow Landmarks](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow_Landmarks_Burress_et_al_2019.png)
+![Minnow Landmarks](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow_Landmarks_Burress_et_al_2017.png)
 
-See <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow_Landmarks_Burress_et_al_2019.csv">Minnow_Landmarks_Burress_et_al_2019.csv</a> for descriptions of the position of the landmarks.
+See <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow_Landmarks_Burress_et_al_2017.csv">Minnow_Landmarks_Burress_et_al_2017.csv</a> for descriptions of the position of the landmarks.
 
 1. Anterior portion of head
 6. Posterior caudal fin connection with trunk
