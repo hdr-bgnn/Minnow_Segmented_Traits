@@ -1,4 +1,4 @@
-﻿type,Landmark_Number,Definition,Ontology_SubClass,Ontology_SubClass_IRI,Code_Definition
+﻿Type,Landmark_Number,Definition,Ontology_SubClass,Ontology_SubClass_IRI,Code_Definition
 landmark,1,"Tip of snout, which is the anterior-most part of head",'tip of snout',UBERON:1000016,
 landmark,2,"Beginning of the scales at the dorsal side, where the head meets the trunk",'anatomical point' | 'part of' some  ('dorso-medial margin' and ('characteristic of' some head)),UBERON:0006983 | BFO:0000050 some  (BSPO:0000048 and (RO:0000052 some UBERON:0000033)),
 landmark,3,Anterior insertion of the dorsal fin,'anatomical point' | 'part of' some  ('in anterior side of' some 'dorsal fin'),UBERON:0006983 | BFO:0000050 some  (BSPO:0000123 some UBERON:0003097),
