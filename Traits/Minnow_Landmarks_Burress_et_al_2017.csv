@@ -1,7 +1,7 @@
-﻿type,landmarkNumber,terminology,position
-landmark,1,Tip of snout,anterior-most (left-most) part of head
-landmark,6,End of vertebral column,midline of caudal fin
-landmark,12,Most dorsal point of operculum,posterior-most (right-most) part of head
-landmark,14,anterior-most (left-most) part of eye,anterior-most (left-most) part of eye
-landmark,15,posterior-most (right-most) part of eye,posterior-most (right-most) part of eye
-landmark,18,center of eye,centroid of eye
+﻿Landmark_Number,Definition,Ontology_SubClass,Ontology_SubClass_IRI,Code_Definition
+1,"Tip of snout, which is the anterior-most part of head",'tip of snout',UBERON:1000016,
+6,"End of vertebral column, at the midline of the caudal fin",'anatomical point' | 'part of' some  ('antero-medial margin' and ('characteristic of' some 'caudal fin')),UBERON:0006983 | BFO:0000050 some (BSPO:0000042 and (RO:0000042 some UBERON:4000164)),
+12,"Most dorsal point of operculum, which is the posterior-most part of the head",'anatomical point' | 'part of' some  ('in posterior side of' some 'opercular flap'),UBERON:0006983 | BFO:0000050 some  (BSPO:0000122 some UBERON:2000555),
+14,anterior-most (left-most) part of eye,'anatomical point' | 'part of' some  ('in anterior side of' some eye),UBERON:0006983 | BFO:0000050 some  (BSPO:0000123 some UBERON:0000970),
+15,posterior-most (right-most) part of eye,'anatomical point' | 'part of' some  ('in posterior side of' some eye),UBERON:0006983 | BFO:0000050 some  (BSPO:0000122 some UBERON:0000970),
+18,center (centroid) of eye,'anatomical point' | 'part of' some  eye | 'follows axis' some 'left-right axis' | 'follows axis' some 'upper-lower axis',UBERON:0006983 | BFO:0000050 some  UBERON:0000970 | BSPO:0015002 some BSPO:0000017 | BSPO:0015002 some BSPO:0000011,
