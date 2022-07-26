@@ -1,0 +1,72 @@
+from snakemake.utils import min_version
+import pandas as pd
+
+min_version("6.1.1")
+
+configfile: "config/config.yaml"
+
+def get_image_names(csv_filename):
+    # Read CSV returning dictionary of 'name' -> 'download_url'
+    df = pd.read_csv(csv_filename)
+    # Create 'name' column by removing the filename extension from 'original_file_name'
+    names = df['original_file_name'].apply(lambda x : os.path.splitext(x)[0])
+    return names.tolist()
+
+# The first rule defines the goal of the workflow
+rule all:
+    input:
+       "results/presence.absence.matrix.csv"
+
+# Filter the images to be processed
+# This is a checkpoint instead of a rule since selection_critera_segmented_images cannot be evaluated 
+# until after this rule creates minnow.filtered.from.imagequalitymetadata.csv
+checkpoint select_minnow_images:
+    input:
+       image_metadata=config["image_metadata"],
+       image_quality_metadata=config["image_quality_metadata"]
+    output:
+       "results/minnow.filtered.from.imagequalitymetadata.csv"
+    params:
+        script=srcdir("../Scripts/minnowSelectionImageQualityMetadata.R"),
+    log:
+       "logs/select_minnow_images.log",
+    singularity:
+        'docker://jbradley/minnow:0.0.1'
+    shell:
+        "Rscript {params.script} {input.image_metadata} {input.image_quality_metadata} {output} > {log} 2>&1"
+
+# import BGNN_Snakemake rules used to create morpology presence.json files for images
+module segmentation:
+    snakefile:
+        github("hdr-bgnn/BGNN_Snakemake", path="Snakefile", tag="f0498d7dd87ca2ec3e5a13f4b2c3b1736323dd8b")
+    # setup the segmentation rules to fetch images based on the complete list of images
+    config: { "list": config['image_metadata'] }
+
+use rule * from segmentation as seg_*
+
+# defines inputs needed for selection_critera_segmented_images rule
+# requires select_minnow_images to be complete
+def selection_critera_segmented_images_input(wildcards):
+    with checkpoints.select_minnow_images.get(**wildcards).output[0].open() as f:
+       names = get_image_names(f)
+    # TODO remove next line
+    names = names[1:10]
+    presence_files = [f"Morphology/Presence/{i}_presence.json" for i in names]
+    return {
+        "presence_files": presence_files,
+        "image_metadata": config["image_metadata"]
+    }
+
+rule selection_critera_segmented_images:
+    input:
+       unpack(selection_critera_segmented_images_input)
+    output:
+       "results/presence.absence.matrix.csv"
+    params:
+        script=srcdir("../Scripts/selectionCriteraSegmentedImages.R"),
+    log:
+       "logs/selection_critera_segmented_images.log",
+    singularity:
+        'docker://jbradley/minnow:0.0.1'
+    shell:
+        "Rscript {params.script} Morphology/Presence {input.image_metadata} {output} > {log} 2>&1"
