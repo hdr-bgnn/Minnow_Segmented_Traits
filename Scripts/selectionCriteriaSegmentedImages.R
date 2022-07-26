@@ -16,7 +16,10 @@ if (length(args) != 3) {
 }
 presence.json.directory <- args[1]
 image.metadata.csv <- args[2]
-output.matrix.csv.path <- args[3] # presence.absence.matrix.csv
+burress.csv.path <- args[3]
+output.matrix.csv.path <- args[4] # presence.absence.matrix.csv
+burress.sampling.species.csv <- args[5]
+minnows.sampling.csv.path <- args[6]
 
 files <- list.files(path = presence.json.directory, pattern = '*.json', full.names = TRUE)
 
@@ -34,7 +37,7 @@ json_df <- function(jfile){
 }
 
 #test with one  file
-test.file <- "INHS_FISH_003752_presence.json"
+test.file <- file.path(presence.json.directory, "INHS_FISH_003752_presence.json")
 test <- json_df(jfile = test.file)
 str(test)
 
@@ -49,15 +52,15 @@ names(presence.df) <- gsub(x = names(presence.df),
 
 #write dataframe to Files directory
 #return to GitHub directory
-setwd("~/BGNN/minnowTraits/Files")
-write.csv(presence.df, "presence.absence.matrix.csv", row.names = FALSE)
+
+write.csv(presence.df, output.matrix.csv.path, row.names = FALSE)
 
 #read presence absence dataframe
-presence.df <- read.csv("presence.absence.matrix.csv", 
+presence.df <- read.csv(output.matrix.csv.path,
                         header = TRUE)
 
 #combine with metadata to get taxonomic hierarchy
-meta.df <- read.csv("Image_Metadata_v1_20211206_151152.csv", header = TRUE)
+meta.df <- read.csv(image.metadata.csv, header = TRUE)
 colnames(meta.df)
 #remove ".jpg" from file name to more easily align with file name in presence.df
 meta.df$original_file_name <- gsub(meta.df$original_file_name,
@@ -72,7 +75,7 @@ nrow(presence.meta) #6297
 length(unique(presence.meta$scientific_name)) #41
 
 ##load species from Burress et al. 2016
-burress <- read.csv("Previous Fish Measurements - Burress et al. 2016.csv", header = TRUE)
+burress <- read.csv(burress.csv.path, header = TRUE)
 b.sp <- unique(burress$Species)
 
 ##compare to burress
@@ -288,7 +291,7 @@ length(unique(df.fin.b.95.3$scientific_name)) #8
 #how is the sampling for these species?
 b.sampling <- as.data.frame(table(df.fin.b.95.3$scientific_name))
 colnames(b.sampling) <- c("Scientific_Name", "Sample_Size")
-write.csv(b.sampling, "sampling.species.in.Burress.csv", row.names = FALSE)
+write.csv(b.sampling, burress.sampling.species.csv, row.names = FALSE)
 
 ##how much does the total dataset get reduced if all traits are at a 95% cut off?
 df.fin.95 <- df.fin.per[df.fin.per$head_percentage > .95 &
@@ -315,4 +318,4 @@ length(unique(df.fin.95.3$scientific_name)) #41
 sampling.95.3 <- as.data.frame(sort(table(df.fin.95.3$scientific_name)))
 colnames(sampling.95.3) <- c("Scientific_Name", "Sample_Size")
 nrow(sampling.95.3) #41 sp; don't lose any!
-write.csv(sampling.95.3, "sampling.minnows.95.blob.3.segments.csv", row.names = FALSE)
+write.csv(sampling.95.3, minnows.sampling.csv.path, row.names = FALSE)

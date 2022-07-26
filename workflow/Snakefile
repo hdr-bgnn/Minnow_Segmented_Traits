@@ -23,9 +23,11 @@ rule all:
 checkpoint select_minnow_images:
     input:
        image_metadata=config["image_metadata"],
-       image_quality_metadata=config["image_quality_metadata"]
+       image_quality_metadata=config["image_quality_metadata"],
+       burress=config["burress"]
     output:
-       "results/minnow.filtered.from.imagequalitymetadata.csv"
+       images_minnows=config["images_minnows"],
+       burress_images_minnows=config["burress_images_minnows"]
     params:
         script=srcdir("../Scripts/minnowSelectionImageQualityMetadata.R"),
     log:
@@ -33,7 +35,7 @@ checkpoint select_minnow_images:
     singularity:
         'docker://jbradley/minnow:0.0.1'
     shell:
-        "Rscript {params.script} {input.image_metadata} {input.image_quality_metadata} {output} > {log} 2>&1"
+        "Rscript {params.script} {input.image_metadata} {input.image_quality_metadata} {input.burress} {output.images_minnows} {output.burress_images_minnows} > {log} 2>&1"
 
 # import BGNN_Snakemake rules used to create morpology presence.json files for images
 module segmentation:
@@ -47,21 +49,22 @@ use rule * from segmentation as seg_*
 # defines inputs needed for selection_critera_segmented_images rule
 # requires select_minnow_images to be complete
 def selection_critera_segmented_images_input(wildcards):
-    with checkpoints.select_minnow_images.get(**wildcards).output[0].open() as f:
+    with checkpoints.select_minnow_images.get(**wildcards).output[1].open() as f:
        names = get_image_names(f)
-    # TODO remove next line
-    names = names[1:10]
     presence_files = [f"Morphology/Presence/{i}_presence.json" for i in names]
     return {
         "presence_files": presence_files,
-        "image_metadata": config["image_metadata"]
+        "image_metadata": config["image_metadata"],
+        "burress": config["burress"]
     }
 
 rule selection_critera_segmented_images:
     input:
        unpack(selection_critera_segmented_images_input)
     output:
-       "results/presence.absence.matrix.csv"
+       matrix="Files/presence.absence.matrix.csv",
+       burress_sampling="Files/sampling.species.in.Burress.csv",
+       minnows_sampling="Files/sampling.minnows.95.blob.3.segments.csv",
     params:
         script=srcdir("../Scripts/selectionCriteraSegmentedImages.R"),
     log:
@@ -69,4 +72,4 @@ rule selection_critera_segmented_images:
     singularity:
         'docker://jbradley/minnow:0.0.1'
     shell:
-        "Rscript {params.script} Morphology/Presence {input.image_metadata} {output} > {log} 2>&1"
+        "Rscript {params.script} Morphology/Presence {input.image_metadata} {input.burress} {output.matrix} {output.burress_sampling} {output.minnows_sampling} > {log} 2>&1"
