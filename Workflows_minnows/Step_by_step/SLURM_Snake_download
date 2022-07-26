@@ -1,0 +1,54 @@
+#!/bin/bash
+#SBATCH --account=PAS2136
+#SBATCH --job-name=Download
+#SBATCH --time=02:30:00
+#
+# Runs Snakemake pipeline just for MORPHOLOGY.
+# There are three required positional arguments.
+# Usage:
+# sbatch SLURM_Snake <SNAKEFILE> <WORKDIR> <NUMJOBS> <DEV_WORKDIR>
+# - SNAKEFILE - target a specific Snakefile
+# - WORKDIR - Snakemake working directory - contains output files
+# - NUMJOBS - Number of job run in parallele
+# - INPUTCSV - location ot the list
+# Stop if a command fails (non-zero exit status)
+set -e
+
+# Verify command line arguments
+SNAKEFILE=$1
+WORKDIR=$2
+NUMJOBS=$3
+INPUTCSV=$4
+
+# Default to running 4 jobs if not set
+if [ -z "$NUMJOBS" ]
+then
+      NUMJOBS=4
+fi
+
+# Ensures CSV path is an absolute path.
+# Otherwise snakemake will look for this file within $WORKDIR.
+REAL_INPUTCSV=$(realpath $INPUTCSV)
+
+# Make sure the input CSV file exists
+if [ ! -f "$REAL_INPUTCSV" ]
+then
+   echo "ERROR: Required INPUTCSV file $INPUTCSV does not exist."
+   exit 1
+fi
+
+# Activate Snakemake environment
+module load miniconda3/4.10.3-py37
+# Activate using source per OSC instructions
+source activate snakemake
+
+# Run pipeline using Snakemake
+snakemake \
+    --jobs $NUMJOBS \
+    --profile slurm/ \
+    --snakefile $SNAKEFILE \
+    --directory $WORKDIR \
+    --config list=$REAL_INPUTCSV \
+    --keep-going
+
+chmod -R 774 $WORKDIR

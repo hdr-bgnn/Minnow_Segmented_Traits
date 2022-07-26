@@ -1,0 +1,15 @@
+######
+import pandas as pd
+import glob
+import os
+NAMES = glob_wildcards('Cropped/{image}_cropped.jpg').image
+SEGMENTED = expand("Segmented/{image}_segmented.png", image=NAMES)
+rule all:
+    input: SEGMENTED
+rule Segmentation:
+    input: 'Cropped/{image}_cropped.jpg'
+    output: 'Segmented/{image}_segmented.png'
+    singularity:
+        'docker://ghcr.io/hdr-bgnn/bgnn-trait-segmentation:0.0.5'
+    shell:
+        'segmentation_main_rescale_origin.py {input} {output}'

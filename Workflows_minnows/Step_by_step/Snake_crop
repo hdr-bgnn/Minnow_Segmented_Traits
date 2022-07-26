@@ -1,0 +1,17 @@
+######
+import pandas as pd
+import glob
+import os
+NAMES = glob_wildcards('Metadata/{image}.json').image
+CROPPED = expand("Cropped/{image}_cropped.jpg", image=NAMES)
+
+rule all:
+    input: CROPPED
+rule Cropped_image:
+    input:
+        image = 'Images/{image}.jpg',
+        metadata = 'Metadata/{image}.json'
+    output:'Cropped/{image}_cropped.jpg'
+    singularity:
+        'docker://ghcr.io/hdr-bgnn/crop_image:0.0.3'
+    shell: 'Crop_image_main.py {input.image} {input.metadata} {output}'

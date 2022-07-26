@@ -1,0 +1,20 @@
+######
+import glob
+import os
+NAMES = glob_wildcards('Images/{image}.jpg').image
+METADATA = expand("Metadata/{image}.json", image=NAMES)
+
+rule all:
+    input: METADATA
+
+rule generate_metadata:
+    input:'Images/{image}.jpg'
+    output:
+        metadata = 'Metadata/{image}.json',
+        mask = 'Mask/{image}_mask.png'
+    singularity:
+        'library://thibaulttabarin/bgnn/gen_metadata:v2'
+    shell: 'gen_metadata.py {input} {output.metadata} {output.mask}'
+
+
+

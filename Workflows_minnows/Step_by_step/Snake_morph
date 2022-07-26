@@ -1,0 +1,28 @@
+######
+import pandas as pd
+import glob
+import os
+
+print(os.getcwd())
+NAMES = glob_wildcards('Segmented/{image}_segmented.png').image
+MORPHOLOGY = expand("Morphology/Measure/{image}_measure.json", image=NAMES)
+
+rule all:
+    input: MORPHOLOGY
+
+rule Morphological_analysis:
+    input:
+        image = 'Segmented/{image}_segmented.png',
+	metadata = 'Metadata/{image}.json'
+    output:
+        measure = "Morphology/Measure/{image}_measure.json",
+        landmark = "Morphology/Landmark/{image}_landmark.json",
+        presence = "Morphology/Presence/{image}_presence.json",
+        vis_landmarks = "Morphology/Vis_landmarks/{image}_landmark_image.png"
+   
+    singularity:
+        "docker://ghcr.io/hdr-bgnn/morphology-analysis/morphology:0.1.0"
+    shell:
+        'Morphology_main.py {input.image} {input.metadata} {output.measure} {output.landmark} {output.presence} {output.vis_landmarks}'
+
+

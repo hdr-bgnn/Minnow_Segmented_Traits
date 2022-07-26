@@ -1,0 +1,43 @@
+#!/bin/bash
+#SBATCH --account=PAS2136
+#SBATCH --job-name=Morphology
+#SBATCH --time=02:30:00
+#
+# Runs Snakemake pipeline just for MORPHOLOGY.
+# There are three required positional arguments.
+# Usage:
+# sbatch SLURM_Snake <SNAKEFILE> <WORKDIR> <NUMJOBS> <DEV_WORKDIR>
+# - SNAKEFILE - target a specific Snakefile
+# - WORKDIR - Snakemake working directory - contains output files
+# - NUMJOBS - Number of job run in parallele
+# - DEV_WORKDIR - location of the python code to test
+# Stop if a command fails (non-zero exit status)
+set -e
+
+# Verify command line arguments
+SNAKEFILE=$1
+WORKDIR=$2
+NUMJOBS=$3
+#DEV_WORKDIR=$4
+
+# Default to running 4 jobs if not set
+if [ -z "$NUMJOBS" ]
+then
+      NUMJOBS=4
+fi
+
+# Activate Snakemake environment
+module load miniconda3/4.10.3-py37
+# Activate using source per OSC instructions
+source activate snakemake
+
+# Run pipeline using Snakemake
+snakemake \
+    --jobs $NUMJOBS \
+    --profile slurm/ \
+    --snakefile $SNAKEFILE \
+    --use-singularity \
+    --directory $WORKDIR \
+    --keep-going
+
+chmod -R 774 $WORKDIR
