@@ -80,6 +80,16 @@ Based on these results, we chose a criteria of blob size of 95% (that is, the bi
 
 This results in 39 species and 4,663 images.
 
+Selecting only the species in Burress et al. 2017, We are left with 446 images and 8 species
+* <i>Notropis volcucellus</i> (145)
+* <i>Notropis texanus</i> (97)
+* <i>Notropis leuciodus</i> (71)
+* <i>Notropis rubellus</i> (46)
+* <i>Notropis photogenis</i> (33)
+* <i>Notropis baileyi</i> (16)
+* <i>Notropis ammophilus</i> (15)
+* <i>Notropis stilbius</i> (23)
+
 ### Analyses on segmented images
 
 *This section will describe the analyses*
@@ -99,9 +109,9 @@ All traits except head depth through the midline of the eye (HH) were done using
 
 **Eye diameter (ED)**: anterior-posterior length of eye segmentation [<a href="https://onlinelibrary.wiley.com/doi/full/10.1111/jeb.13024">Burress et al. 2017</a>].
 
-**Head depth (HD)**: vertical distance of head dorso-ventrally through the center of the eye [<a href="https://onlinelibrary.wiley.com/doi/full/10.1111/jeb.13024">Burress et al. 2017</a>].
+**Head height (HH)**: vertical distance of head dorso-ventrally through the center of the eye [called head depth in <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/jeb.13024">Burress et al. 2017</a>].
 
-**Snout length or preorbital depth (pOD)**: anterior tip of head to anterior eye [<a href="https://onlinelibrary.wiley.com/doi/full/10.1111/jeb.13024">Burress et al. 2017</a>].
+**Preorbital depth (pOD)**: anterior tip of head to anterior eye [called snout length (SnL) in <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/jeb.13024">Burress et al. 2017</a>].
 
 ### Landmarks
 **Fin and eye positions**: a series of landmarks [<a href="https://www.biotaxa.org/Zootaxa/article/view/zootaxa.3586.1.3/44599">Armbruster 2012</a>]; we can use the segmentation to our advantage:
@@ -116,3 +126,6 @@ See <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow_La
 14. posterior of eye
 15. anterior of eye
 18. centroid of eye
+
+###Trait extraction
+More information on trait extraction can be found on the <a href="https://github.com/hdr-bgnn/Morphology-analysis">Morphological Analysis repository</a>
