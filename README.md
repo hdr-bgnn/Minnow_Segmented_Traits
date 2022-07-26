@@ -3,6 +3,8 @@ We use a segmentation model to extract morphological traits from minnows (Family
 
 ![minnowTraits_workflow](https://github.com/hdr-bgnn/minnowTraits/blob/main/minnowTraits_workflow.png)
 
+For instructions on how to run the pipeline see [RUNNING.md](RUNNING.md).
+
 ## Goals
 
 * Highlight <a href="https://github.com/hdr-bgnn/BGNN_Snakemake">BGNN_Snakemake workflow</a>

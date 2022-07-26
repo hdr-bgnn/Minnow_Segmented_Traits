@@ -7,17 +7,20 @@ library(tidyr)
 library(dplyr)
 library(ggplot2)
 
-##set directory
-setwd("~/BGNN/minnowTraits/Files")
-
 ####LOAD DATA----
 
-##image metadata and image quality metadata from Yasin
-image.data <- read.csv("Image_Metadata_v1_20211206_151152.csv", header = TRUE) #images with metadata
-image.quality <- read.csv("Image_Quality_Metadata_v1_20211206_151204.csv", header = TRUE)
+args = commandArgs(trailingOnly=TRUE)
+if (length(args) != 5) {
+    stop("Received wrong number of arguments.")
+}
+image.data.path <- args[1]     # eg. Image_Metadata_v1_20211206_151152.csv
+image.quality.path <- args[2]  # eg. Image_Quality_Metadata_v1_20211206_151204.csv
+burress.csv.path <- args[3]    # eg. "Previous Fish Measurements - Burress et al. 2016.csv"
+output.path <- args[4]         # eg. minnow.filtered.from.imagequalitymetadata_25Jul2022.csv
+trimmed.output.path <- args[5] # eg. burress.minnow.sp.filtered.from.imagequalitymetadata_25Jul2022.csv
 
 ##load species from Burress et al. 2016
-burress <- read.csv("Previous Fish Measurements - Burress et al. 2016.csv", header = TRUE)
+burress <- read.csv(burress.csv.path, header = TRUE)
 b.sp <- unique(burress$Species)
 
 #how many species and images in image metadata?
@@ -178,9 +181,9 @@ nrow(table.gen) #4
 unique(images.minnows.10$genus.x)
 
 #write dataset without index
-write.csv(images.minnows.10, "minnow.filtered.from.imagequalitymetadata_25Jul2022.csv", row.names = FALSE)
+write.csv(images.minnows.10, output.path, row.names = FALSE)
 
 #write dataset trimmed to Burress
 images.minnows.burress <- images.minnows.10[images.minnows.10$scientific_name.x %in% b.sp,]
-write.csv(images.minnows.burress, "burress.minnow.sp.filtered.from.imagequalitymetadata_25Jul2022.csv", row.names = FALSE)
+write.csv(images.minnows.burress, trimmed.output.path, row.names = FALSE)
 

@@ -10,9 +10,16 @@ library(RColorBrewer)
 library(reshape2)
 
 #get list of file names
-#path is in the OSC 
-setwd("~/BGNN/Minnows/Morphology/Presence/")
-files <- list.files(pattern = '*.json')
+args = commandArgs(trailingOnly=TRUE)
+if (length(args) != 3) {
+    stop("Received wrong number of arguments.")
+}
+presence.json.directory <- args[1]
+image.metadata.csv <- args[2]
+output.matrix.csv.path <- args[3] # presence.absence.matrix.csv
+
+files <- list.files(path = presence.json.directory, pattern = '*.json', full.names = TRUE)
+
 
 #turn into csv
 #rbind
