@@ -19,6 +19,10 @@ burress.csv.path <- args[3]    # eg. "Previous Fish Measurements - Burress et al
 output.path <- args[4]         # eg. minnow.filtered.from.imagequalitymetadata_25Jul2022.csv
 trimmed.output.path <- args[5] # eg. burress.minnow.sp.filtered.from.imagequalitymetadata_25Jul2022.csv
 
+##image metadata and image quality metadata from Yasin
+image.data <- read.csv(image.data.path, header = TRUE) #images with metadata
+image.quality <- read.csv(image.quality.path, header = TRUE)
+
 ##load species from Burress et al. 2016
 burress <- read.csv(burress.csv.path, header = TRUE)
 b.sp <- unique(burress$Species)

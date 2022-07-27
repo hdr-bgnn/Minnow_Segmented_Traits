@@ -15,10 +15,12 @@ def get_image_names(csv_filename):
 # The first rule defines the goal of the workflow
 rule all:
     input:
-       "results/presence.absence.matrix.csv"
+       "results/presence.absence.matrix.csv",
+       "results/sampling.species.in.Burress.csv",
+       "results/sampling.minnows.95.blob.3.segments.csv"
 
 # Filter the images to be processed
-# This is a checkpoint instead of a rule since selection_critera_segmented_images cannot be evaluated 
+# This is a checkpoint instead of a rule since selection_criteria_segmented_images cannot be evaluated 
 # until after this rule creates minnow.filtered.from.imagequalitymetadata.csv
 checkpoint select_minnow_images:
     input:
@@ -35,7 +37,7 @@ checkpoint select_minnow_images:
     singularity:
         'docker://jbradley/minnow:0.0.1'
     shell:
-        "Rscript {params.script} {input.image_metadata} {input.image_quality_metadata} {input.burress} {output.images_minnows} {output.burress_images_minnows} > {log} 2>&1"
+        "Rscript {params.script} {input.image_metadata} {input.image_quality_metadata} {input.burress:q} {output.images_minnows} {output.burress_images_minnows} > {log} 2>&1"
 
 # import BGNN_Snakemake rules used to create morpology presence.json files for images
 module segmentation:
@@ -46,9 +48,9 @@ module segmentation:
 
 use rule * from segmentation as seg_*
 
-# defines inputs needed for selection_critera_segmented_images rule
+# defines inputs needed for selection_criteria_segmented_images rule
 # requires select_minnow_images to be complete
-def selection_critera_segmented_images_input(wildcards):
+def selection_criteria_segmented_images_input(wildcards):
     with checkpoints.select_minnow_images.get(**wildcards).output[1].open() as f:
        names = get_image_names(f)
     presence_files = [f"Morphology/Presence/{i}_presence.json" for i in names]
@@ -58,18 +60,21 @@ def selection_critera_segmented_images_input(wildcards):
         "burress": config["burress"]
     }
 
-rule selection_critera_segmented_images:
+rule selection_criteria_segmented_images:
     input:
-       unpack(selection_critera_segmented_images_input)
+       unpack(selection_criteria_segmented_images_input)
     output:
-       matrix="Files/presence.absence.matrix.csv",
-       burress_sampling="Files/sampling.species.in.Burress.csv",
-       minnows_sampling="Files/sampling.minnows.95.blob.3.segments.csv",
+       matrix="results/presence.absence.matrix.csv",
+       burress_sampling="results/sampling.species.in.Burress.csv",
+       minnows_sampling="results/sampling.minnows.95.blob.3.segments.csv",
+       pa_sample_dist="Prelim Results/presence.absence.sample.dist.png",
+       heatmap_avg="Prelim Results/heatmap.avg.blob.png",
+       heatmap_sd="Prelim Results/heatmap.sd.blob.png"
     params:
-        script=srcdir("../Scripts/selectionCriteraSegmentedImages.R"),
+        script=srcdir("../Scripts/selectionCriteriaSegmentedImages.R"),
     log:
-       "logs/selection_critera_segmented_images.log",
+       "logs/selection_criteria_segmented_images.log",
     singularity:
-        'docker://jbradley/minnow:0.0.1'
+        'docker://jbradley/minnow:0.0.2'
     shell:
-        "Rscript {params.script} Morphology/Presence {input.image_metadata} {input.burress} {output.matrix} {output.burress_sampling} {output.minnows_sampling} > {log} 2>&1"
+        "Rscript {params.script} Morphology/Presence {input.image_metadata} {input.burress:q} {output.matrix} {output.burress_sampling} {output.minnows_sampling} {output.pa_sample_dist:q} {output.heatmap_avg:q} {output.heatmap_sd:q} > {log} 2>&1"
