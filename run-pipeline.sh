@@ -27,4 +27,4 @@ snakemake \
     --profile $SNAKEMAKE_PROFILE \
     --use-singularity
 
-snakemake --report report.html
+#snakemake --report report.html

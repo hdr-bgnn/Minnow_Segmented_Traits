@@ -11,7 +11,7 @@ library(reshape2)
 
 #get list of file names
 args = commandArgs(trailingOnly=TRUE)
-if (length(args) != 3) {
+if (length(args) != 9) {
     stop("Received wrong number of arguments.")
 }
 presence.json.directory <- args[1]
@@ -20,6 +20,9 @@ burress.csv.path <- args[3]
 output.matrix.csv.path <- args[4] # presence.absence.matrix.csv
 burress.sampling.species.csv <- args[5]
 minnows.sampling.csv.path <- args[6]
+presence.absence.dist.path <- args[7]
+heatmap.avg.path <- args[8]
+heatmap.sd.path <- args[9]
 
 files <- list.files(path = presence.json.directory, pattern = '*.json', full.names = TRUE)
 
@@ -117,9 +120,8 @@ df.fin.per.sample.dist <- ggplot(data = df.fin.per.sample, aes(x = sample)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black"))
 
-ggsave(df.fin.per.sample.dist, file = "presence.absence.sample.dist.png", 
-       width = 20, height = 15, units = "cm",
-       path = "../Prelim Results/")
+ggsave(df.fin.per.sample.dist, file = presence.absence.dist.path,
+       width = 20, height = 15, units = "cm")
 
 #about the data
 stats <- df %>%
@@ -228,9 +230,8 @@ hm.avg <- ggplot(melt_stats_avg, aes(Var2, Var1)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black"))
 
-ggsave(hm.avg, file = "heatmap.avg.blob.png", 
-       width = 14, height = 20, units = "cm",
-       path = "../Prelim Results/")
+ggsave(hm.avg, file = heatmap.avg.path,
+       width = 14, height = 20, units = "cm")
 
 min(melt_stats_avg$value) #81 is smallest average size
 
@@ -252,9 +253,8 @@ hm.sd <- ggplot(melt_stats_avg, aes(Var2, Var1)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black"))
 
-ggsave(hm.avg, file = "heatmap.sd.blob.png", 
-       width = 14, height = 20, units = "cm",
-       path = "../Prelim Results/")
+ggsave(hm.avg, file = heatmap.sd.path,
+       width = 14, height = 20, units = "cm")
 
 max(melt_stats_sd$value) #.34 largest standard deviation
 
