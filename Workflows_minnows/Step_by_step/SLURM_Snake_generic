@@ -7,10 +7,9 @@
 # There are three required positional arguments.
 # Usage:
 # sbatch SLURM_Snake_generic <SNAKEFILE> <WORKDIR> <NUMJOBS> <DEV_WORKDIR>
-# - SNAKEFILE - target a specific Snakefile
+# - SNAKEFILE - target a specific Snakefile "Snake_"
 # - WORKDIR - Snakemake working directory - contains output files
 # - NUMJOBS - Number of job run in parallele
-# - DEV_WORKDIR - location of the python code to test
 # Stop if a command fails (non-zero exit status)
 set -e
 
