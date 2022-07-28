@@ -6,7 +6,7 @@
 # Runs Snakemake pipeline just for MORPHOLOGY.
 # There are three required positional arguments.
 # Usage:
-# sbatch SLURM_Snake <SNAKEFILE> <WORKDIR> <NUMJOBS> <DEV_WORKDIR>
+# sbatch SLURM_Snake_generic <SNAKEFILE> <WORKDIR> <NUMJOBS> <DEV_WORKDIR>
 # - SNAKEFILE - target a specific Snakefile
 # - WORKDIR - Snakemake working directory - contains output files
 # - NUMJOBS - Number of job run in parallele
