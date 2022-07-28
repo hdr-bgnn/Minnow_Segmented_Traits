@@ -19,6 +19,10 @@ Clone minnowTraits to the OSC folder
 
 Set up snake environment
 
+#### To update
+
+Each snake file is associated with a container. To update the container, open the snake file and change the docker version.
+
 ## 2- Run Download
 This step has its own SLURM script (SLURM_Snake_dowload) because of the input <INPUT_CSV_LIST>
 
