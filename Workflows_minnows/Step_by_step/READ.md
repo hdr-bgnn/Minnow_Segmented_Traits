@@ -13,6 +13,11 @@ step_name :
  + seg : segment the fish
  + morph : calculate the morphology analysis
 
+#### To start
+
+Clone minnowTraits to the OSC folder
+
+Set up snake environment
 
 ## 2- Run Download
 This step has its own SLURM script (SLURM_Snake_dowload) because of the input <INPUT_CSV_LIST>
