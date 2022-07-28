@@ -23,6 +23,10 @@ Set up snake environment
 
 Each snake file is associated with a container. To update the container, open the snake file and change the docker version.
 
+#### To run
+
+cd into folder with the slurm and snakemake files.
+
 ## 2- Run Download
 This step has its own SLURM script (SLURM_Snake_dowload) because of the input <INPUT_CSV_LIST>
 
