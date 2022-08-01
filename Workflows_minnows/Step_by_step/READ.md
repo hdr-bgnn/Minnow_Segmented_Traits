@@ -23,13 +23,17 @@ Set up snake environment
 
 Each snake file is associated with a container. To update the container, open the snake file and change the docker version.
 
+#### To run
+
+cd into folder with the slurm and snakemake files.
+
 ## 2- Run Download
 This step has its own SLURM script (SLURM_Snake_dowload) because of the input <INPUT_CSV_LIST>
 
 + <INPUT_CSV_LIST> : List of name and url should comply with [this description]()
 + <number_of_core> : number of core allocated
 + Create a directory "My_minnows_project"
-+ /fs/ess/<project_name>/My_minnows_project : Location where the data are or will be.
++ /fs/ess/<project_name>/My_minnows_project : Location where the list (csv) of image names are or will be.
 
 ```
 sbatch SLURM_Snake_download Snake_download /fs/ess/<project_name>/My_minnows_project <number_of_core>  <INPUT_CSV_LIST> 
@@ -37,7 +41,7 @@ sbatch SLURM_Snake_download Snake_download /fs/ess/<project_name>/My_minnows_pro
 This should create a folder Images containing the result from "Download"
 ## 3 - Run Metadata
 
-In /fs/ess/<project_name>/My_minnows_project, Images folder should be present with the Fish images (generate by 2- Run Download)
+In /fs/ess/<project_name>/My_minnows_project, Images folder should be present with the fish images (generate by 2- Run Download). Snake_metadata will look in the My_minnows_project directory for the folder Images.
 
 ```
 sbatch SLURM_Snake_generic Snake_metadata /fs/ess/<project_name>/My_minnows_project <number_of_core>  
