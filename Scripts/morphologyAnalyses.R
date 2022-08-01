@@ -94,10 +94,10 @@ measure_stats <- meta.measure.df.scale %>%
   dplyr::group_by(scientific_name) %>%
   dplyr::summarise(sample.size = n(), 
                    
-                   min.HL_bbox = min(HL_bbox_conv, na.rm = TRUE),
-                   max.HL_bbox  = max(HL_bbox_conv, na.rm = TRUE),
-                   avg.HL_bbox = mean(HL_bbox_conv, na.rm = TRUE),
-                   sd.err.HL_bbox = sd(HL_bbox_conv, na.rm = TRUE)/sqrt(sample.size),
+                   min.SL_bbox = min(SL_bbox_conv, na.rm = TRUE),
+                   max.SL_bbox  = max(SL_bbox_conv, na.rm = TRUE),
+                   avg.SL_bbox = mean(SL_bbox_conv, na.rm = TRUE),
+                   sd.err.SL_bbox = sd(SL_bbox_conv, na.rm = TRUE)/sqrt(sample.size),
                    
                    min.SL_lm = min(SL_lm_conv, na.rm = TRUE),
                    max.SL_lm  = max(SL_lm_conv, na.rm = TRUE),
@@ -159,8 +159,35 @@ b.measure.stats <- merge(b.df, measure_stats,
                          by.x = "Species", 
                          by.y = "scientific_name",
                          all.x = FALSE, all.y = TRUE)
-            
 
+b.measure.stats$SL_bbox.diff <- (b.measure.stats$b.SL*10) - b.measure.stats$avg.SL_bbox
+b.measure.stats$SL_lm.diff <- (b.measure.stats$b.SL*10) - b.measure.stats$avg.SL_lm
+b.measure.stats$HL_bbox.diff <- (b.measure.stats$b.HL*10) - b.measure.stats$avg.HL_bbox
+b.measure.stats$HL_lm.diff <- (b.measure.stats$b.HL*10) - b.measure.stats$avg.HL_lm
+b.measure.stats$pOD_bbox.diff <- (b.measure.stats$SnL*10) - b.measure.stats$avg.pOD_bbox
+b.measure.stats$pOD_lm.diff <- (b.measure.stats$SnL*10) - b.measure.stats$avg.pOD_lm
+b.measure.stats$ED_bbox.diff <- (b.measure.stats$b.ED*10) - b.measure.stats$avg.ED_bbox
+b.measure.stats$ED_lm.diff <- (b.measure.stats$b.ED*10) - b.measure.stats$avg.ED_lm
+b.measure.stats$HH_lm.diff <- (b.measure.stats$b.HD*10) - b.measure.stats$avg.HH_lm
+
+b.measure.stats$SL_bbox.diff.se <- b.measure.stats$SL_bbox.diff / b.measure.stats$sd.err.SL_bbox
+b.measure.stats$SL_lm.diff.se <- b.measure.stats$SL_lm.diff / b.measure.stats$sd.err.SL_lm
+b.measure.stats$HL_bbox.diff.se <- b.measure.stats$HL_bbox.diff / b.measure.stats$sd.err.HL_bbox
+b.measure.stats$HL_lm.diff.se <- b.measure.stats$HL_lm.diff / b.measure.stats$sd.err.HL_lm
+b.measure.stats$pOD_bbox.diff.se <- b.measure.stats$pOD_bbox.diff / b.measure.stats$sd.err.pOD_bbox
+b.measure.stats$pOD_lm.diff.se <- b.measure.stats$pOD_lm.diff / b.measure.stats$sd.err.pOD_lm
+b.measure.stats$ED_bbox.diff.se <- b.measure.stats$ED_bbox.diff / b.measure.stats$sd.err.ED_bbox
+b.measure.stats$ED_lm.diff.se <- b.measure.stats$ED_lm.diff / b.measure.stats$sd.err.ED_lm
+b.measure.stats$HH_lm.diff.se <- b.measure.stats$HH_lm.diff / b.measure.stats$sd.err.HH_lm
+
+abs.mass.diff.se = abs(mass.diff.se), #observed t; number in t-units (counts of standard errors from each mean)
+outside.3.sigma = abs.mass.diff.se > 3, #if true then greater than 3 std errors outside
+critical.t = abs(qt(p = 0.025, df = (sample.size-1))),
+diff.amt = abs.mass.diff.se-critical.t,
+sig = diff.amt > 0, # true means sig diff
+p.value.fromt.crit.t = 1-pt(abs.mass.diff.se, df = (sample.size-1)), #if p=0.05 then most of it is outside
+p.value = t.test(measurementValue, mu = pan.mass, conf.level = 0.95, alternative = "two.sided")$p.value,
+per.diff = abs(((avg.mass - pan.mass)/avg.mass)*100)
   
                    pan.mass = X5.1_AdultBodyMass_g[1],
                    mass.diff = (pan.mass - avg.mass),
