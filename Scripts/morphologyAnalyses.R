@@ -51,6 +51,8 @@ write.csv(measure.df, "measure.df.burress.csv", row.names = FALSE)
 errors <- measure.df[measure.df$X.none. == "none",] %>% drop_na(X.none.)
 nrow(errors) #18 images
 
+write.csv(errors, "measure.df.missing.scale.csv", row.names = FALSE)
+
 measure.df.scale <- measure.df[!(measure.df$base_name %in% errors$base_name),]
 
 #need to combine metatdata about fish
