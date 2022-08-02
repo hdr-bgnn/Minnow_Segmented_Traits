@@ -21,7 +21,7 @@ rule Morphological_analysis:
         vis_landmarks = "Morphology/Vis_landmarks/{image}_landmark_image.png"
    
     singularity:
-        "docker://ghcr.io/thibaulttabarin/morphology-analysis/morphology:0.1.2"
+        "docker://ghcr.io/thibaulttabarin/morphology-analysis/morphology:0.1.3"
     shell:
         'Morphology_main.py {input.image} {input.metadata} {output.measure} {output.landmark} {output.presence} {output.vis_landmarks}'
 
