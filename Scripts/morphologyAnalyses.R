@@ -109,6 +109,7 @@ measure_stats = b.meta.measure.df.scale %>%
   dplyr::summarise(sample.size = n(),
                    crit.t = abs(qt(p = 0.025, df = (sample.size - 1))),
                    
+                   b.N = b.N[1],
                    b.SL = b.SL[1],
                    b.HL = b.HL[1],
                    b.SnL = b.SnL[1],
@@ -270,13 +271,15 @@ noam <- melt(df.trim[df.trim$scientific_name == sp[7],], id.vars = c(1:7, 19))
 nost <- melt(df.trim[df.trim$scientific_name == sp[8],], id.vars = c(1:7, 19))
 
 vs <- unique(novo$variable)
+sl.labels <- c(var1 = "SL, bbox", var2 = "SL, lm")
 
 novo.p <- ggplot(data = novo[novo$variable == vs[1:2],]) +
-  geom_density(aes(x = value, fill = variable)) +
+  geom_density(aes(x = value, fill = variable), alpha = 0.25) +
   ggtitle("Notropis volucellus: comparison of measurements using bbox and lm compared to Burress et al. 2017") + 
   scale_x_continuous(name = 'Standard length (mm)') + 
   scale_y_continuous(name = 'Density') + 
-  geom_vline(xintercept = b.df$b.SL[b.df$Species == sp[1]], linetype = "dashed", col = "darkgray") +
+  scale_color_manual(labels = sl.labels) + 
+  geom_vline(xintercept = 41.3, linetype = "dashed", col = "black") +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black"))
 #ggsave(p, file=paste0("diff.mass", ".png"), width = 14, height = 10, units = "cm")
