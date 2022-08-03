@@ -337,3 +337,5 @@ fig <- ggarrange(sl.p, hl.p, pod.p, ed.p, hh.p,
 ggsave(fig, file=paste0(sp[i],": comparison of measurements (Burress et al. 2017 dashed line)", ".png"), 
        width =100, height = 50, units = "cm")
 }
+
+
