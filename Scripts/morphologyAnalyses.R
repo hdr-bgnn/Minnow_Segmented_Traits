@@ -9,6 +9,7 @@ library(ggplot2)
 library(stringr)
 library(RColorBrewer)
 library(reshape2)
+library(ggpubr)
 
 #get list of file names
 #path is in the OSC 
@@ -268,39 +269,71 @@ write.csv(measure_stats, "measurement.stats.burress.csv", row.names = FALSE)
 
 #create datasets by species
 df.trim <- meta.measure.df.scale[, -c(2:5, 11:26, 28:32)]
-sp <- unique(df.trim$scientific_name)
+df.melt <- melt(df.trim, id.vars = c(1:7, 19))
+df.melt$variable <- as.factor(df.melt$variable)
+sp <- unique(df.melt$scientific_name)
+vs <- unique(df.melt$variable)
 
-novo <- melt(df.trim[df.trim$scientific_name == sp[1],], id.vars = c(1:7, 19))
-note <- melt(df.trim[df.trim$scientific_name == sp[2],], id.vars = c(1:7, 19))
-nole <- melt(df.trim[df.trim$scientific_name == sp[3],], id.vars = c(1:7, 19))
-noru <- melt(df.trim[df.trim$scientific_name == sp[4],], id.vars = c(1:7, 19))
-noph <- melt(df.trim[df.trim$scientific_name == sp[5],], id.vars = c(1:7, 19))
-noba <- melt(df.trim[df.trim$scientific_name == sp[6],], id.vars = c(1:7, 19))
-noam <- melt(df.trim[df.trim$scientific_name == sp[7],], id.vars = c(1:7, 19))
-nost <- melt(df.trim[df.trim$scientific_name == sp[8],], id.vars = c(1:7, 19))
-
-vs <- unique(novo$variable)
-sl.labels <- c(var1 = "SL, bbox", var2 = "SL, lm")
-
-novo.p <- ggplot(data = novo[novo$variable == vs[1:2],]) +
+for(i in 1:length(sp)){
+sl.p <- ggplot(data = df.melt[df.melt$variable == vs[1:2] &
+                              df.melt$scientific_name == sp[i],]) +
   geom_density(aes(x = value, fill = variable), alpha = 0.25) +
-  ggtitle("Notropis volucellus: comparison of measurements using bbox and lm compared to Burress et al. 2017") + 
+# ggtitle("Notropis volucellus: comparison of measurements using bbox and lm compared to Burress et al. 2017") + 
   scale_x_continuous(name = 'Standard length (mm)') + 
   scale_y_continuous(name = 'Density') + 
-  scale_color_manual(labels = sl.labels) + 
-  geom_vline(xintercept = 41.3, linetype = "dashed", col = "black") +
+  scale_fill_discrete(labels = c('SL, bbox', 'SL, lm')) +
+  geom_vline(xintercept = b.df$b.SL[b.df$Species == sp[1]], linetype = "dashed", col = "black") +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black"))
-#ggsave(p, file=paste0("diff.mass", ".png"), width = 14, height = 10, units = "cm")
 
-p <- ggplot(data = pan.adult_stats.trim, aes(x = mass.diff.se)) +
-  geom_density(col = "slateblue4") +
-  geom_rug(sides = "b", col = "slateblue4") +
-  ggtitle("Difference in Mean Mass (PanTHERIA) to Mean Mass (this paper) over Standard Error") + 
-  scale_x_continuous(name = 'Standard Deviations from Mean') + 
-  scale_y_continuous(name = 'Probability') + 
-  geom_vline(xintercept = c(-3, 3), linetype = "dashed", col = "darkgray") +
+hl.p <- ggplot(data = df.melt[df.melt$variable == vs[3:4] &
+                              df.melt$scientific_name == sp[i],]) +
+  geom_density(aes(x = value, fill = variable), alpha = 0.25) +
+# ggtitle("Notropis volucellus: comparison of measurements using bbox and lm compared to Burress et al. 2017") + 
+  scale_x_continuous(name = 'Head length (mm)') + 
+  scale_y_continuous(name = 'Density') + 
+  scale_fill_discrete(labels = c('HL, bbox', 'HL, lm')) +
+  geom_vline(xintercept = b.df$b.HL[b.df$Species == sp[i]], linetype = "dashed", col = "black") +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black"))
-ggsave(p, file=paste0("diff.mass", ".png"), width = 14, height = 10, units = "cm")
 
+pod.p <- ggplot(data = df.melt[df.melt$variable == vs[5:6] &
+                               df.melt$scientific_name == sp[i],]) +
+  geom_density(aes(x = value, fill = variable), alpha = 0.25) +
+# ggtitle("Notropis volucellus: comparison of measurements using bbox and lm compared to Burress et al. 2017") + 
+  scale_x_continuous(name = 'Preorbital length (mm)') + 
+  scale_y_continuous(name = 'Density') + 
+  scale_fill_discrete(labels = c('pOD, bbox', 'pOD, lm')) +
+  geom_vline(xintercept = b.df$b.SnL[b.df$Species == sp[i]], linetype = "dashed", col = "black") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black"))
+
+ed.p <- ggplot(data = df.melt[df.melt$variable == vs[7:8] &
+                                   df.melt$scientific_name == sp[i],]) +
+  geom_density(aes(x = value, fill = variable), alpha = 0.25) +
+# ggtitle("Notropis volucellus: comparison of measurements using bbox and lm compared to Burress et al. 2017") + 
+  scale_x_continuous(name = 'Eye diameter (mm)') + 
+  scale_y_continuous(name = 'Density') + 
+  scale_fill_discrete(labels = c('ED, bbox', 'ED, lm')) +
+  geom_vline(xintercept = b.df$b.ED[b.df$Species == sp[i]], linetype = "dashed", col = "black") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black"))
+
+hh.p <- ggplot(data = df.melt[df.melt$variable == vs[9] &
+                                   df.melt$scientific_name == sp[i],]) +
+  geom_density(aes(x = value, fill = variable), alpha = 0.25) +
+# ggtitle("Notropis volucellus: comparison of measurements using bbox and lm compared to Burress et al. 2017") + 
+  scale_x_continuous(name = 'Head height (mm)') + 
+  scale_y_continuous(name = 'Density') + 
+  scale_fill_discrete(labels = c('HH, lm')) +
+  geom_vline(xintercept = b.df$b.HD[b.df$Species == sp[i]], linetype = "dashed", col = "black") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black"))
+
+fig <- ggarrange(sl.p, hl.p, pod.p, ed.p, hh.p,
+                   labels = c("SL", "HL", "pOD", "ED", "HH"),
+                   ncol = 3, nrow = 2)
+
+ggsave(fig, file=paste0(sp[i],": comparison of measurements (Burress et al. 2017 dashed line)", ".png"), 
+       width =100, height = 50, units = "cm")
+}
