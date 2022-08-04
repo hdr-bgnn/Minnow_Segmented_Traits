@@ -365,7 +365,7 @@ b.old.df <- merge(b.df, old.df,
 
 
 
-measure_stats = b.old.df %>%
+old_stats = b.old.df %>%
   dplyr::group_by(Species) %>%
   dplyr::summarise(sample.size = n(),
                    crit.t = abs(qt(p = 0.025, df = (sample.size - 1))),
@@ -539,7 +539,6 @@ measure_stats = b.old.df %>%
                    HH_lm.pvalue.sig.corr = HH_lm.pvalue.corr <= 0.05, #TRUE means sig diff
                    HH_lm.t.value.sig.corr = HH_lm.t.value.corr <= 0.05) %>% #TRUE means sig diff
   as.data.frame()
-
 
 ### old code
 # json_df <- function(jfile){
