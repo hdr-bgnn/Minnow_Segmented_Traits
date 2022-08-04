@@ -278,8 +278,16 @@ write.csv(measure_stats, "measurement.stats.burress.csv", row.names = FALSE)
 # one per species
 
 #create datasets by species
-df.trim <- meta.measure.df.scale[, -c(2:5, 11:26, 28:32)]
-df.melt <- melt(df.trim, id.vars = c(1:7, 19))
+columns.keep <- c("original_file_name", "dataset", "path",
+                  "scientific_name", "genus", "family", "institution",
+                  "SL_bbox.conv", "SL_lm.conv",
+                  "HL_bbox.conv", "HL_lm.conv",
+                  "ED_bbox.conv", "ED_lm.conv",
+                  "pOD_bbox.conv", "pOD_lm.conv",
+                  "HH_lm.conv",
+                  "unit.conv")
+df.trim <- meta.measure.df.scale[, names(meta.measure.df.scale) %in% columns.keep]
+df.melt <- melt(df.trim, id.vars = c(1:7, 17))
 df.melt$variable <- as.factor(df.melt$variable)
 sp <- unique(df.melt$scientific_name)
 vs <- unique(df.melt$variable)
