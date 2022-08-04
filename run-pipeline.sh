@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --account=PAS2136
 #SBATCH --job-name=minnowTraits
-#SBATCH --time=02:30:00
+#SBATCH --time=05:00:00
 #
 # sbatch run-pipeline.sh [NUMJOBS]
 # - NUMJOBS - Number of parallel jobs to run at once
@@ -27,4 +27,3 @@ snakemake \
     --profile $SNAKEMAKE_PROFILE \
     --use-singularity
 
-#snakemake --report report.html

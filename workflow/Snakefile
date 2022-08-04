@@ -54,6 +54,8 @@ def selection_criteria_segmented_images_input(wildcards):
     with checkpoints.select_minnow_images.get(**wildcards).output[1].open() as f:
        names = get_image_names(f)
     presence_files = [f"Morphology/Presence/{i}_presence.json" for i in names]
+    # Hack to supply the required image for selectionCriteriaSegmentedImages.R
+    presence_files.append("Morphology/Presence/INHS_FISH_003752_presence.json")
     return {
         "presence_files": presence_files,
         "image_metadata": config["image_metadata"],

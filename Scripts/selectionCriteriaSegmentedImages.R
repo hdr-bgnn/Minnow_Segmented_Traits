@@ -33,7 +33,7 @@ files <- list.files(path = presence.json.directory, pattern = '*.json', full.nam
 json_df <- function(jfile){
   input <- fromJSON(file = jfile)
   df <- as.data.frame(input)
-  df$file.name <- gsub(jfile,
+  df$file.name <- gsub(basename(jfile),
                        pattern = "_presence.json", 
                        replacement = "")
   return(df)
@@ -54,8 +54,6 @@ names(presence.df) <- gsub(x = names(presence.df),
 
 
 #write dataframe to Files directory
-#return to GitHub directory
-
 write.csv(presence.df, output.matrix.csv.path, row.names = FALSE)
 
 #read presence absence dataframe
