@@ -10,33 +10,24 @@ library(stringr)
 library(RColorBrewer)
 library(reshape2)
 library(ggpubr)
+library(moments)
 
 #get list of file names
 #path is in the OSC 
 setwd("/fs/ess/PAS2136/BGNN/Burress_et_al_2017_minnows/Morphology/Measure")
 m.files <- list.files(pattern = '*.json')
 
-#turn into csv
-#rbind
-
+#turn into data frame
 json_df <- function(jfile){
   input <- fromJSON(file = jfile, unexpected.escape = "keep")
-  #some json files have null for scale (index 15 & 16)
-  if(isTRUE(is.null(input[15][[1]][[1]]))){
-    input[15][[1]][[1]] <- "none"
-  }
-  if(isTRUE(is.null(input[16][[1]][[1]]))){
-    input[16][[1]][[1]] <- "none"
-  }
   df <- as.data.frame(input)
-  df$file.name <- gsub(jfile,
-                       pattern = "_measure.json", #can change this depending on the file name
-                       replacement = "")
+  df$scale <- as.numeric(df$scale) #for some reason there are "doubles"; making them all the same
+  #will get warnings because NA are created since some df$scales are characters ("none")
   return(df)
 }
 
-measure.df <- lapply(m.files, json_df) %>% 
-  dplyr::bind_rows()
+measure.df <- lapply(m.files, json_df) %>% #list of dataframes
+  dplyr::bind_rows() #rbind to turn into single dataframes
 
 #check have all the files
 nrow(measure.df) #446
@@ -46,10 +37,12 @@ str(measure.df)
 View(measure.df)
 
 #in files dir
+setwd("/users/PAS2136/balkm/minnowTraits/Files/")
 write.csv(measure.df, "measure.df.burress.csv", row.names = FALSE)
 
 #remove those that don't have a scale
-errors <- measure.df[measure.df$X.none. == "none",] %>% drop_na(X.none.)
+unique(measure.df$unit) #None means no scale was detected or extracted
+errors <- measure.df[measure.df$unit == "None",] %>% drop_na(unit)
 nrow(errors) #18 images
 
 write.csv(errors, "measure.df.missing.scale.csv", row.names = FALSE)
@@ -59,7 +52,6 @@ measure.df.scale <- measure.df[!(measure.df$base_name %in% errors$base_name),]
 write.csv(measure.df.scale, "measure.df.errors.removed.csv", row.names = FALSE)
 
 #need to combine metatdata about fish
-setwd("/users/PAS2136/balkm/minnowTraits/Files/")
 meta <- read.csv("Image_Metadata_v1_20211206_151152.csv", header = TRUE)
 
 #remove file extension
@@ -115,11 +107,13 @@ measure_stats = b.meta.measure.df.scale %>%
                    b.HL = b.HL[1],
                    b.SnL = b.SnL[1],
                    b.ED = b.ED[1],
-                   b.HH = b.HD[1],
+                   b.HD = b.HD[1],
                    
                    min.SL_bbox = min(SL_bbox.conv, na.rm = TRUE),
                    max.SL_bbox  = max(SL_bbox.conv, na.rm = TRUE),
                    avg.SL_bbox = mean(SL_bbox.conv, na.rm = TRUE),
+                   med.SL_bbox = median(SL_bbox.conv, na.rm = TRUE),
+                   kurt.SL_bbox = round(kurtosis(SL_bbox.conv), digits = 2),
                    sd.SL_bbox = sd(SL_bbox.conv, na.rm = TRUE),
                    se.err.SL_bbox = sd.SL_bbox/sqrt(sample.size),
                    abs.se.diff.SL_bbox = abs((b.SL - avg.SL_bbox)/se.err.SL_bbox), #absolute masss.diff.se observed t; number in t-units (counts of standard errors from each mean)
@@ -136,6 +130,8 @@ measure_stats = b.meta.measure.df.scale %>%
                    min.SL_lm = min(SL_lm.conv, na.rm = TRUE),
                    max.SL_lm  = max(SL_lm.conv, na.rm = TRUE),
                    avg.SL_lm = mean(SL_lm.conv, na.rm = TRUE),
+                   med.SL_lm = median(SL_lm.conv, na.rm = TRUE),
+                   kurt.SL_lm = round(kurtosis(SL_lm.conv), digits = 2),
                    sd.SL_lm = sd(SL_lm.conv, na.rm = TRUE),
                    se.err.SL_lm = sd.SL_lm/sqrt(sample.size),
                    abs.se.diff.SL_lm = abs((b.SL - avg.SL_lm)/se.err.SL_lm),
@@ -152,6 +148,8 @@ measure_stats = b.meta.measure.df.scale %>%
                    min.HL_bbox = min(HL_bbox.conv, na.rm = TRUE),
                    max.HL_bbox  = max(HL_bbox.conv, na.rm = TRUE),
                    avg.HL_bbox = mean(HL_bbox.conv, na.rm = TRUE),
+                   med.HL_bbox = median(HL_bbox.conv, na.rm = TRUE),
+                   kurt.HL_bbox = round(kurtosis(HL_bbox.conv), digits = 2),
                    sd.HL_bbox = sd(HL_bbox.conv, na.rm = TRUE),
                    se.err.HL_bbox = sd.HL_bbox/sqrt(sample.size),
                    abs.se.diff.HL_bbox = abs((b.HL - avg.HL_bbox)/se.err.HL_bbox),
@@ -168,6 +166,8 @@ measure_stats = b.meta.measure.df.scale %>%
                    min.HL_lm = min(HL_lm.conv, na.rm = TRUE),
                    max.HL_lm  = max(HL_lm.conv, na.rm = TRUE),
                    avg.HL_lm = mean(HL_lm.conv, na.rm = TRUE),
+                   med.HL_lm = median(HL_lm.conv, na.rm = TRUE),
+                   kurt.HL_lm = round(kurtosis(HL_lm.conv), digits = 2),
                    sd.HL_lm = sd(HL_lm.conv, na.rm = TRUE),
                    se.err.HL_lm = sd.HL_lm/sqrt(sample.size),
                    abs.se.diff.HL_lm = abs((b.HL - avg.HL_lm)/se.err.HL_lm),
@@ -184,6 +184,8 @@ measure_stats = b.meta.measure.df.scale %>%
                    min.pOD_bbox = min(pOD_bbox.conv, na.rm = TRUE),
                    max.pOD_bbox  = max(pOD_bbox.conv, na.rm = TRUE),
                    avg.pOD_bbox = mean(pOD_bbox.conv, na.rm = TRUE),
+                   med.pOD_bbox = median(pOD_bbox.conv, na.rm = TRUE),
+                   kurt.pOD_bbox = round(kurtosis(pOD_bbox.conv), digits = 2),
                    sd.pOD_bbox = sd(pOD_bbox.conv, na.rm = TRUE),
                    se.err.pOD_bbox = sd.pOD_bbox/sqrt(sample.size),
                    abs.se.diff.pOD_bbox = abs((b.SnL - avg.pOD_bbox)/se.err.pOD_bbox),
@@ -200,6 +202,8 @@ measure_stats = b.meta.measure.df.scale %>%
                    min.pOD_lm = min(pOD_lm.conv, na.rm = TRUE),
                    max.pOD_lm  = max(pOD_lm.conv, na.rm = TRUE),
                    avg.pOD_lm = mean(pOD_lm.conv, na.rm = TRUE),
+                   med.pOD_lm = median(pOD_lm.conv, na.rm = TRUE),
+                   kurt.pOD_lm = round(kurtosis(pOD_lm.conv), digits = 2),
                    sd.pOD_lm = sd(pOD_lm.conv, na.rm = TRUE),
                    se.err.pOD_lm = sd.pOD_lm/sqrt(sample.size),
                    abs.se.diff.pOD_lm = abs((b.SnL - avg.pOD_lm)/se.err.pOD_lm),
@@ -216,6 +220,8 @@ measure_stats = b.meta.measure.df.scale %>%
                    min.ED_bbox = min(ED_bbox.conv, na.rm = TRUE),
                    max.ED_bbox  = max(ED_bbox.conv, na.rm = TRUE),
                    avg.ED_bbox = mean(ED_bbox.conv, na.rm = TRUE),
+                   med.ED_bbox = median(ED_bbox.conv, na.rm = TRUE),
+                   kurt.ED_bbox = round(kurtosis(ED_bbox.conv), digits = 2),
                    sd.ED_bbox = sd(ED_bbox.conv, na.rm = TRUE),
                    se.err.ED_bbox = sd.ED_bbox/sqrt(sample.size),
                    abs.se.diff.ED_bbox = abs((b.ED - avg.ED_bbox)/se.err.ED_bbox),
@@ -232,6 +238,8 @@ measure_stats = b.meta.measure.df.scale %>%
                    min.ED_lm = min(ED_lm.conv, na.rm = TRUE),
                    max.ED_lm  = max(ED_lm.conv, na.rm = TRUE),
                    avg.ED_lm = mean(ED_lm.conv, na.rm = TRUE),
+                   med.ED_lm = median(ED_lm.conv, na.rm = TRUE),
+                   kurt.ED_lm = round(kurtosis(ED_lm.conv), digits = 2),
                    sd.ED_lm = sd(ED_lm.conv, na.rm = TRUE),
                    se.err.ED_lm = sd.ED_lm /sqrt(sample.size),
                    abs.se.diff.ED_lm = abs((b.ED - avg.ED_lm)/se.err.ED_lm),
@@ -248,14 +256,16 @@ measure_stats = b.meta.measure.df.scale %>%
                    min.HH_lm = min(HH_lm.conv, na.rm = TRUE),
                    max.HH_lm  = max(HH_lm.conv, na.rm = TRUE),
                    avg.HH_lm = mean(HH_lm.conv, na.rm = TRUE),
+                   med.HH_lm = median(HH_lm.conv, na.rm = TRUE),
+                   kurt.HH_lm = round(kurtosis(HH_lm.conv), digits = 2),
                    sd.HH_lm = sd(HH_lm.conv, na.rm = TRUE),
                    se.err.HH_lm = sd.HH_lm/sqrt(sample.size),
-                   abs.se.diff.HH_lm = abs((b.HH - avg.HH_lm)/se.err.HH_lm),
+                   abs.se.diff.HH_lm = abs((b.HD - avg.HH_lm)/se.err.HH_lm),
                    HH_lm.3se = abs.se.diff.HH_lm > 3,
                    HH_lm.sig = abs.se.diff.HH_lm-crit.t > 0,
                    HH_lm.pvalue.crit.t = 1-pt(abs.se.diff.HH_lm, df = (sample.size-1)),
-                   HH_lm.pvalue = t.test(HH_lm, mu = b.HH, conf.level = 0.95, alternative = "two.sided")$p.value,                   
-                   HH_lm.per.diff = abs(((avg.HH_lm - b.HH)/avg.HH_lm)*100),
+                   HH_lm.pvalue = t.test(HH_lm, mu = b.HD, conf.level = 0.95, alternative = "two.sided")$p.value,                   
+                   HH_lm.per.diff = abs(((avg.HH_lm - b.HD)/avg.HH_lm)*100),
                    HH_lm.pvalue.corr = p.adjust(HH_lm.pvalue, method = "BH"),
                    HH_lm.t.value.corr = p.adjust(HH_lm.pvalue.crit.t, method = "BH"),
                    HH_lm.pvalue.sig.corr = HH_lm.pvalue.corr <= 0.05, #TRUE means sig diff
@@ -264,7 +274,7 @@ measure_stats = b.meta.measure.df.scale %>%
 
 write.csv(measure_stats, "measurement.stats.burress.csv", row.names = FALSE)
   
-##series of density plots with the distrbution of measurements and the avg from Burress
+##series of density plots with the distribution of measurements and the avg from Burress
 # one per species
 
 #create datasets by species
@@ -339,3 +349,19 @@ ggsave(fig, file=paste0(sp[i],": comparison of measurements (Burress et al. 2017
 }
 
 
+### old code
+# json_df <- function(jfile){
+#   input <- fromJSON(file = jfile, unexpected.escape = "keep")
+#   #some json files have null for scale (index 15 & 16)
+#   if(isTRUE(is.null(input[15][[1]][[1]]))){
+#     input[15][[1]][[1]] <- "none"
+#   }
+#   if(isTRUE(is.null(input[16][[1]][[1]]))){
+#     input[16][[1]][[1]] <- "none"
+#   }
+#   df <- as.data.frame(input)
+#   df$file.name <- gsub(jfile,
+#                        pattern = "_measure.json", #can change this depending on the file name
+#                        replacement = "")
+#   return(df)
+# }
