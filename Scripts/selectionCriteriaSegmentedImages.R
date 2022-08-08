@@ -6,7 +6,7 @@ revn::init()
 
 #get list of file names
 #path is in the OSC 
-setwd("/fs/ess/PAS2136/BGNN/Minnows/Morphology/Presence/")
+setwd("~/BGNN/Minnows/Morphology/Presence/")
 files <- list.files(pattern = '*.json')
 
 #turn into csv
@@ -37,7 +37,7 @@ names(presence.df) <- gsub(x = names(presence.df),
 
 #write dataframe to Files directory
 #return to GitHub directory
-setwd("GitHub/BGNN/minnowTraits/Files")
+setwd("~/BGNN/minnowTraits/Files")
 write.csv(presence.df, "presence.absence.matrix.csv", row.names = FALSE)
 
 #read presence absence dataframe
@@ -56,8 +56,16 @@ presence.meta <- merge(presence.df, meta.df,
                        by.x = "file_name", by.y = "original_file_name", 
                        all.x = TRUE, all.y = FALSE)
 #check df
-nrow(presence.meta)
-length(unique(presence.meta$scientific_name))
+nrow(presence.meta) #6297
+length(unique(presence.meta$scientific_name)) #41
+
+##load species from Burress et al. 2016
+burress <- read.csv("Previous Fish Measurements - Burress et al. 2016.csv", header = TRUE)
+b.sp <- unique(burress$Species)
+
+##compare to burress
+nrow(presence.meta[presence.meta$scientific_name %in% b.sp,]) #446
+length(unique(presence.meta$scientific_name[presence.meta$scientific_name %in% b.sp])) #8
 
 #get rid of columns we don't need
 #not using adipose fin for minnows
@@ -245,8 +253,6 @@ max(melt_stats_sd$value) #.34 largest standard deviation
 ggplot(data = presence.meta) +
   geom_density(aes(x = dorsal_fin_percentage, fill = scientific_name))
 
-
-
 #remove species that have 0 for traits we are using: head, eye, trunk
 df.fin.0 <- df.fin.per[df.fin.per$head_percentage > 0 &
                        df.fin.per$eye_percentage > 0 &
@@ -255,22 +261,20 @@ df.fin.0 <- df.fin.per[df.fin.per$head_percentage > 0 &
 nrow(df.fin.per) #6297
 nrow(df.fin.0) #6297, no loss
 
-#reduce to species in Burress et al paper
-burress <- read.csv("Previous Fish Measurements - Burress et al. 2016.csv", header = TRUE)
-b.sp <- unique(burress$Species)
-
-df.fin.burress <- df.fin.0[df.fin.0$scientific_name %in% b.sp,]
-nrow(df.fin.burress) #446
-
 #based on visualizations above, we decided to keep .95 blobs; only for the traits we care about
-df.fin.b.95 <- df.fin.burress[df.fin.burress$head_percentage > .95 &
-                              df.fin.burress$eye_percentage > .95 &
-                              df.fin.burress$trunk_percentage > .95,]
-nrow(df.fin.b.95) #445 images
-length(unique(df.fin.b.95$scientific_name)) #8 species
+df.fin.95.3 <- df.fin.per[df.fin.per$head_percentage > .95 &
+                          df.fin.per$eye_percentage > .95 &
+                          df.fin.per$trunk_percentage > .95,]
+nrow(df.fin.95.3) #6205 images
+length(unique(df.fin.95.3$scientific_name)) #41 species
+
+#compare to burress
+df.fin.b.95.3 <- df.fin.95.3[df.fin.95.3$scientific_name %in% b.sp,]
+nrow(df.fin.b.95.3) #445
+length(unique(df.fin.b.95.3$scientific_name)) #8
 
 #how is the sampling for these species?
-b.sampling <- as.data.frame(table(df.fin.b.95$scientific_name))
+b.sampling <- as.data.frame(table(df.fin.b.95.3$scientific_name))
 colnames(b.sampling) <- c("Scientific_Name", "Sample_Size")
 write.csv(b.sampling, "sampling.species.in.Burress.csv", row.names = FALSE)
 
@@ -298,5 +302,5 @@ length(unique(df.fin.95.3$scientific_name)) #41
 #how is sampling?
 sampling.95.3 <- as.data.frame(sort(table(df.fin.95.3$scientific_name)))
 colnames(sampling.95.3) <- c("Scientific_Name", "Sample_Size")
-nrow(sampling.95) #41 sp; don't lose any!
+nrow(sampling.95.3) #41 sp; don't lose any!
 write.csv(sampling.95.3, "sampling.minnows.95.blob.3.segments.csv", row.names = FALSE)

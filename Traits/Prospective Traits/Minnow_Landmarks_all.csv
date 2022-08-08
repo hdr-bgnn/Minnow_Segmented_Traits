@@ -1,47 +1,47 @@
-﻿type,landmarkNumber,terminology,position,anatomicalDefinition,codeDefinition
-landmark,1,Tip of snout,anterior-most (left-most) part of head,,
-landmark,2,Beginning of the scales at the dorsal side,dorsal (top) of head that meets the trunk,,
-landmark,3,Anterior insertion of the dorsal fin,anterior-most (left-most) insertion point of dorsal fin,,
-landmark,4,Posterior insertion of dorsal fin,posterior-most (right-most) insertion point of dorsal fin,,
-landmark,5,Dorsal insertion of the caudal fin,anterior/dorsal (upper left) insertion point of caudal fin,,
-landmark,6,End of vertebral column,midline of caudal fin,,
-landmark,7,Ventral insertion of the caudal fin,anterior/ventral (lower left) insertion point of caudal fin ,,
-landmark,8,Posterior insertion of the anal fin,posterior-most (right-most) insertion point of anal fin,,
-landmark,9,Anterior insertion of the anal fin,anterior-most (left-most) insertion point of anal fin,,
-landmark,10,Anterior insertion of the pelvic fin,anterior-most (left-most) insertion point of pelvic fin,,
-landmark,11,Superior insertions of the pectoral fin,anterior-most (left most) insertion point of pectoral fin,,
-landmark,12,Most dorsal point of operculum,posterior-most (right-most) part of head,,
-landmark,13,Most ventral point of operculum,dorsal (lower) part of head that meets the trunk,,
-landmark,14,anterior-most (left-most) part of eye,anterior-most (left-most) part of eye,,
-landmark,15,posterior-most (right-most) part of eye,posterior-most (right-most) part of eye,,
-landmark,16,dorsal-most (upper) part of eye),dorsal-most (upper) part of eye),,
-landmark,17,ventral-most (lower) part of eye,ventral-most (lower) part of eye,,
-landmark,18,center of eye,centroid of eye,,
-semi-landmark,19,,semi-landmarks equally spaced between 1 & 2; 1/3 from #1,,
-semi-landmark,20,,semi-landmarks equally spaced between 1 & 2; 2/3 from #1,,
-semi-landmark,21,,semi-landmarks equally spaced between 2 & 3; 1/4 from #2,,
-semi-landmark,22,,semi-landmarks equally spaced between 2 & 3; 1/2 between 2 & 3,,
-semi-landmark,23,,semi-landmarks equally spaced between 2 & 3; 3/4 from #2,,
-semi-landmark,24,,semi-landmarks equally spaced between 4 & 5; 1/4 from #4,,
-semi-landmark,25,,semi-landmarks equally spaced between 4 & 5; 1/2 between 4 & 5,,
-semi-landmark,26,,semi-landmarks equally spaced between 4 & 5; 3/4 from #4,,
-semi-landmark,27,,semi-landmarks equally spaced between 7 & 8; 1/4 from #7,,
-semi-landmark,28,,semi-landmarks equally spaced between 7 & 8; 1/2 between 7 & 8,,
-semi-landmark,29,,semi-landmarks equally spaced between 7 & 8; 3/4 from #7,,
-landmark,30,Inferior insertions of the pectoral fin,lower insertion of pectoral fin,,
-landmark,31,Most dorsal point of operculum,dorsal end of opercle,,
-landmark,32,nostril,nostril,,
-landmark,33,opening of mouth,anterior-most part of mouth,,
-landmark,34,end of mouth,posterior-most part of mouth,,
+﻿Type,Landmark_Number,Definition,Ontology_SubClass,Ontology_SubClass_IRI,Code_Definition
+landmark,1,"Tip of snout, which is the anterior-most part of head",'tip of snout',UBERON:1000016,Left-most point of the head mask defined by left boundary of the bbox
+landmark,2,"Beginning of the scales at the dorsal side, where the head meets the trunk",anatomical point' | 'part of' some ('dorso-medial margin' and ('characteristic of' some head)),UBERON:0006983 | BFO:0000050 some (BSPO:0000048 and (RO:0000052 some UBERON:0000033)),Top-most point of the head mask defined by top boundary of the bbox
+landmark,3,Anterior insertion of the dorsal fin,anatomical point' | 'part of' some ('in anterior side of' some 'dorsal fin'),UBERON:0006983 | BFO:0000050 some (BSPO:0000123 some UBERON:0003097),Left-most point of the dorsal fin mask defined by left boundary of the bbox
+landmark,4,Posterior insertion of dorsal fin,anatomical point' | 'part of' some ('in posterior side of' some 'dorsal fin'),UBERON:0006983 | BFO:0000050 some (BSPO:0000122 some UBERON:0003097),Furthest bottom point of the dorsal fin defined by bottom boundary of the bbox
+landmark,5,Dorsal insertion of the caudal fin,anatomical point' | 'part of' some ('antero-dorsal margin' and ('characteristic of' some 'caudal fin')),UBERON:0006983 | BFO:0000050 some (BSPO:0000686 and (RO:0000052 some UBERON:4000164)),Left-most point of the upper half of the caudal fin mask (split through the midline) using the bbox
+landmark,6,"End of vertebral column, at the midline of the caudal fin",anatomical point' | 'part of' some ('antero-medial margin' and ('characteristic of' some 'caudal fin')),UBERON:0006983 | BFO:0000050 some (BSPO:0000042 and (RO:0000042 some UBERON:4000164)),Right-most part of the trunk mask defined by the right boundary of the bbox
+landmark,7,Ventral insertion of the caudal fin,anatomical point' | 'part of' some ('antero-ventral margin' and ('characteristic of' some 'caudal fin')),UBERON:0006983 | BFO:0000050 some (BSPO:0000688 and (RO:0000042 some UBERON:4000164)),Left-most point of the lower half of the caudal fin mask (split through the midline) using the bbox
+landmark,8,Posterior insertion of the anal fin,anatomical point' | 'part of' some ('in posterior side of' some 'anal fin'),UBERON:0006983 | BFO:0000050 some (BSPO:0000122 some UBERON:4000163),Top-most point of the anal fin mask defined by top boundary of the bbox
+landmark,9,Anterior insertion of the anal fin,anatomical point' | 'part of' some ('in anterior side of' some 'anal fin'),UBERON:0006983 | BFO:0000050 some (BSPO:0000123 some UBERON:4000163),Left-most point of the anal fin mask defined by left boundary of the bbox
+landmark,10,Anterior insertion of the pelvic fin,anatomical point' | 'part of' some ('in anterior side of' some 'pelvic fin'),UBERON:0006983 | BFO:0000050 some (BSPO:0000123 some UBERON:0000152),Left-most point of the pelvic fin mask defined by left boundary of the bbox
+landmark,11,Anterior insertion of the pectoral fin,anatomical point' | 'part of' some ('in anterior side of' some 'pectoral fin'),UBERON:0006983 | BFO:0000050 some (BSPO:0000123 some UBERON:0000151),Left-most point of the pectoral fin mask defined by left boundary of the bbox
+landmark,12,"Dorsal-most point of operculum, which is the posterior-most part of the head",anatomical point' | 'part of' some ('in posterior side of' some 'opercular flap'),UBERON:0006983 | BFO:0000050 some (BSPO:0000122 some UBERON:2000555),Right-most part of the head mask defined by the right boundary of the bbox
+landmark,13,"Ventral-most point of operculum, where the head meets the trunk",anatomical point' | 'part of' some ('in ventral side of' some 'opercular flap'),UBERON:0006983 | BFO:0000050 some (BSPO:0015102 some UBERON:2000555),Furthest bottom point of the head mask defined by bottom boundary of the bbox
+landmark,14,anterior-most (left-most) part of eye,anatomical point' | 'part of' some ('in anterior side of' some eye),UBERON:0006983 | BFO:0000050 some (BSPO:0000123 some UBERON:0000970),Left-most point of the eye mask defined by left boundary of the bbox
+landmark,15,posterior-most (right-most) part of eye,anatomical point' | 'part of' some ('in posterior side of' some eye),UBERON:0006983 | BFO:0000050 some (BSPO:0000122 some UBERON:0000970),Right-most part of the eye mask defined by the right boundary of the bbox
+landmark,16,dorsal-most (upper) part of eye),anatomical point' | 'part of' some ('in dorsal side of' some eye),UBERON:0006983 | BFO:0000050 some (BSPO:0015101 some UBERON:0000970),Top-most point of the eye mask defined by top boundary of the bbox
+landmark,17,ventral-most (lower) part of eye,anatomical point' | 'part of' some ('in ventral side of' some eye),UBERON:0006983 | BFO:0000050 some (BSPO:0015102 some UBERON:0000970),Furthest bottom point of the eye mask defined by bottom boundary of the bbox
+landmark,18,center (centroid) of eye,anatomical point' | 'part of' some eye | 'follows axis' some 'left-right axis' | 'follows axis' some 'upper-lower axis',UBERON:0006983 | BFO:0000050 some UBERON:0000970 | BSPO:0015002 some BSPO:0000017 | BSPO:0015002 some BSPO:0000011,Center of the eye mask
+semi-landmark,19,semi-landmarks equally spaced between 1 & 2; 1/3 from #1,,,
+semi-landmark,20,semi-landmarks equally spaced between 1 & 2; 2/3 from #1,,,
+semi-landmark,21,semi-landmarks equally spaced between 2 & 3; 1/4 from #2,,,
+semi-landmark,22,semi-landmarks equally spaced between 2 & 3; 1/2 between 2 & 3,,,
+semi-landmark,23,semi-landmarks equally spaced between 2 & 3; 3/4 from #2,,,
+semi-landmark,24,semi-landmarks equally spaced between 4 & 5; 1/4 from #4,,,
+semi-landmark,25,semi-landmarks equally spaced between 4 & 5; 1/2 between 4 & 5,,,
+semi-landmark,26,semi-landmarks equally spaced between 4 & 5; 3/4 from #4,,,
+semi-landmark,27,semi-landmarks equally spaced between 7 & 8; 1/4 from #7,,,
+semi-landmark,28,semi-landmarks equally spaced between 7 & 8; 1/2 between 7 & 8,,,
+semi-landmark,29,semi-landmarks equally spaced between 7 & 8; 3/4 from #7,,,
+landmark,30,Inferior insertions of the pectoral fin,,,
+landmark,31,Most dorsal point of operculum,,,
+landmark,32,nostril,,,
+landmark,33,Anterior opening of mouth,,,
+landmark,34,end (posterior) of mouth,,,
 landmark,35,Waist - superior,,,
 landmark,36,Superior insertion of the caudal peduncle ,,,
 landmark,37,Inferior insertion of the caudal peduncle ,,,
 landmark,38,Waist - inferior,,,
 landmark,39,Anus,,,
-centroid,40,Head Centroid,centroid of the head segmentation,,
-centroid,41,Trunk Centroid,centroid of the trunk segmentation,,
-centroid,42,Caudal Fin Centroid,centroid of the caudal fin segmentation,,
-centroid,43,Pectoral Fin Centroid,centroid of the pectoral fin segmentation,,
-centroid,44,Dorsal Fin Centroid,centroid of the dorsal fin segmentation,,
-centroid,45,Anal Fin Centroid,centroid of the anal fin segmentation,,
-centroid,46,Pelvic Fin Centroid,centroid fo the pelvic fin segmentation,,
+centroid,40,Centroid of head segmentation,,,
+centroid,41,Centroid of trunk segmentation,,,
+centroid,42,Centroid of caudal fin segmentation,,,
+centroid,43,Centroid of pectoral fin segmentation,,,
+centroid,44,Centroid of dorsal fin segmentation,,,
+centroid,45,Centroid of anal fin segmentation,,,
+centroid,46,Centroid of pelvic fin segmentation,,,
