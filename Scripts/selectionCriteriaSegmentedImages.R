@@ -2,70 +2,84 @@
 # Meghan Balk 
 # balk@battelleecology.org
 
-revn::init()
+## MAKE SURE WD IS IN REPO
+#setwd("minnowTraits")
 
-#get list of file names
-#path is in the OSC 
-setwd("~/BGNN/Minnows/Morphology/Presence/")
-files <- list.files(pattern = '*.json')
+#### load dependencies ----
+source("paths.R")
+source("dependencies.R")
 
-#turn into csv
-#rbind
+#### add to sampling.df ----
+sampling.df <- read.csv(file = file.path(results, "sampling.df.IQM.csv"),
+                        header = TRUE)
 
-json_df <- function(jfile){
-  input <- fromJSON(file = jfile)
-  df <- as.data.frame(input)
-  df$file.name <- gsub(jfile,
-                       pattern = "_presence.json", 
-                       replacement = "")
-  return(df)
-}
+#### load functions ----
+source(file.path(scripts, "json_df.R"))
 
-#test with one  file
-test.file <- "INHS_FISH_003752_presence.json"
-test <- json_df(jfile = test.file)
-str(test)
+# Files created by this script:
+# 1. presence absence matrix from the folder "Presence"
+# 2. new data set that only keeps images that have at least 95% for 
+#    the biggest blob for trunk, eye, and head
+# 3. table of the sample size for species in Burress et al. that have 95% blob
+#    for the trunk, eye, and head
+# 4. table of sampling as selection criteria applied
+# 5. heat map of the average blob size of the largest blob for each trait per species
+# 6. heat map of the sd of blob sizes of the largest blob for each trait per species
+# 7. plot of distribution of sample size (number of images) per species that have 
+#    at least 95% blob for trunk, eye, head
 
-presence.df <- lapply(files, json_df) %>% 
-  dplyr::bind_rows()
+#### json to df ----
+# files are the in the Presences folder
+# get list of file names
+
+p.files <- list.files(path = file.path("", presence), pattern = '*.json')
+
+# turn into csv
+presence.df <- lapply(p.files, json_df) %>% 
+  dplyr::bind_rows() # collapses list of data frames into a single data frame
 
 #column names have a mix of "_" and ".", standardize to all being "_"
 names(presence.df) <- gsub(x = names(presence.df), 
                            pattern = "\\.", 
                            replacement = "_")  
 
+# write data frame to Results directory
+write.csv(presence.df, 
+          file = file.path(results, paste0("presence.absence.matrix", Sys.Date(), ".csv")), 
+          row.names = FALSE) #no index
 
-#write dataframe to Files directory
-#return to GitHub directory
-setwd("~/BGNN/minnowTraits/Files")
-write.csv(presence.df, "presence.absence.matrix.csv", row.names = FALSE)
-
-#read presence absence dataframe
-presence.df <- read.csv("presence.absence.matrix.csv", 
-                        header = TRUE)
-
+#### merge with metadata ----
 #combine with metadata to get taxonomic hierarchy
-meta.df <- read.csv("Image_Metadata_v1_20211206_151152.csv", header = TRUE)
-colnames(meta.df)
-#remove ".jpg" from file name to more easily align with file name in presence.df
-meta.df$original_file_name <- gsub(meta.df$original_file_name,
-                                   pattern = ".jpg",
-                                   replacement = "")
+colnames(meta.df) #loaded in from paths.R
 
 presence.meta <- merge(presence.df, meta.df, 
-                       by.x = "file_name", by.y = "original_file_name", 
+                       by.x = "file_name", 
+                       by.y = "original_file_name", 
                        all.x = TRUE, all.y = FALSE)
+
+#### 8. sampling after segmentation ----
+
+sampling.df$Selection_Criteria[8] <- "After segmentation"
+
 #check df
 nrow(presence.meta) #6297
 length(unique(presence.meta$scientific_name)) #41
 
-##load species from Burress et al. 2016
-burress <- read.csv("Previous Fish Measurements - Burress et al. 2016.csv", header = TRUE)
-b.sp <- unique(burress$Species)
+sampling.df$All_Minnows_Images_sp[8] <- paste0(nrow(presence.meta),
+                                               " (",
+                                               length(unique(presence.meta$scientific_name)),
+                                               ")")
 
-##compare to burress
-nrow(presence.meta[presence.meta$scientific_name %in% b.sp,]) #446
-length(unique(presence.meta$scientific_name[presence.meta$scientific_name %in% b.sp])) #8
+#compare to Burress et al. 2017
+nrow(presence.meta[presence.meta$scinetific_name %in% b.sp])
+length(unique(presence.meta$scientific_name[presence.meta$scinetific_name %in% b.sp]))
+
+sampling.df$Burress_et_al._2017_Overlap_Images_sp[8] <- paste0(nrow(presence.meta[presence.meta$scinetific_name %in% b.sp]),
+                                                               " (",
+                                                               length(unique(presence.meta$scientific_name[presence.meta$scinetific_name %in% b.sp])),
+                                                               ")")
+
+#### analyze presence ----
 
 #get rid of columns we don't need
 #not using adipose fin for minnows
@@ -76,22 +90,29 @@ df <- select(presence.meta, - c("adipos_fin_number", "adipos_fin_percentage",
                                 "alt_fin_ray_number", "alt_fin_ray_percentage",
                                 "width", "size", "height"))
 
-## how many 0s are there?
+## how many 0s are there? ====
 no.abs <- df[apply(df, 1, function(row) all(row !=0 )), ]  # Remove zero-rows
 nrow(df) - nrow(no.abs) #40
 
-## how many have all fins?
+## how many have all fins? ====
 df.fin.per <- select(df, c("scientific_name", contains("percentage")))
 df.fin.per$total <- rowSums(df.fin.per[ , 2:9], na.rm=TRUE)
 nrow(df.fin.per[df.fin.per$total > 8,]) #none are perfect
 
-#sampling of data
+#### sampling of data ----
 df.fin.per.sample <- df.fin.per %>%
   group_by(scientific_name) %>%
   summarize(sample = n()) %>%
   as.data.frame()
 
-#visualize sampling data
+## sampling from Burress et al. 2017 ====
+
+# compare to burress
+nrow(df[df$scientific_name %in% b.sp,]) #446
+length(unique(df$scientific_name[df$scientific_name %in% b.sp])) #8
+table(df$scientific_name[df$scientific_name %in% b.sp,])
+
+## visualize sampling data ####
 df.fin.per.sample.dist <- ggplot(data = df.fin.per.sample, aes(x = sample)) +
   geom_density(col = "blue") +
   geom_rug(sides = "b", col = "blue") +
@@ -102,11 +123,11 @@ df.fin.per.sample.dist <- ggplot(data = df.fin.per.sample, aes(x = sample)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black"))
 
-ggsave(df.fin.per.sample.dist, file = "presence.absence.sample.dist.png", 
-       width = 20, height = 15, units = "cm",
-       path = "../Prelim Results/")
+ggsave(df.fin.per.sample.dist, 
+       file = file.path(results, "presence.absence.sample.dist.png"), 
+       width = 20, height = 15, units = "cm")
 
-#about the data
+#### statistics about the data ----
 stats <- df %>%
   summarise(min.head = min(head_percentage),
             max.head = max(head_percentage),
@@ -178,7 +199,7 @@ stats.sp <- df %>%
             sd.pect = sd(pectoral_fin_percentage)) %>%
   as.data.frame()
 
-#make a heat map
+## make a heat map ####
 #need to have matrix in the order we already want
 #need to label rows
 stats.sp.sort <- stats.sp[order(stats.sp$sample, decreasing = TRUE),]
@@ -195,7 +216,7 @@ hm <- heatmap(stats.sp.trim,
               labCol = colnames(stats.sp.trim), 
               main = "Heat Map")
 
-#average
+## average
 stats.sp.avg <- select(stats.sp.sort, contains("avg."))
 colnames(stats.sp.avg) #in correct order
 stats.sp.avg <- as.matrix(stats.sp.avg)
@@ -213,13 +234,13 @@ hm.avg <- ggplot(melt_stats_avg, aes(Var2, Var1)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black"))
 
-ggsave(hm.avg, file = "heatmap.avg.blob.png", 
-       width = 14, height = 20, units = "cm",
-       path = "../Prelim Results/")
+ggsave(hm.avg, 
+       file = file.path(results, "heatmap.avg.blob.png"), 
+       width = 14, height = 20, units = "cm")
 
 min(melt_stats_avg$value) #81 is smallest average size
 
-#sd
+# sd
 stats.sp.sd <- select(stats.sp.sort, contains("sd."))
 stats.sp.sd <- as.matrix(stats.sp.sd)
 colnames(stats.sp.sd) #in correct order
@@ -237,9 +258,9 @@ hm.sd <- ggplot(melt_stats_avg, aes(Var2, Var1)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black"))
 
-ggsave(hm.avg, file = "heatmap.sd.blob.png", 
-       width = 14, height = 20, units = "cm",
-       path = "../Prelim Results/")
+ggsave(hm.avg, 
+       file = file.path(results, "heatmap.sd.blob.png"), 
+       width = 14, height = 20, units = "cm")
 
 max(melt_stats_sd$value) #.34 largest standard deviation
 
@@ -250,9 +271,7 @@ max(melt_stats_sd$value) #.34 largest standard deviation
 #  - % blob by trait and then by sp
 #  - create coefficient of variation
 
-ggplot(data = presence.meta) +
-  geom_density(aes(x = dorsal_fin_percentage, fill = scientific_name))
-
+#### remove species missing traits ----
 #remove species that have 0 for traits we are using: head, eye, trunk
 df.fin.0 <- df.fin.per[df.fin.per$head_percentage > 0 &
                        df.fin.per$eye_percentage > 0 &
@@ -261,6 +280,10 @@ df.fin.0 <- df.fin.per[df.fin.per$head_percentage > 0 &
 nrow(df.fin.per) #6297
 nrow(df.fin.0) #6297, no loss
 
+## 9. 95% min for blob ====
+
+sampling.df$Selection_Criteria[9] <- "95% blobb for head, eye, trunk"
+
 #based on visualizations above, we decided to keep .95 blobs; only for the traits we care about
 df.fin.95.3 <- df.fin.per[df.fin.per$head_percentage > .95 &
                           df.fin.per$eye_percentage > .95 &
@@ -268,17 +291,29 @@ df.fin.95.3 <- df.fin.per[df.fin.per$head_percentage > .95 &
 nrow(df.fin.95.3) #6205 images
 length(unique(df.fin.95.3$scientific_name)) #41 species
 
-#compare to burress
+sampling.df$All_Minnows_Images_sp[9] <- paste0(nrow(df.fin.95.3),
+                                               " (",
+                                               length(unique(df.fin.95.3$scientific_name)),
+                                               ")")
+
+## compare to Burress et al. 2017 ====
 df.fin.b.95.3 <- df.fin.95.3[df.fin.95.3$scientific_name %in% b.sp,]
 nrow(df.fin.b.95.3) #445
 length(unique(df.fin.b.95.3$scientific_name)) #8
 
+sampling.df$Burress_et_al._2017_Overlap_Images_sp[9] <- paste0(nrow(df.fin.b.95.3),
+                                                               " (",
+                                                               length(unique(df.fin.b.95.3$scientific_name)),
+                                                               ")")
+
 #how is the sampling for these species?
 b.sampling <- as.data.frame(table(df.fin.b.95.3$scientific_name))
 colnames(b.sampling) <- c("Scientific_Name", "Sample_Size")
-write.csv(b.sampling, "sampling.species.in.Burress.csv", row.names = FALSE)
+write.csv(b.sampling,
+          file = file.path(results, paste0("sampling.species.in.Burress", Sys.Date(), ".csv")),
+          row.names = FALSE)
 
-##how much does the total dataset get reduced if all traits are at a 95% cut off?
+## how much does the total dataset get reduced if all traits are at a 95% cut off?
 df.fin.95 <- df.fin.per[df.fin.per$head_percentage > .95 &
                         df.fin.per$eye_percentage > .95 &
                         df.fin.per$trunk_percentage > .95 &
@@ -292,15 +327,22 @@ length(unique(df.fin.95$scientific_name)) #41
 
 sort(table(df.fin.95$scientific_name)) #3 species have under 10 samples; lose 20 images
 
-##how much does the total dataset get reduced for the 3 segmented traits at a 95% cut off?
+## how much does the total dataset get reduced for the 3 segmented traits at a 95% cut off?
 df.fin.95.3 <- df.fin.per[df.fin.per$head_percentage > .95 &
                           df.fin.per$eye_percentage > .95 &
                           df.fin.per$trunk_percentage > .95,]
 nrow(df.fin.95.3) #6205; a lot more!
 length(unique(df.fin.95.3$scientific_name)) #41
 
-#how is sampling?
+# how is sampling?
 sampling.95.3 <- as.data.frame(sort(table(df.fin.95.3$scientific_name)))
 colnames(sampling.95.3) <- c("Scientific_Name", "Sample_Size")
 nrow(sampling.95.3) #41 sp; don't lose any!
-write.csv(sampling.95.3, "sampling.minnows.95.blob.3.segments.csv", row.names = FALSE)
+
+write.csv(sampling.95.3,
+          file = file.path(results, paste0("sampling.minnows.95.blob.3.segments", Sys.Date(), ".csv")),
+          row.names = FALSE)
+
+write.csv(sampling.df,
+          file = file.path(results, "sampling.df.seg.csv"),
+          row.names = FALSE)

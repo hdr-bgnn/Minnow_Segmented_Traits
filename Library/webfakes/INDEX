@@ -1,0 +1,27 @@
+httpbin_app             Generic web app for testing HTTP clients
+local_app_process       App process that is cleaned up automatically
+mw_etag                 Middleware that add an 'Etag' header to the
+                        response
+mw_json                 Middleware to parse a JSON body
+mw_log                  Log requests to the standard output or other
+                        connection
+mw_multipart            Parse a multipart HTTP request body
+mw_raw                  Middleware to read the raw body of a request
+mw_static               Middleware function to serve static files
+mw_text                 Middleware to parse a plain text body
+mw_urlencoded           Middleware to parse an url-encoded request body
+new_app                 Create a new web application
+new_app_process         Run a webfakes app in another process
+new_regexp              Create a new regular expression to use in
+                        webfakes routes
+oauth2_httr_login       Helper function to use httr's OAuth2.0
+                        functions non-interactively, e.g. in test cases
+oauth2_login            Helper function to log in to a third party
+                        OAuth2.0 app without a browser
+oauth2_resource_app     Fake OAuth 2.0 resource and authorization app
+oauth2_third_party_app
+                        App representing the third-party app
+server_opts             Webfakes web server options
+tmpl_glue               glue based template engine
+webfakes_request        A webfakes request object
+webfakes_response       A webfakes response object

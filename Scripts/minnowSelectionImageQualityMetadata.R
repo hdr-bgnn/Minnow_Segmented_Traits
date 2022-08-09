@@ -2,45 +2,85 @@
 # Meghan Balk 
 # balk@battelleecology.org
 
-renv::init()
+## MAKE SURE WD IS IN REPO
+#setwd("minnowTraits")
 
-##set directory
-setwd("~/BGNN/minnowTraits/Files")
+#### load dependencies ----
+source("paths.R")
+source("dependencies.R")
 
-####LOAD DATA----
+#### load functions ----
+source(file.path(scripts, "json_df.R"))
+source(file.path(scripts, "valid_url.R"))
+source(file.path(scripts, "download_size.R"))
 
-##image metadata and image quality metadata from Yasin
-image.data <- read.csv("Image_Metadata_v1_20211206_151152.csv", header = TRUE) #images with metadata
-image.quality <- read.csv("Image_Quality_Metadata_v1_20211206_151204.csv", header = TRUE)
+# Files created by this script:
+# 1. table of sampling as selection criteria applied
+# 2. new data set that only keeps images that meet the selection criteria
+# 3. new data set that only keeps images that meet the selection criteria and
+#    that contain the species in Burress et al. 2017
 
-##load species from Burress et al. 2016
-burress <- read.csv("Previous Fish Measurements - Burress et al. 2016.csv", header = TRUE)
-b.sp <- unique(burress$Species)
+#### create table to be appended ----
+c.names <- c("Selection_Criteria", 
+             "All_Minnows_Images_sp",
+             "Burress_et_al._2017_Overlap_Images_sp")
+sampling.df = data.frame(matrix(nrow = 15, ncol = length(c.names))) 
+colnames(sampling.df) = c.names
+
+#### 1. sampling of the metadata ----
 
 #how many species and images in image metadata?
+sampling.df$Selection_Criteria[1] <- "Image quality metadata file"
 #length(unique(image.data$file_name)) #109421
 #length(unique(image.data$scientific_name)) #13664
 
 length(unique(image.quality$image_name)) #34795
 length(unique(image.quality$scientific_name)) #804
 
-#now reduce to burress
+sampling.df$All_Minnows_Images_sp[1] <- paste0(length(unique(image.quality$image_name)),
+                                               " (",
+                                               length(unique(image.quality$scientific_name)),
+                                               ")")
+
+#now reduce to Burress et al. 2017
 #length(unique(image.data$file_name[image.quality$scientific_name %in% b.sp])) #4114
 #length(unique(image.data$scientific_name[image.data$scientific_name %in% b.sp])) #22
 
 length(unique(image.quality$image_name[image.quality$scientific_name %in% b.sp])) #1333
 length(unique(image.quality$scientific_name[image.quality$scientific_name %in% b.sp])) #22
 
+sampling.df$Burress_et_al._2017_Overlap_Images_sp[1] <- paste0(length(unique(image.quality$image_name[image.quality$scientific_name %in% b.sp])),
+                                                               " (",
+                                                               length(unique(image.quality$scientific_name[image.quality$scientific_name %in% b.sp])),
+                                                               ")")
+
+#### 2. selection based on IQM ----
+
+sampling.df$Selection_Criteria[2] <- "Select for Minnows"
+
 #extract just the minnows
 minnow.quality <-  image.quality[image.quality$family == "Cyprinidae",]
 length(unique(minnow.quality$image_name)) #13842
 length(unique(minnow.quality$scientific_name)) #166
 
-##compared to Burress
+sampling.df$All_Minnows_Images_sp[2] <- paste0(length(unique(minnow.quality$image_name)),
+                                               " (",
+                                               length(unique(minnow.quality$scientific_name)),
+                                               ")")
+
+##compared to Burress et al. 2017
 length(unique(minnow.quality$image_name[minnow.quality$scientific_name %in% b.sp])) #1333
 length(unique(minnow.quality$scientific_name[minnow.quality$scientific_name %in% b.sp])) #22
 
-#use image quality metadata to select for minnow images
+sampling.df$Burress_et_al._2017_Overlap_Images_sp[2] <- paste0(length(unique(minnow.quality$image_name[minnow.quality$scientific_name %in% b.sp])),
+                                                               " (",
+                                                               length(unique(minnow.quality$scientific_name[minnow.quality$scientific_name %in% b.sp])),
+                                                               ")")
+
+#### 3. use image quality metadata to select for minnow images ----
+
+sampling.df$Selection_Criteria[3] <- "Image Quality Metadata Selection"
+
 minnow.keep <- minnow.quality[minnow.quality$specimen_viewing == "left" & #facing left
                               minnow.quality$straight_curved == "straight"&
                               minnow.quality$brightness == "normal" &
@@ -55,9 +95,19 @@ minnow.keep <- minnow.quality[minnow.quality$specimen_viewing == "left" & #facin
 length(unique(minnow.keep$image_name)) #7811
 length(unique(minnow.keep$scientific_name)) #115
 
-#for burress
+sampling.df$All_Minnows_Images_sp[3] <- paste0(length(unique(minnow.keep$image_name)),
+                                               " (",
+                                               length(unique(minnow.keep$scientific_name)),
+                                               ")")
+
+#for Burress et al. 2017
 length(unique(minnow.keep$image_name[minnow.keep$scientific_name %in% b.sp])) #756
 length(unique(minnow.keep$scientific_name[minnow.keep$scientific_name %in% b.sp])) #20
+
+sampling.df$Burress_et_al._2017_Overlap_Images_sp[3] <- paste0(length(unique(minnow.keep$image_name[minnow.keep$scientific_name %in% b.sp])),
+                                                               " (",
+                                                               length(unique(minnow.keep$scientific_name[minnow.keep$scientific_name %in% b.sp])),
+                                                               ")")
 
 #we lose a lot of species when we include this
 nrow(minnow.keep[minnow.keep$if_background_uniform == "True",]) #3533
@@ -70,18 +120,35 @@ length(unique(minnow.keep$scientific_name[minnow.keep$if_background_uniform == "
 
 images.minnows <- merge(image.data, minnow.keep, by.x = "original_file_name", by.y = "image_name")
 
-#get rid of dupes!! image metadata has multiple users, so duplicates per fish
+#### 4. get rid of dupes ----
+# image metadata has multiple users, so duplicates per fish
+
+sampling.df$Selection_Criteria[4] <- "Removing dupes from image quality metadata file"
+
 images.minnows.clean <- images.minnows[!duplicated(images.minnows$original_file_name),]
 
 #how many species and images in image metadata?
 nrow(images.minnows.clean) #7811
 length(unique(images.minnows.clean$scientific_name.x)) #115
 
-#now reduce to burress
+sampling.df$All_Minnows_Images_sp[4] <- paste0(nrow(images.minnows.clean),
+                                               " (",
+                                               length(unique(images.minnows.clean$scientific_name.x)),
+                                               ")")
+
+#now reduce to Burress et al. 2017
 nrow(images.minnows.clean[images.minnows.clean$scientific_name.x %in% b.sp,]) #756
 length(unique(images.minnows.clean$scientific_name.x[images.minnows.clean$scientific_name.x %in% b.sp])) #20
 
-#only INHS, UWZM
+sampling.df$Burress_et_al._2017_Overlap_Images_sp[4] <- paste0(nrow(images.minnows.clean[images.minnows.clean$scientific_name.x %in% b.sp,]),
+                                                               " (",
+                                                               length(unique(images.minnows.clean$scientific_name.x[images.minnows.clean$scientific_name.x %in% b.sp])),
+                                                               ")")
+
+#### 5. only INHS, UWZM ----
+
+sampling.df$Selection_Criteria[5] <- "Only INHS or UWZM (none from UWZM)"
+
 institutions <- c("INHS", "UWZM") #no uwzm
 images.minnows.trim <- images.minnows.clean[images.minnows.clean$institution %in% institutions,]
 unique(images.minnows.trim$institution)
@@ -91,10 +158,22 @@ length(unique(images.minnows.trim$scientific_name.x)) #93
 unique(images.minnows.trim$fish_number) 
 #should be 1; don't want multiple fish per images because currently don't have a good way to keep metadata
 
-##compared to burress
+sampling.df$All_Minnows_Images_sp[5] <- paste0(nrow(images.minnows.trim),
+                                               " (",
+                                               length(unique(images.minnows.trim$scientific_name.x)),
+                                               ")")
+
+##compared to Burress et al. 2017
 nrow(images.minnows.trim[images.minnows.trim$scientific_name.x %in% b.sp,]) #478
 length(unique(images.minnows.trim$scientific_name.x[images.minnows.trim$scientific_name.x %in% b.sp])) #18
 
+sampling.df$Burress_et_al._2017_Overlap_Images_sp[5] <- paste0(nrow(images.minnows.trim[images.minnows.trim$scientific_name.x %in% b.sp,]),
+                                                               " (",
+                                                               length(unique(images.minnows.trim$scientific_name.x[images.minnows.trim$scientific_name.x %in% b.sp])),
+                                                               ")")
+#### 6. remove empty URLs ----
+
+sampling.df$Selection_Criteria[6] <- "No empty URLs"
 
 ##ask if url is empty and remove if it is
 #1) see if url resolves
@@ -102,30 +181,13 @@ length(unique(images.minnows.trim$scientific_name.x[images.minnows.trim$scientif
 #3) if resolves & not empty, keep the path
 #4) remove all other paths
 
-#from stack overflow: https://stackoverflow.com/questions/52911812/check-if-url-exists-in-r
-valid_url <- function(url_in,t=2){
-  con <- url(url_in)
-  check <- suppressWarnings(try(open.connection(con,open="rt",timeout=t),silent=T)[1])
-  suppressWarnings(try(close.connection(con),silent=T))
-  ifelse(is.null(check),TRUE,FALSE)
-}
-#test; images.minnows.trim$path[1]
-valid_url(images.minnows.trim$path[1])
-
-#from stack overflow: https://stackoverflow__com.teameo.ca/questions/63852146/how-to-determine-online-file-size-before-download-in-r
-download_size <- function(url){
-  as.numeric(httr::HEAD(url)$headers$`content-length`)
-}
-#test; images.minnows.trim$path[1]
-download_size(images.minnows.trim$path[1])
-
-test1 <- images.minnows.trim[1:10,]
-#known url that doesn't work
+#test with a known url that doesn't work
 ##http://www.tubri.org/HDR/INHS/INHS_FISH_65294.jpg
 ##INHS_FISH_33814.jpg
-test2 <- images.minnows.trim[images.minnows.trim$original_file_name == "INHS_FISH_33814.jpg" |
-                             images.minnows.trim$path == "http://www.tubri.org/HDR/INHS/INHS_FISH_65294.jpg",]
-  
+test <- images.minnows.trim[images.minnows.trim$original_file_name == "INHS_FISH_33814.jpg" |
+                            images.minnows.trim$path == "http://www.tubri.org/HDR/INHS/INHS_FISH_65294.jpg",]
+
+## now for all:
 empty <- c()
 for(i in 1:nrow(images.minnows.trim)){
   if(!isTRUE(valid_url(images.minnows.trim$path[i]))){
@@ -145,9 +207,23 @@ images.minnows.resolve <- images.minnows.trim[!(images.minnows.trim$path %in% em
 nrow(images.minnows.resolve) #6480
 length(unique(images.minnows.resolve$scientific_name.x)) #93
 
-##compared to burress
+sampling.df$All_Minnows_Images_sp[6] <- paste0(nrow(images.minnows.resolve),
+                                               " (",
+                                               length(unique(images.minnows.resolve$scientific_name.x)),
+                                               ")")
+
+##compared to Burress et al. 2017
 nrow(images.minnows.resolve[images.minnows.resolve$scientific_name.x %in% b.sp,]) #478
 length(unique(images.minnows.resolve$scientific_name.x[images.minnows.resolve$scientific_name.x %in% b.sp])) #17
+
+sampling.df$Burress_et_al._2017_Overlap_Images_sp[6] <- paste0(nrow(images.minnows.resolve[images.minnows.resolve$scientific_name.x %in% b.sp,]),
+                                                               " (",
+                                                               length(unique(images.minnows.resolve$scientific_name.x[images.minnows.resolve$scientific_name.x %in% b.sp])),
+                                                               ")")
+
+#### 7. At least 10 samples ----
+
+sampling.df$Selection_Criteria[7] <- "At least 10 samples"
 
 #get sample size (number of images per species)
 table.sp <- images.minnows.resolve %>%
@@ -164,20 +240,34 @@ images.minnows.10 <- images.minnows.resolve[images.minnows.resolve$scientific_na
 nrow(images.minnows.10) #6300
 length(unique(images.minnows.10$scientific_name.x)) #41
 
-#compared to burress
+sampling.df$All_Minnows_Images_sp[7] <- paste0(nrow(images.minnows.10),
+                                               " (",
+                                               length(unique(images.minnows.10$scientific_name.x)),
+                                               ")")
+
+#compared to Burress et al. 2017
 nrow(images.minnows.10[images.minnows.10$scientific_name.x %in% b.sp,]) #446
 length(unique(images.minnows.10$scientific_name.x[images.minnows.10$scientific_name.x %in% b.sp])) #8
 
-table.gen <- images.minnows.10 %>%
-  group_by(genus.x) %>%
-  summarise(sample.size = n())
-nrow(table.gen) #4
-unique(images.minnows.10$genus.x)
+sampling.df$Burress_et_al._2017_Overlap_Images_sp[7] <- paste0(nrow(images.minnows.10[images.minnows.10$scientific_name.x %in% b.sp,]),
+                                                               " (", 
+                                                               length(unique(images.minnows.10$scientific_name.x[images.minnows.10$scientific_name.x %in% b.sp])),
+                                                               ")")
+
+#### write datasets ----
 
 #write dataset without index
-write.csv(images.minnows.10, "minnow.filtered.from.imagequalitymetadata_25Jul2022.csv", row.names = FALSE)
+write.csv(images.minnows.10, 
+          file = file.path(results, paste0("minnow.filtered.from.imagequalitymetadata_", Sys.Date(),".csv")), 
+          row.names = FALSE)
 
 #write dataset trimmed to Burress
 images.minnows.burress <- images.minnows.10[images.minnows.10$scientific_name.x %in% b.sp,]
-write.csv(images.minnows.burress, "burress.minnow.sp.filtered.from.imagequalitymetadata_25Jul2022.csv", row.names = FALSE)
+write.csv(images.minnows.burress, 
+          file = file.path(results, paste0("burress.minnow.sp.filtered.from.imagequalitymetadata_", Sys.Date(), ".csv")),
+          row.names = FALSE)
 
+#write table of sampling
+write.csv(sampling.df,
+          file = file.path(restults, "sampling.df.IQM.csv"),
+          row.names = FALSE)
