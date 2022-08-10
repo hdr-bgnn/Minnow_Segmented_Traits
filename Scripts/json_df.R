@@ -6,7 +6,7 @@
 json_df <- function(jfile){
   input <- fromJSON(file = jfile, unexpected.escape = "keep")
   df <- as.data.frame(input)
-  if(isTRUE(names(df) %in% "scale")){
+  if(isTRUE("scale" %in% colnames(df))){
     df$scale <- as.numeric(df$scale) #for some reason there are "doubles"; making them all the same
   }
   if(!isTRUE(names(df) %in% "file_name")){

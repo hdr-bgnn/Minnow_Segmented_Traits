@@ -66,7 +66,7 @@ presence.meta <- merge(presence.df, meta.df,
 
 sampling.df$Selection_Criteria[8] <- "After segmentation"
 
-#check df
+#check df (need to re-run w everything)
 nrow(presence.meta) #6297
 length(unique(presence.meta$scientific_name)) #41
 
@@ -76,12 +76,12 @@ sampling.df$All_Minnows_Images_sp[8] <- paste0(nrow(presence.meta),
                                                ")")
 
 #compare to Burress et al. 2017
-nrow(presence.meta[presence.meta$scinetific_name %in% b.sp])
-length(unique(presence.meta$scientific_name[presence.meta$scinetific_name %in% b.sp]))
+nrow(presence.meta[presence.meta$scinetific_name %in% b.sp]) #446
+length(unique(presence.meta$scientific_name[presence.meta$scientific_name %in% b.sp])) #8
 
 sampling.df$Burress_et_al._2017_Overlap_Images_sp[8] <- paste0(nrow(presence.meta[presence.meta$scinetific_name %in% b.sp]),
                                                                " (",
-                                                               length(unique(presence.meta$scientific_name[presence.meta$scinetific_name %in% b.sp])),
+                                                               length(unique(presence.meta$scientific_name[presence.meta$scientific_name %in% b.sp])),
                                                                ")")
 
 #### analyze presence ----
@@ -97,7 +97,7 @@ df <- select(presence.meta, - c("adipos_fin_number", "adipos_fin_percentage",
 
 ## how many 0s are there? ====
 no.abs <- df[apply(df, 1, function(row) all(row !=0 )), ]  # Remove zero-rows
-nrow(df) - nrow(no.abs) #40
+nrow(df) - nrow(no.abs) #40; 10 from Burress
 
 ## how many have all fins? ====
 df.fin.per <- select(df, c("scientific_name", contains("percentage")))
@@ -115,7 +115,6 @@ df.fin.per.sample <- df.fin.per %>%
 # compare to burress
 nrow(df[df$scientific_name %in% b.sp,]) #446
 length(unique(df$scientific_name[df$scientific_name %in% b.sp])) #8
-table(df$scientific_name[df$scientific_name %in% b.sp,])
 
 ## visualize sampling data ####
 df.fin.per.sample.dist <- ggplot(data = df.fin.per.sample, aes(x = sample)) +
@@ -315,7 +314,7 @@ sampling.df$Burress_et_al._2017_Overlap_Images_sp[9] <- paste0(nrow(df.fin.b.95.
 b.sampling <- as.data.frame(table(df.fin.b.95.3$scientific_name))
 colnames(b.sampling) <- c("Scientific_Name", "Sample_Size")
 write.csv(b.sampling,
-          file = file.path(results, paste0("sampling.species.in.Burress", Sys.Date(), ".csv")),
+          file = file.path(results, paste0("sampling.species.in.Burress_", Sys.Date(), ".csv")),
           row.names = FALSE)
 
 ## how much does the total dataset get reduced if all traits are at a 95% cut off?
