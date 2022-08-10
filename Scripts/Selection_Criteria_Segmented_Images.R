@@ -32,9 +32,11 @@ source(file.path(scripts, "json_df.R"))
 # files are the in the Presences folder
 # get list of file names
 
-p.files <- list.files(path = file.path("", presence), pattern = '*.json')
+p.files <- list.files(path = file.path("/fs/ess/PAS2136/BGNN/Burress_et_al_2017_minnows", presence), pattern = '*.json')
 
 # turn into csv
+# need to set to file path to open them
+setwd(file.path("/fs/ess/PAS2136/BGNN/Burress_et_al_2017_minnows", presence))
 presence.df <- lapply(p.files, json_df) %>% 
   dplyr::bind_rows() # collapses list of data frames into a single data frame
 
@@ -44,8 +46,11 @@ names(presence.df) <- gsub(x = names(presence.df),
                            replacement = "_")  
 
 # write data frame to Results directory
+## RESET DIRECTORY
+setwd("/users/PAS2136/balkm/minnowTraits")
+
 write.csv(presence.df, 
-          file = file.path(results, paste0("presence.absence.matrix", Sys.Date(), ".csv")), 
+          file = file.path(results, paste0("presence.absence.matrix_", Sys.Date(), ".csv")), 
           row.names = FALSE) #no index
 
 #### merge with metadata ----
