@@ -10,7 +10,7 @@ source("paths.R")
 source("dependencies.R")
 
 #### add to sampling.df ----
-sampling.df <- read.csv(file = file.path(results, "sampling.df.IQM.csv"),
+sampling.df <- read.csv(file = file.path(results, "sampling.df.seg.csv"),
                         header = TRUE)
 
 #### load functions ----
@@ -29,7 +29,7 @@ source(file.path(scripts, "json_df.R"))
 #### json to df ----
 # files are the in the Presences folder
 # get list of file names
-m.files <- list.files(path = file.path("", measure), pattern = '*.json')
+m.files <- list.files(path = file.path("/fs/ess/PAS2136/BGNN/Burress_et_al_2017_minnows", measure), pattern = '*.json')
 
 # turn into csv
 measure.df <- lapply(m.files, json_df) %>% #list of dataframes
@@ -42,7 +42,9 @@ length(m.files) #446
 str(measure.df)
 View(measure.df)
 
-#in files dir
+# write data frame to Results directory
+## RESET DIRECTORY
+setwd("/users/PAS2136/balkm/minnowTraits")
 write.csv(measure.df, 
           file = file.path(results, paste0("measure.df_", Sys.Date(), ".csv")),
           row.names = FALSE)
