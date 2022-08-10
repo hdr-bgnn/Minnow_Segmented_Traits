@@ -12,7 +12,7 @@ json_df <- function(jfile){
   if(!isTRUE(names(df) %in% "file_name")){
     df$file.name <- gsub(jfile,
                          pattern = "_presence.json", #can change this depending on the file name
-                         eplacement = "")
+                         replacement = "")
   }
   #will get warnings because NA are created since some df$scales are characters ("none")
   return(df)
