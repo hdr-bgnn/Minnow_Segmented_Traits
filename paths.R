@@ -25,6 +25,10 @@ meta.df$original_file_name <- gsub(meta.df$original_file_name,
                                    pattern = ".jpg",
                                    replacement = "")
 
+iqm.df$image_name <- gsub(iqm.df$image_name,
+                          pattern = "\\..*",
+                          replacement = "")
+
 ## burress previous measurements
 # measurements from Burress et al. 2017 (see PDFs/Burress et al 2017  Ecological diversification associated with the benthic‐to‐pelagic transition supinfo.docx)
 b.df <- read.csv(file = file.path(files, "Previous Fish Measurements - Burress et al. 2016.csv"),
