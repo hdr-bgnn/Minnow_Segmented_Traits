@@ -79,7 +79,7 @@ sampling.df$All_Minnows_Images_sp[10] <- paste0(nrow(meta.measure.df.scale),
                                                 length(unique(meta.measure.df.scale$scientific_name)),
                                                 ")")
 
-sampling.df$Burress_et_al._2017_Overlap_Images_sp[10] <- paste0(nrow(meta.measure.df.scale[meta.measure.df.scale$scientific_name %in% b.sp]),
+sampling.df$Burress_et_al._2017_Overlap_Images_sp[10] <- paste0(nrow(meta.measure.df.scale[meta.measure.df.scale$scientific_name %in% b.sp,]),
                                                                 " (",
                                                                 length(unique(meta.measure.df.scale$scientific_name[meta.measure.df.scale$scientific_name %in% b.sp])),
                                                                 ")")
@@ -292,7 +292,7 @@ measure_stats = b.meta.measure.df.scale %>%
   as.data.frame()
 
 write.csv(measure_stats,
-          file = file.path(restults, paste0("measurement.stats.burress_", Sys.Date(), ".csv")),
+          file = file.path(results, paste0("measurement.stats.burress_", Sys.Date(), ".csv")),
           row.names = FALSE)
 
 #### analyze per species ----  
