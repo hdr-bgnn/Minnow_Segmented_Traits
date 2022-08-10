@@ -32,6 +32,8 @@ source(file.path(scripts, "json_df.R"))
 m.files <- list.files(path = file.path("/fs/ess/PAS2136/BGNN/Burress_et_al_2017_minnows", measure), pattern = '*.json')
 
 # turn into csv
+# need to be in directory to grab the files 
+setwd(file.path("/fs/ess/PAS2136/BGNN/Burress_et_al_2017_minnows", measure))
 measure.df <- lapply(m.files, json_df) %>% #list of dataframes
   dplyr::bind_rows() #rbind to turn into single dataframes
 
