@@ -9,10 +9,14 @@ json_df <- function(jfile){
   if(isTRUE(names(df) %in% "scale")){
     df$scale <- as.numeric(df$scale) #for some reason there are "doubles"; making them all the same
   }
+  if(!isTRUE(names(df) %in% "file_name")){
+    df$file.name <- gsub(jfile,
+                         pattern = "_presence.json", #can change this depending on the file name
+                         eplacement = "")
+  }
   #will get warnings because NA are created since some df$scales are characters ("none")
   return(df)
 }
-
 
 ### old code
 # json_df <- function(jfile){
