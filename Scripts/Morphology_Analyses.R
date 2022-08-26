@@ -5,16 +5,9 @@
 ## MAKE SURE WD IS IN REPO
 #setwd("minnowTraits")
 
-#### load dependencies ----
-source("paths.R")
-source("dependencies.R")
-
 #### add to sampling.df ----
 sampling.df <- read.csv(file = file.path(results, "sampling.df.seg.csv"),
                         header = TRUE)
-
-#### load functions ----
-source(file.path(scripts, "json_df.R"))
 
 # Files created by this script:
 # 1. table of sampling as selection criteria applied
@@ -34,7 +27,7 @@ m.files <- list.files(path = file.path("/fs/ess/PAS2136/BGNN/Burress_et_al_2017_
 # turn into csv
 # need to be in directory to grab the files 
 setwd(file.path("/fs/ess/PAS2136/BGNN/Burress_et_al_2017_minnows", measure))
-measure.df <- lapply(m.files, json_df) %>% #list of dataframes
+measure.df <- lapply(m.files, json_df, type = "_measure") %>% #list of dataframes
   dplyr::bind_rows() #rbind to turn into single dataframes
 
 #check have all the files
@@ -48,7 +41,7 @@ View(measure.df)
 ## RESET DIRECTORY
 setwd("/users/PAS2136/balkm/minnowTraits")
 write.csv(measure.df, 
-          file = file.path(results, paste0("measure.df_", Sys.Date(), ".csv")),
+          file = file.path(results, "morphology.df.csv"),
           row.names = FALSE)
 
 ## 10. remove those that don't have a scale ----
@@ -60,13 +53,13 @@ errors <- measure.df[measure.df$unit == "None",] %>% drop_na(unit)
 nrow(errors) #18 images
 
 write.csv(errors, 
-          file = file.path(results, paste0("measure.df.missing.scale_", Sys.Date(), ".csv")),
+          file = file.path(results, "measure.df.missing.scale.csv"),
           row.names = FALSE)
 
 measure.df.scale <- measure.df[!(measure.df$base_name %in% errors$base_name),]
 
 write.csv(measure.df.scale, 
-          file = file.path(results, paste0("measure.df.errors.removed_", Sys.Date(), ".csv")), 
+          file = file.path(results, "measure.df.errors.removed.csv"), 
           row.names = FALSE)
 
 ##need to combine metatdata about fish
@@ -87,7 +80,7 @@ sampling.df$Burress_et_al._2017_Overlap_Images_sp[10] <- paste0(nrow(meta.measur
                                                                 ")")
 
 write.csv(sampling.df,
-          file = file.path(results, paste0("sampling.df_", Sys.Date(), ".csv")),
+          file = file.path(figures, "sampling.table.csv"),
           row.names = FALSE)
 
 #### convert scale ----
@@ -105,12 +98,10 @@ meta.measure.df.scale$HA_m.conv <- round(((meta.measure.df.scale$HA_m/(meta.meas
 meta.measure.df.scale$unit.conv <- "mm"
 
 write.csv(meta.measure.df.scale, 
-          file = file.path(results, paste0("meta.merged.measure.burress.errors.removed.rescaled_", Sys.Date(), ".csv")), 
+          file = file.path(results, "meta.merged.measure.burress.errors.removed.rescaled.csv"), 
           row.names = FALSE)
 
-## compare to Burress et al. 2017
-names(b.df)[2:10] <- paste0("b.",names(b.df)[2:10])
-
+## combine with Burress et al. 2017
 b.meta.measure.df.scale <- merge(b.df, meta.measure.df.scale,
                                  by.x = "Species",
                                  by.y = "scientific_name",
@@ -137,7 +128,8 @@ measure_stats = b.meta.measure.df.scale %>%
                    kurt.SL_bbox = round(kurtosis(SL_bbox.conv), digits = 2),
                    sd.SL_bbox = sd(SL_bbox.conv, na.rm = TRUE),
                    se.err.SL_bbox = sd.SL_bbox/sqrt(sample.size),
-                   abs.se.diff.SL_bbox = abs((b.SL - avg.SL_bbox)/se.err.SL_bbox), #absolute masss.diff.se observed t; number in t-units (counts of standard errors from each mean)
+                   se.diff.SL_bbox = (b.SL - avg.SL_bbox)/se.err.SL_bbox, #absolute masss.diff.se observed t; number in t-units (counts of standard errors from each mean)
+                   abs.se.diff.SL_bbox = abs(se.diff.SL_bbox), #absolute masss.diff.se observed t; number in t-units (counts of standard errors from each mean)
                    SL_bbox.3se = abs.se.diff.SL_bbox > 3, #outside.3.sigma; if true then greater than 3 std errors outside
                    SL_bbox.sig = (abs.se.diff.SL_bbox-crit.t) > 0, #sig = true means sig diff
                    SL_bbox.pvalue.crit.t = 1-pt(abs.se.diff.SL_bbox, df = (sample.size-1)), #p.value.fromt.crit.t; if p=0.05 then most of it is outside
@@ -155,7 +147,8 @@ measure_stats = b.meta.measure.df.scale %>%
                    kurt.SL_lm = round(kurtosis(SL_lm.conv), digits = 2),
                    sd.SL_lm = sd(SL_lm.conv, na.rm = TRUE),
                    se.err.SL_lm = sd.SL_lm/sqrt(sample.size),
-                   abs.se.diff.SL_lm = abs((b.SL - avg.SL_lm)/se.err.SL_lm),
+                   se.diff.SL_lm = (b.SL - avg.SL_lm)/se.err.SL_lm,
+                   abs.se.diff.SL_lm = abs(se.diff.SL_lm),
                    SL_lm.3se = abs.se.diff.SL_lm > 3,
                    SL_lm.sig = (abs.se.diff.SL_lm-crit.t) > 0,
                    SL_lm.pvalue.crit.t = 1-pt(abs.se.diff.SL_lm, df = (sample.size-1)),
@@ -173,7 +166,8 @@ measure_stats = b.meta.measure.df.scale %>%
                    kurt.HL_bbox = round(kurtosis(HL_bbox.conv), digits = 2),
                    sd.HL_bbox = sd(HL_bbox.conv, na.rm = TRUE),
                    se.err.HL_bbox = sd.HL_bbox/sqrt(sample.size),
-                   abs.se.diff.HL_bbox = abs((b.HL - avg.HL_bbox)/se.err.HL_bbox),
+                   se.diff.HL_bbox = (b.HL - avg.HL_bbox)/se.err.HL_bbox,
+                   abs.se.diff.HL_bbox = abs(se.diff.HL_bbox),
                    HL_bbox.3se = abs.se.diff.HL_bbox > 3,
                    HL_bbox.sig = abs.se.diff.HL_bbox-crit.t > 0,
                    HL_bbox.pvalue.crit.t = 1-pt(abs.se.diff.HL_bbox, df = (sample.size-1)),
@@ -191,7 +185,8 @@ measure_stats = b.meta.measure.df.scale %>%
                    kurt.HL_lm = round(kurtosis(HL_lm.conv), digits = 2),
                    sd.HL_lm = sd(HL_lm.conv, na.rm = TRUE),
                    se.err.HL_lm = sd.HL_lm/sqrt(sample.size),
-                   abs.se.diff.HL_lm = abs((b.HL - avg.HL_lm)/se.err.HL_lm),
+                   se.diff.HL_lm = (b.HL - avg.HL_lm)/se.err.HL_lm,
+                   abs.se.diff.HL_lm = abs(se.diff.HL_lm),
                    HL_lm.3se = abs.se.diff.HL_lm > 3,
                    HL_lm.sig = abs.se.diff.HL_lm-crit.t > 0,
                    HL_lm.pvalue.crit.t = 1-pt(abs.se.diff.HL_lm, df = (sample.size-1)),
@@ -209,7 +204,8 @@ measure_stats = b.meta.measure.df.scale %>%
                    kurt.pOD_bbox = round(kurtosis(pOD_bbox.conv), digits = 2),
                    sd.pOD_bbox = sd(pOD_bbox.conv, na.rm = TRUE),
                    se.err.pOD_bbox = sd.pOD_bbox/sqrt(sample.size),
-                   abs.se.diff.pOD_bbox = abs((b.SnL - avg.pOD_bbox)/se.err.pOD_bbox),
+                   se.diff.pOD_bbox = (b.SnL - avg.pOD_bbox)/se.err.pOD_bbox,
+                   abs.se.diff.pOD_bbox = abs(se.diff.pOD_bbox),
                    pOD_bbox.3se = abs.se.diff.pOD_bbox > 3,
                    pOD_bbox.sig = abs.se.diff.pOD_bbox-crit.t > 0,
                    pOD_bbox.pvalue.crit.t = 1-pt(abs.se.diff.pOD_bbox, df = (sample.size-1)),
@@ -227,7 +223,8 @@ measure_stats = b.meta.measure.df.scale %>%
                    kurt.pOD_lm = round(kurtosis(pOD_lm.conv), digits = 2),
                    sd.pOD_lm = sd(pOD_lm.conv, na.rm = TRUE),
                    se.err.pOD_lm = sd.pOD_lm/sqrt(sample.size),
-                   abs.se.diff.pOD_lm = abs((b.SnL - avg.pOD_lm)/se.err.pOD_lm),
+                   se.diff.pOD_lm = (b.SnL - avg.pOD_lm)/se.err.pOD_lm,
+                   abs.se.diff.pOD_lm = abs(se.diff.pOD_lm),
                    pOD_lm.3se = abs.se.diff.pOD_lm > 3,
                    pOD_lm.sig = abs.se.diff.pOD_lm-crit.t > 0,
                    pOD_lm.pvalue.crit.t = 1-pt(abs.se.diff.pOD_lm, df = (sample.size-1)),
@@ -245,7 +242,8 @@ measure_stats = b.meta.measure.df.scale %>%
                    kurt.ED_bbox = round(kurtosis(ED_bbox.conv), digits = 2),
                    sd.ED_bbox = sd(ED_bbox.conv, na.rm = TRUE),
                    se.err.ED_bbox = sd.ED_bbox/sqrt(sample.size),
-                   abs.se.diff.ED_bbox = abs((b.ED - avg.ED_bbox)/se.err.ED_bbox),
+                   se.diff.ED_bbox = (b.ED - avg.ED_bbox)/se.err.ED_bbox,
+                   abs.se.diff.ED_bbox = abs(se.diff.ED_bbox),
                    ED_bbox.3se = abs.se.diff.ED_bbox > 3,
                    ED_bbox.sig = abs.se.diff.ED_bbox-crit.t > 0,
                    ED_bbox.pvalue.crit.t = 1-pt(abs.se.diff.ED_bbox, df = (sample.size-1)),
@@ -263,7 +261,8 @@ measure_stats = b.meta.measure.df.scale %>%
                    kurt.ED_lm = round(kurtosis(ED_lm.conv), digits = 2),
                    sd.ED_lm = sd(ED_lm.conv, na.rm = TRUE),
                    se.err.ED_lm = sd.ED_lm /sqrt(sample.size),
-                   abs.se.diff.ED_lm = abs((b.ED - avg.ED_lm)/se.err.ED_lm),
+                   se.diff.ED_lm = (b.ED - avg.ED_lm)/se.err.ED_lm,
+                   abs.se.diff.ED_lm = abs(se.diff.ED_lm),
                    ED_lm.3se = abs.se.diff.ED_lm > 3,
                    ED_lm.sig = abs.se.diff.ED_lm-crit.t > 0,
                    ED_lm.pvalue.crit.t = 1-pt(abs.se.diff.ED_lm, df = (sample.size-1)),
@@ -281,7 +280,8 @@ measure_stats = b.meta.measure.df.scale %>%
                    kurt.HH_lm = round(kurtosis(HH_lm.conv), digits = 2),
                    sd.HH_lm = sd(HH_lm.conv, na.rm = TRUE),
                    se.err.HH_lm = sd.HH_lm/sqrt(sample.size),
-                   abs.se.diff.HH_lm = abs((b.HD - avg.HH_lm)/se.err.HH_lm),
+                   se.diff.HH_lm = (b.HD - avg.HH_lm)/se.err.HH_lm,
+                   abs.se.diff.HH_lm = abs(se.diff.HH_lm),
                    HH_lm.3se = abs.se.diff.HH_lm > 3,
                    HH_lm.sig = abs.se.diff.HH_lm-crit.t > 0,
                    HH_lm.pvalue.crit.t = 1-pt(abs.se.diff.HH_lm, df = (sample.size-1)),
@@ -294,10 +294,10 @@ measure_stats = b.meta.measure.df.scale %>%
   as.data.frame()
 
 write.csv(measure_stats,
-          file = file.path(results, paste0("measurement.stats.burress_", Sys.Date(), ".csv")),
+          file = file.path(results, "measurement.stats.burress.csv"),
           row.names = FALSE)
 
-#### analyze per species ----  
+#### Figures: measurements per species per trait ----  
 ##series of density plots with the distribution of measurements and the avg from Burress
 # one per species
 
@@ -311,72 +311,242 @@ columns.keep <- c("original_file_name", "dataset", "path",
                   "HH_lm.conv",
                   "unit.conv")
 df.trim <- meta.measure.df.scale[, names(meta.measure.df.scale) %in% columns.keep]
-df.melt <- melt(df.trim, id.vars = c(1:7, 17))
-df.melt$variable <- as.factor(df.melt$variable)
+df.melt <- melt(df.trim, id.vars = c(1:7, 17),
+                variable.name = "traits",
+                value.name = "measurements")
+df.melt$traits <- as.factor(df.melt$traits)
 sp <- unique(df.melt$scientific_name)
-vs <- unique(df.melt$variable)
+traits <- unique(df.melt$traits) #order of variables
+
+## colors
+#bbox = tan4
+#lm = darkgreen
 
 for(i in 1:length(sp)){
-sl.p <- ggplot(data = df.melt[df.melt$variable == vs[1:2] &
+sl.p <- ggplot(data = df.melt[df.melt$traits == traits[1:2] &
                               df.melt$scientific_name == sp[i],]) +
-  geom_density(aes(x = value, fill = variable), alpha = 0.25) +
-# ggtitle("Notropis volucellus: comparison of measurements using bbox and lm compared to Burress et al. 2017") + 
-  scale_x_continuous(name = 'Standard length (mm)') + 
-  scale_y_continuous(name = 'Density') + 
-  scale_fill_discrete(labels = c('SL, bbox', 'SL, lm')) +
-  geom_vline(xintercept = b.df$b.SL[b.df$Species == sp[1]], linetype = "dashed", col = "black") +
+  geom_density(aes(x = measurements, fill = traits), 
+               alpha = 0.25) +
+  geom_rug(data = df.melt[df.melt$traits == traits[1] & #lm and bbox basically overlap
+                          df.melt$scientific_name == sp[i],],
+           aes(x = measurements),
+           sides = "b", col = "darkgrey", alpha = 0.25) +
+  ggtitle(paste0(sp[i], ": comparison of Standard Length (Burress et al. 2017 dashed line)")) + 
+  scale_x_continuous(name = 'Standard Length (mm)',
+                     limits = c(0, 70)) + 
+  scale_y_continuous(name = 'Density',
+                     limits = c(0, 0.1)) + 
+  scale_fill_manual(labels = c('SL, bbox', 'SL, lm'),
+                    values = c("tan4", "darkgreen")) +
+  geom_vline(xintercept = b.df$b.SL[b.df$Species == sp[i]], linetype = "dashed", col = "black") +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black"))
 
-hl.p <- ggplot(data = df.melt[df.melt$variable == vs[3:4] &
+ggsave(sl.p, 
+       file = file.path(figures, paste0(sp[i],": comparison of Standard Length (Burress et al. 2017 dashed line)", ".png")), 
+       width =100, height = 50, units = "cm")
+
+hl.p <- ggplot(data = df.melt[df.melt$traits == traits[3:4] &
                               df.melt$scientific_name == sp[i],]) +
-  geom_density(aes(x = value, fill = variable), alpha = 0.25) +
-# ggtitle("Notropis volucellus: comparison of measurements using bbox and lm compared to Burress et al. 2017") + 
-  scale_x_continuous(name = 'Head length (mm)') + 
-  scale_y_continuous(name = 'Density') + 
-  scale_fill_discrete(labels = c('HL, bbox', 'HL, lm')) +
+  geom_density(aes(x = measurements, fill = traits), alpha = 0.25) +
+  geom_rug(data = df.melt[df.melt$traits == traits[3] & #lm and bbox basically overlap
+                          df.melt$scientific_name == sp[i],],
+           aes(x = measurements),
+           sides = "b", col = "darkgrey", alpha = 0.25) +
+  ggtitle(paste0(sp[i], ": comparison of Head Length (Burress et al. 2017 dashed line)")) + 
+  scale_x_continuous(name = 'Head Length (mm)',
+                     limits = c(0, 15)) + 
+  scale_y_continuous(name = 'Density',
+                     limits = c(0, 0.5)) + 
+  scale_fill_manual(labels = c('HL, bbox', 'HL, lm'),
+                    values = c("tan4", "darkgreen")) +
   geom_vline(xintercept = b.df$b.HL[b.df$Species == sp[i]], linetype = "dashed", col = "black") +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black"))
 
-pod.p <- ggplot(data = df.melt[df.melt$variable == vs[5:6] &
+ggsave(hl.p, 
+       file = file.path(figures, paste0(sp[i],": comparison of Head Length (Burress et al. 2017 dashed line)", ".png")), 
+       width =100, height = 50, units = "cm")
+
+pod.p <- ggplot(data = df.melt[df.melt$traits == traits[5:6] &
                                df.melt$scientific_name == sp[i],]) +
-  geom_density(aes(x = value, fill = variable), alpha = 0.25) +
-# ggtitle("Notropis volucellus: comparison of measurements using bbox and lm compared to Burress et al. 2017") + 
-  scale_x_continuous(name = 'Preorbital length (mm)') + 
-  scale_y_continuous(name = 'Density') + 
-  scale_fill_discrete(labels = c('pOD, bbox', 'pOD, lm')) +
+  geom_density(aes(x = measurements, fill = traits), alpha = 0.25) +
+  geom_rug(data = df.melt[df.melt$traits == traits[5] & #lm and bbox basically overlap
+                          df.melt$scientific_name == sp[i],],
+           aes(x = measurements),
+           sides = "b", col = "darkgrey", alpha = 0.25) +
+  ggtitle(paste0(sp[i], ": comparison of Preorbital Depth (Burress et al. 2017 dashed line)")) + 
+  scale_x_continuous(name = 'Preorbital Depth (mm)',
+                     limits = c(0, 5)) + 
+  scale_y_continuous(name = 'Density',
+                     limits = c(0, 1)) + 
+  scale_fill_manual(labels = c('pOD, bbox', 'pOD, lm'),
+                    values = c("tan4", "darkgreen")) +
   geom_vline(xintercept = b.df$b.SnL[b.df$Species == sp[i]], linetype = "dashed", col = "black") +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black"))
 
-ed.p <- ggplot(data = df.melt[df.melt$variable == vs[7:8] &
-                                   df.melt$scientific_name == sp[i],]) +
-  geom_density(aes(x = value, fill = variable), alpha = 0.25) +
-# ggtitle("Notropis volucellus: comparison of measurements using bbox and lm compared to Burress et al. 2017") + 
-  scale_x_continuous(name = 'Eye diameter (mm)') + 
-  scale_y_continuous(name = 'Density') + 
-  scale_fill_discrete(labels = c('ED, bbox', 'ED, lm')) +
+ggsave(pod.p, 
+       file = file.path(figures, paste0(sp[i],": comparison of Preorbital Depth (Burress et al. 2017 dashed line)", ".png")), 
+       width =100, height = 50, units = "cm")
+
+ed.p <- ggplot(data = df.melt[df.melt$traits == traits[7:8] &
+                              df.melt$scientific_name == sp[i],]) +
+  geom_density(aes(x = measurements, fill = traits), alpha = 0.25) +
+  geom_rug(data = df.melt[df.melt$traits == traits[7] & #lm and bbox basically overlap
+                            df.melt$scientific_name == sp[i],],
+           aes(x = measurements),
+           sides = "b", col = "darkgrey", alpha = 0.25) +
+  ggtitle(paste0(sp[i], ": comparison of Eye Diameter (Burress et al. 2017 dashed line)")) + 
+  scale_x_continuous(name = 'Eye Diameter (mm)',
+                     limits = c(0, 5)) + 
+  scale_y_continuous(name = 'Density',
+                     limits = c(0, 1)) + 
+  scale_fill_manual(labels = c('ED, bbox', 'ED, lm'),
+                    values = c("tan4", "darkgreen")) +
   geom_vline(xintercept = b.df$b.ED[b.df$Species == sp[i]], linetype = "dashed", col = "black") +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black"))
 
-hh.p <- ggplot(data = df.melt[df.melt$variable == vs[9] &
-                                   df.melt$scientific_name == sp[i],]) +
-  geom_density(aes(x = value, fill = variable), alpha = 0.25) +
-# ggtitle("Notropis volucellus: comparison of measurements using bbox and lm compared to Burress et al. 2017") + 
-  scale_x_continuous(name = 'Head height (mm)') + 
-  scale_y_continuous(name = 'Density') + 
-  scale_fill_discrete(labels = c('HH, lm')) +
+ggsave(ed.p, 
+       file = file.path(figures, paste0(sp[i],": comparison of Eye Diameter (Burress et al. 2017 dashed line)", ".png")), 
+       width =100, height = 50, units = "cm")
+
+hh.p <- ggplot(data = df.melt[df.melt$traits == traits[9] &
+                              df.melt$scientific_name == sp[i],]) +
+  geom_density(aes(x = measurements, fill = traits), alpha = 0.25) +
+  geom_rug(data = df.melt[df.melt$traits == traits[9] & #lm and bbox basically overlap
+                            df.melt$scientific_name == sp[i],],
+           aes(x = measurements),
+           sides = "b", col = "darkgrey", alpha = 0.25) +
+  ggtitle(paste0(sp[i], ": comparison of Head Height (Burress et al. 2017 dashed line)")) + 
+  scale_x_continuous(name = 'Head Height (mm)',
+                     limits = c(0, 10)) + 
+  scale_y_continuous(name = 'Density',
+                     limits = c(0, .5)) + 
+  scale_fill_manual(labels = c('HH, lm'),
+                    values = "darkgreen") +
   geom_vline(xintercept = b.df$b.HD[b.df$Species == sp[i]], linetype = "dashed", col = "black") +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black"))
 
-fig <- ggarrange(sl.p, hl.p, pod.p, ed.p, hh.p,
-                   labels = c("SL", "HL", "pOD", "ED", "HH"),
-                   ncol = 3, nrow = 2)
-
-ggsave(fig, 
-       file = file.path(results, paste0(sp[i],": comparison of measurements (Burress et al. 2017 dashed line)", ".png")), 
+ggsave(hh.p, 
+       file = file.path(figures, paste0(sp[i],": comparison of Head Height (Burress et al. 2017 dashed line)", ".png")), 
        width =100, height = 50, units = "cm")
 }
+
+#### Figures: difference in measurements for all species ----
+
+## Standard Length
+stats.sl <- stats.df %>%
+  select(Species,
+         b.SL,
+         se.diff.SL_bbox,
+         se.diff.SL_lm)
+
+sl.diff.p <- ggplot(data = stats.sl, aes(x = se.diff.SL_lm)) +
+  geom_density(col = "darkgoldenrod") +
+  geom_rug(sides = "b", col = "darkgoldenrod") +
+  ggtitle("Difference in Standard Length (Burress et al.) to Mean Standard Length (this paper) over Standard Error") + 
+  scale_x_continuous(name = 'Standard Errors from Mean',
+                     limits = c(-10, 30)) + 
+  scale_y_continuous(name = 'Probability',
+                     limits = c(0, .1)) + 
+  geom_vline(xintercept = c(-3, 3), linetype = "dashed", col = "darkgray") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black"))
+
+ggsave(sl.diff.p, 
+       file = file.path(figures, paste0("se.diff.sl", ".png")), 
+       width = 14, height = 10, units = "cm")
+
+## Head Length
+stats.hl <- stats.df %>%
+  select(Species,
+         b.HL,
+         se.diff.HL_bbox,
+         se.diff.HL_lm)
+
+hl.diff.p <- ggplot(data = stats.hl, aes(x = se.diff.HL_lm)) +
+  geom_density(col = "darkgoldenrod") +
+  geom_rug(sides = "b", col = "darkgoldenrod") +
+  ggtitle("Difference in Head Length (Burress et al.) to Mean Head Length (this paper) over Standard Error") + 
+  scale_x_continuous(name = 'Standard Errors from Mean',
+                     limits = c(-10, 30)) + 
+  scale_y_continuous(name = 'Probability',
+                     limits = c(0, .1)) + 
+  geom_vline(xintercept = c(-3, 3), linetype = "dashed", col = "darkgray") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black"))
+
+ggsave(hl.diff.p, 
+       file = file.path(figures, paste0("se.diff.hl", ".png")), 
+       width = 14, height = 10, units = "cm")
+
+## Head Height
+stats.hh <- stats.df %>%
+  select(Species,
+         b.HD,
+         se.diff.HH_lm)
+
+hh.diff.p <- ggplot(data = stats.hh, aes(x = se.diff.HH_lm)) +
+  geom_density(col = "darkgoldenrod") +
+  geom_rug(sides = "b", col = "darkgoldenrod") +
+  ggtitle("Difference in Head Height (Burress et al.) to Mean Head Height (this paper) over Standard Error") + 
+  scale_x_continuous(name = 'Standard Errors from Mean',
+                     limits = c(-5, 15)) + 
+  scale_y_continuous(name = 'Probability',
+                     limits = c(0, .2)) + 
+  geom_vline(xintercept = c(-3, 3), linetype = "dashed", col = "darkgray") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black"))
+
+ggsave(hh.diff.p, 
+       file = file.path(figures, paste0("se.diff.hh", ".png")), 
+       width = 14, height = 10, units = "cm")
+
+## Eye Diameter
+stats.ed <- stats.df %>%
+  select(Species,
+         b.ED,
+         se.diff.ED_bbox,
+         se.diff.ED_lm)
+
+ed.diff.p <- ggplot(data = stats.ed, aes(x = se.diff.ED_lm)) +
+  geom_density(col = "darkgoldenrod") +
+  geom_rug(sides = "b", col = "darkgoldenrod") +
+  ggtitle("Difference in Eye Diameter (Burress et al.) to Mean Eye Diameter (this paper) over Standard Error") + 
+  scale_x_continuous(name = 'Standard Errors from Mean',
+                     limits = c(-10, 45)) + 
+  scale_y_continuous(name = 'Probability',
+                     limits = c(0, .05)) + 
+  geom_vline(xintercept = c(-3, 3), linetype = "dashed", col = "darkgray") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black"))
+
+ggsave(ed.diff.p, 
+       file = file.path(figures, paste0("se.diff.ed", ".png")), 
+       width = 14, height = 10, units = "cm")
+
+## Pre-Orbital Depth
+stats.pod <- stats.df %>%
+  select(Species,
+         b.SnL,
+         se.diff.pOD_bbox,
+         se.diff.pOD_lm)
+
+pod.diff.p <- ggplot(data = stats.pod, aes(x = se.diff.pOD_lm)) +
+  geom_density(col = "darkgoldenrod") +
+  geom_rug(sides = "b", col = "darkgoldenrod") +
+  ggtitle("Difference in Preorbital Depth (Burress et al.) to Mean Preorbital Depth (this paper) over Standard Error") + 
+  scale_x_continuous(name = 'Standard Errors from Mean',
+                     limits = c(-10, 35)) + 
+  scale_y_continuous(name = 'Probability',
+                     limits = c(0, .05)) + 
+  geom_vline(xintercept = c(-3, 3), linetype = "dashed", col = "darkgray") +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black"))
+
+ggsave(pod.diff.p, 
+       file = file.path(figures, paste0("se.diff.pod", ".png")), 
+       width = 14, height = 10, units = "cm")

@@ -3,7 +3,7 @@
 # balk@battelleecology.org
 
 #turn into data frame
-json_df <- function(jfile){
+json_df <- function(jfile, type){
   input <- fromJSON(file = jfile, unexpected.escape = "keep")
   df <- as.data.frame(input)
   if(isTRUE("scale" %in% colnames(df))){
@@ -11,7 +11,7 @@ json_df <- function(jfile){
   }
   if(!isTRUE(names(df) %in% "file_name")){
     df$file.name <- gsub(jfile,
-                         pattern = "_presence.json", #can change this depending on the file name
+                         pattern = paste0(type, ".json"), #can change this depending on the file name
                          replacement = "")
   }
   #will get warnings because NA are created since some df$scales are characters ("none")

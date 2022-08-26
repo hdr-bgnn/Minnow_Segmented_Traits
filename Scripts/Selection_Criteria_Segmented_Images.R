@@ -5,16 +5,9 @@
 ## MAKE SURE WD IS IN REPO
 #setwd("minnowTraits")
 
-#### load dependencies ----
-source("paths.R")
-source("dependencies.R")
-
 #### add to sampling.df ----
 sampling.df <- read.csv(file = file.path(results, "sampling.df.IQM.csv"),
                         header = TRUE)
-
-#### load functions ----
-source(file.path(scripts, "json_df.R"))
 
 # Files created by this script:
 # 1. presence absence matrix from the folder "Presence"
@@ -37,7 +30,7 @@ p.files <- list.files(path = file.path("/fs/ess/PAS2136/BGNN/Burress_et_al_2017_
 # turn into csv
 # need to set to file path to open them
 setwd(file.path("/fs/ess/PAS2136/BGNN/Burress_et_al_2017_minnows", presence))
-presence.df <- lapply(p.files, json_df) %>% 
+presence.df <- lapply(p.files, json_df, type = "_presence") %>% 
   dplyr::bind_rows() # collapses list of data frames into a single data frame
 
 #column names have a mix of "_" and ".", standardize to all being "_"
@@ -50,7 +43,7 @@ names(presence.df) <- gsub(x = names(presence.df),
 setwd("/users/PAS2136/balkm/minnowTraits")
 
 write.csv(presence.df, 
-          file = file.path(results, paste0("presence.absence.matrix_", Sys.Date(), ".csv")), 
+          file = file.path(results, "presence.absence.matrix.csv"), 
           row.names = FALSE) #no index
 
 #### merge with metadata ----
@@ -314,7 +307,7 @@ sampling.df$Burress_et_al._2017_Overlap_Images_sp[9] <- paste0(nrow(df.fin.b.95.
 b.sampling <- as.data.frame(table(df.fin.b.95.3$scientific_name))
 colnames(b.sampling) <- c("Scientific_Name", "Sample_Size")
 write.csv(b.sampling,
-          file = file.path(results, paste0("sampling.species.in.Burress_", Sys.Date(), ".csv")),
+          file = file.path(results, "sampling.species.in.Burress.csv"),
           row.names = FALSE)
 
 ## how much does the total dataset get reduced if all traits are at a 95% cut off?
@@ -344,7 +337,7 @@ colnames(sampling.95.3) <- c("Scientific_Name", "Sample_Size")
 nrow(sampling.95.3) #41 sp; don't lose any!
 
 write.csv(sampling.95.3,
-          file = file.path(results, paste0("sampling.minnows.95.blob.3.segments", Sys.Date(), ".csv")),
+          file = file.path(results, "sampling.minnows.95.blob.3.segments.csv"),
           row.names = FALSE)
 
 write.csv(sampling.df,

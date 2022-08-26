@@ -5,15 +5,6 @@
 ## MAKE SURE WD IS IN REPO
 #setwd("minnowTraits")
 
-#### load dependencies ----
-source("paths.R")
-source("dependencies.R")
-
-#### load functions ----
-source(file.path(scripts, "json_df.R"))
-source(file.path(scripts, "valid_url.R"))
-source(file.path(scripts, "download_size.R"))
-
 # Files created by this script:
 # 1. table of sampling as selection criteria applied
 # 2. new data set that only keeps images that meet the selection criteria
@@ -256,13 +247,13 @@ sampling.df$Burress_et_al._2017_Overlap_Images_sp[7] <- paste0(nrow(images.minno
 
 #write dataset without index
 write.csv(images.minnows.10, 
-          file = file.path(results, paste0("minnow.filtered.from.imagequalitymetadata_", Sys.Date(),".csv")), 
+          file = file.path(results, "minnow.filtered.from.iqm.csv"), 
           row.names = FALSE)
 
 #write dataset trimmed to Burress
 images.minnows.burress <- images.minnows.10[images.minnows.10$scientific_name.x %in% b.sp,]
 write.csv(images.minnows.burress, 
-          file = file.path(results, paste0("burress.minnow.sp.filtered.from.imagequalitymetadata_", Sys.Date(), ".csv")),
+          file = file.path(results, "burress.minnow.sp.filtered.from.iqm.csv"),
           row.names = FALSE)
 
 #write table of sampling

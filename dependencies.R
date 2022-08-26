@@ -2,15 +2,13 @@
 # Meghan Balk 
 # balk@battelleecology.org
 
-## load paths
-source("paths.R")
-
 ## create new library for versions
 .libPaths(c(.libPaths(), file.path(getwd(), library))) #creates place to store package versions
 .libPaths() #make sure it was created
 lib.path <- file.path(tail(.libPaths(), 1)) #last path created
 
 ## install all necessary packages
+options(install.packages.check.source = "yes")
 
 install.packages("remotes",
                  dependencies = TRUE,
@@ -21,6 +19,12 @@ library(remotes,
 #turn json files to R objects
 remotes::install_version("rjson",
                          version = "0.2.21",
+                         upgrade = "never",
+                         lib = lib.path)
+
+#read yaml files
+remotes::install_version("yaml",
+                         version = "2.3.5",
                          upgrade = "never",
                          lib = lib.path)
 

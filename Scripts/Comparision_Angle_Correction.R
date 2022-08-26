@@ -6,13 +6,6 @@
 ## MAKE SURE WD IS IN REPO
 #setwd("minnowTraits")
 
-#### load dependencies ----
-source("paths.R")
-source("dependencies.R")
-
-#### load functions ----
-source(file.path(scripts, "json_df.R"))
-
 # Files created by this script:
 # 1. dataframe of old statistics
 
@@ -23,10 +16,10 @@ m.0.1.1.files <- list.files(path = file.path("Morphology", "Measure_0.1.1"), pat
 m.0.2.0.files <- list.files(path = file.path("Morphology", "Measure_0.2.0"), pattern = '*.json')
 
 # turn into csv
-measure.0.1.1.df <- lapply(m.0.1.1.files, json_df) %>% #list of dataframes
+measure.0.1.1.df <- lapply(m.0.1.1.files, json_df, type = "_measure_0.1.1") %>% #list of dataframes
   dplyr::bind_rows() #rbind to turn into single dataframes
 
-measure.0.2.0.df <- lapply(m.0.2.0.files, json_df) %>% #list of dataframes
+measure.0.2.0.df <- lapply(m.0.2.0.files, json_df, type = "_measure_0.2.0") %>% #list of dataframes
   dplyr::bind_rows() #rbind to turn into single dataframes
 
 # merge with metadata file
@@ -41,7 +34,6 @@ meta.0.2.0.df <- merge(meta.df,measure.0.2.0.df,
                        all.x = FALSE, all.y = TRUE)
 
 # merge with Burress
-names(b.df)[2:10] <- paste0("b.",names(b.df)[2:10])
 
 b.0.1.1.df <- merge(b.df, measure.0.1.1.df,
                     by.x = "Species",
@@ -229,7 +221,7 @@ stats_no_corr = b.0.1.1.df %>%
   as.data.frame()
 
 write.csv(stats_no_corr,
-          file = file.path(results, paste0("measurement_stats_0.1.1_", Sys.Date(), ".csv")),
+          file = file.path(results, "measurement_stats_0.1.1.csv"),
           row.names = FALSE)
 
 #### 2.0.0 stats ----

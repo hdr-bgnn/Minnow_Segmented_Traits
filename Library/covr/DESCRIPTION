@@ -1,7 +1,7 @@
 Encoding: UTF-8
 Package: covr
 Title: Test Coverage for Packages
-Version: 3.5.1
+Version: 3.6.0
 Authors@R: c(
     person("Jim", "Hester", email = "james.f.hester@gmail.com", role = c("aut", "cre")),
     person("Willem", "Ligtenberg", role = "ctb"),
@@ -25,6 +25,7 @@ Authors@R: c(
     person("Chris", "Campbell", role = "ctb"),
     person("David", "Hugh-Jones", role = "ctb"),
     person("Qin", "Wang", role = "ctb"),
+    person("Doug", "Kelkhoff", role = "ctb"),
     person("Ivan", "Sagalaev", role = c("ctb", "cph"), comment = "highlight.js library"),
     person("Mark", "Otto", role = "ctb", comment = "Bootstrap library"),
     person("Jacob", "Thornton", role = "ctb", comment = "Bootstrap library"),
@@ -32,7 +33,7 @@ Authors@R: c(
     person(family = "Twitter, Inc", role = "cph", comment = "Bootstrap library")
     )
 Description: Track and report code coverage for your package and (optionally)
-    upload the results to a coverage service like 'Codecov' <https://codecov.io> or
+    upload the results to a coverage service like 'Codecov' <https://about.codecov.io> or
     'Coveralls' <https://coveralls.io>. Code coverage is a measure of the amount of
     code being exercised by a set of tests. It is an indirect measure of test
     quality and completeness. This package is compatible with any testing
@@ -45,13 +46,12 @@ Imports: digest, stats, utils, jsonlite, rex, httr, crayon, withr (>=
         1.0.2), yaml
 Suggests: R6, curl, knitr, rmarkdown, htmltools, DT (>= 0.2), testthat,
         rlang, rstudioapi (>= 0.2), xml2 (>= 1.0.0), parallel, memoise,
-        mockery
-License: GPL-3
-LazyData: true
+        mockery, covr
+License: MIT + file LICENSE
 VignetteBuilder: knitr
-RoxygenNote: 7.1.0
+RoxygenNote: 7.2.1
 NeedsCompilation: yes
-Packaged: 2020-09-16 20:09:53 UTC; jhester
+Packaged: 2022-08-24 14:15:57 UTC; jimhester
 Author: Jim Hester [aut, cre],
   Willem Ligtenberg [ctb],
   Kirill Müller [ctb],
@@ -74,6 +74,7 @@ Author: Jim Hester [aut, cre],
   Chris Campbell [ctb],
   David Hugh-Jones [ctb],
   Qin Wang [ctb],
+  Doug Kelkhoff [ctb],
   Ivan Sagalaev [ctb, cph] (highlight.js library),
   Mark Otto [ctb] (Bootstrap library),
   Jacob Thornton [ctb] (Bootstrap library),
@@ -81,6 +82,5 @@ Author: Jim Hester [aut, cre],
   Twitter, Inc [cph] (Bootstrap library)
 Maintainer: Jim Hester <james.f.hester@gmail.com>
 Repository: CRAN
-Date/Publication: 2020-09-16 21:10:13 UTC
-Built: R 4.1.0; x86_64-apple-darwin17.0; 2021-05-27 02:29:13 UTC; unix
-Archs: covr.so.dSYM
+Date/Publication: 2022-08-24 15:32:41 UTC
+Built: R 4.1.1; x86_64-apple-darwin17.0; 2022-08-24 22:06:56 UTC; unix

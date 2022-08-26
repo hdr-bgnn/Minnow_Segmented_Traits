@@ -19,4 +19,4 @@ NeedsCompilation: yes
 Packaged: 2020-04-09 12:27:19 UTC; hadley
 Repository: CRAN
 Date/Publication: 2020-04-09 13:50:02 UTC
-Built: R 4.1.1; x86_64-apple-darwin17.0; 2022-08-10 00:13:21 UTC; unix
+Built: R 4.1.1; x86_64-apple-darwin17.0; 2022-08-26 18:45:24 UTC; unix
