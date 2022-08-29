@@ -1,6 +1,7 @@
 # import dependencies for R
 # Meghan Balk 
 # balk@battelleecology.org
+source("paths.R")
 
 ## create new library for versions
 .libPaths(c(.libPaths(), file.path(getwd(), library))) #creates place to store package versions
@@ -8,7 +9,7 @@
 lib.path <- file.path(tail(.libPaths(), 1)) #last path created
 
 ## install all necessary packages
-options(install.packages.check.source = "yes")
+options(install.packages.check.source = "yes", repos = "https://cloud.r-project.org")
 
 install.packages("remotes",
                  dependencies = TRUE,
