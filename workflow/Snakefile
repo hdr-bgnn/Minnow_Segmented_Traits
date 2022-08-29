@@ -1,0 +1,21 @@
+configfile: "config/config.yaml"
+
+rule all:
+    input:
+        config["Minnow_Filtered"]
+
+
+rule select_minnow_images:
+    input:
+        config["Image_Metadata"],
+        config["Image_Quality_Metadata"],
+        config["Burress"]
+    output:
+        config["Minnow_Filtered"],
+        config["Burress_Minnow_Filtered"],
+        config["Sampling"]
+    params:
+        script=srcdir("../Scripts/Minnow_Selection_Image_Quality_Metadata.R")
+    shell:
+        "Rscript {params.script}"
+
