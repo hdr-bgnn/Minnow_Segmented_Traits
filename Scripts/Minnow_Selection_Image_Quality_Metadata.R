@@ -1,9 +1,12 @@
 # selection of minnow images for the workflow
 # Meghan Balk 
 # balk@battelleecology.org
+library(dplyr)
 
 ## MAKE SURE WD IS IN REPO
 #setwd("minnowTraits")
+
+source("Scripts/init.R")
 
 # Files created by this script:
 # 1. table of sampling as selection criteria applied
@@ -247,16 +250,16 @@ sampling.df$Burress_et_al._2017_Overlap_Images_sp[7] <- paste0(nrow(images.minno
 
 #write dataset without index
 write.csv(images.minnows.10, 
-          file = file.path(results, "minnow.filtered.from.iqm.csv"), 
+          file = minnow_filtered_path,
           row.names = FALSE)
 
 #write dataset trimmed to Burress
 images.minnows.burress <- images.minnows.10[images.minnows.10$scientific_name.x %in% b.sp,]
 write.csv(images.minnows.burress, 
-          file = file.path(results, "burress.minnow.sp.filtered.from.iqm.csv"),
+          file = burress_minnow_filtered_path,
           row.names = FALSE)
 
 #write table of sampling
 write.csv(sampling.df,
-          file = file.path(results, "sampling.df.IQM.csv"),
+          file = sampling_path,
           row.names = FALSE)

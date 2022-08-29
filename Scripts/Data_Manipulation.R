@@ -3,13 +3,18 @@
 # balk@battelleecology.org
 
 #### read yaml file ----
-dfs <- read_yaml(file = "config.yaml")
+dfs <- yaml::read_yaml(file = config_file)
 
 meta.df <- read.csv(file = dfs$Image_Metadata[1])
 
 iqm.df <- read.csv(file = dfs$Image_Quality_Metadata[1])
 
 b.df <- read.csv(file = dfs$Burress[1])
+
+# Output file paths
+minnow_filtered_path <- dfs$Minnow_Filtered[1]
+burress_minnow_filtered_path <- dfs$Burress_Minnow_Filtered[1]
+sampling_path <- dfs$Sampling[1]
 
 #### manipulate data ----
 
