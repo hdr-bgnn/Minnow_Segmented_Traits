@@ -17,5 +17,5 @@ rule select_minnow_images:
     params:
         script=srcdir("../Scripts/Minnow_Selection_Image_Quality_Metadata.R")
     shell:
-        "Rscript {params.script}"
+        "R_LIBS_USER=Library Rscript {params.script}"
 
