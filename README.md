@@ -127,5 +127,37 @@ See <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow_La
 15. anterior of eye
 18. centroid of eye
 
-###Trait extraction
+### Trait extraction
 More information on trait extraction can be found on the <a href="https://github.com/hdr-bgnn/Morphology-analysis">Morphological Analysis repository</a>
+
+## Running the Workflow
+This workflow requires R, conda, and singularity to run.
+
+### Installing snakemake
+To run the workflow we use snakemake.
+See the [official instructions for installing snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html).
+
+To install snakemake on the OSC cluster run:
+```
+module load miniconda3
+conda create -n snakemake -c bioconda -c conda-forge snakemake -y
+```
+
+### Installing R packages
+The R packages required by the pipeline must be installed into the `Library` directory.
+This can be accomplished by running `Rscript dependencies.R`.
+On the OSC cluster this can be done like so:
+```
+module load cmake/3.20.5 
+module load R/4.2.1-gnu11.2
+Rscript dependencies.R 
+```
+
+### Running snakemake
+After activating R and snakemake the pipeline can be run using `snakemake --cores 1`.
+
+For running on the OSC cluster there is sbatch script provided to run the workflow.
+On the OSC cluster run this script like so:
+```
+sbatch run-workflow.sh
+```
