@@ -148,6 +148,7 @@ The R packages required by the pipeline must be installed into the `Library` dir
 This can be accomplished by running `Rscript dependencies.R`.
 On the OSC cluster this can be done like so:
 ```
+mkdir Library
 module load cmake/3.20.5 
 module load R/4.2.1-gnu11.2
 Rscript dependencies.R 
