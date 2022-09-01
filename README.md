@@ -142,6 +142,12 @@ To install snakemake on the OSC cluster run:
 module load miniconda3
 conda create -n snakemake -c bioconda -c conda-forge snakemake -y
 ```
+where -n designates the name, "snakemake", -c designates the channel(s), "bioconda" and "conda-forge".
+
+To check that the environment was made:
+```
+conda info -e
+```
 
 ### Installing R packages
 The R packages required by the pipeline must be installed into the `Library` directory.
@@ -149,12 +155,18 @@ This can be accomplished by running `Rscript dependencies.R`.
 On the OSC cluster this can be done like so:
 ```
 mkdir Library
-module load cmake/3.20.5 
+module load cmake #defaukts to version on node
 module load R/4.2.1-gnu11.2
 Rscript dependencies.R 
 ```
 
 ### Running snakemake
+
+Activate snakemake:
+```
+source activate snakemake
+```
+
 After activating R and snakemake the pipeline can be run using `snakemake --cores 1`.
 
 For running on the OSC cluster there is sbatch script provided to run the workflow.
