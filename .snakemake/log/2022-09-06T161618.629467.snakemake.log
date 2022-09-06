@@ -1,0 +1,37 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cores: 1 (use --cores to define parallelism)
+Rules claiming more threads will be scaled down.
+Job stats:
+job                     count    min threads    max threads
+--------------------  -------  -------------  -------------
+all                         1              1              1
+select_minnow_images        1              1              1
+total                       2              1              1
+
+Select jobs to execute...
+
+[Tue Sep  6 16:16:19 2022]
+rule select_minnow_images:
+    input: Files/Image_Metadata_v1_20211206_151152.csv, Files/Image_Quality_Metadata_v1_20211206_151204.csv, Files/Previous Fish Measurements - Burress et al. 2016.csv
+    output: Results/minnow.filtered.from.iqm.csv, Results/burress.minnow.sp.filtered.from.iqm.csv, Results/sampling.df.IQM.csv
+    jobid: 1
+    reason: Missing output files: Results/minnow.filtered.from.iqm.csv
+    resources: tmpdir=/tmp/slurmtmp.20447568
+
+[Tue Sep  6 16:41:57 2022]
+Finished job 1.
+1 of 2 steps (50%) done
+Select jobs to execute...
+
+[Tue Sep  6 16:41:57 2022]
+localrule all:
+    input: Results/minnow.filtered.from.iqm.csv
+    jobid: 0
+    reason: Input files updated by another job: Results/minnow.filtered.from.iqm.csv
+    resources: tmpdir=/tmp/slurmtmp.20447568
+
+[Tue Sep  6 16:41:57 2022]
+Finished job 0.
+2 of 2 steps (100%) done
+Complete log: .snakemake/log/2022-09-06T161618.629467.snakemake.log
