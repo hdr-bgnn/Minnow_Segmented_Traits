@@ -167,10 +167,10 @@ Activate snakemake:
 source activate snakemake
 ```
 
+To run on a local computer:
 After activating R and snakemake the pipeline can be run using `snakemake --cores 1`.
 
-For running on the OSC cluster there is sbatch script provided to run the workflow.
-On the OSC cluster run this script like so:
+To run on the OSC cluster: 
 ```
 sbatch run-workflow.sh
 ```
