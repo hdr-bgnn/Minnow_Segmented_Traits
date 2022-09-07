@@ -8,4 +8,4 @@
 module load miniconda3
 source activate snakemake
 module load R/4.2.1-gnu11.2
-snakemake --cores 1
+snakemake --cores 1 --use-singularity "$@"
