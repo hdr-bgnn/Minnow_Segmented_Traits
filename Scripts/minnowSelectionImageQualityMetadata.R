@@ -174,10 +174,18 @@ table.gen <- images.minnows.10 %>%
 nrow(table.gen) #4
 unique(images.minnows.10$genus.x)
 
+table.sp.10 <- images.minnows.10 %>%
+  group_by(scientific_name.x) %>%
+  summarise(sample.size = n())
+
 #write dataset without index
 write.csv(images.minnows.10, "minnow.filtered.from.imagequalitymetadata_25Jul2022.csv", row.names = FALSE)
 
 #write dataset trimmed to Burress
 images.minnows.burress <- images.minnows.10[images.minnows.10$scientific_name.x %in% b.sp,]
 write.csv(images.minnows.burress, "burress.minnow.sp.filtered.from.imagequalitymetadata_25Jul2022.csv", row.names = FALSE)
+
+table.sp.b <- images.minnows.burress %>%
+  group_by(scientific_name.x) %>%
+  summarise(sample.size = n())
 
