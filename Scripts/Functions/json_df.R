@@ -1,6 +1,7 @@
 # function for turning json files to dataframes
 # Meghan Balk 
 # balk@battelleecology.org
+library(rjson)
 
 #turn into data frame
 json_df <- function(jfile, type){
@@ -10,7 +11,7 @@ json_df <- function(jfile, type){
     df$scale <- as.numeric(df$scale) #for some reason there are "doubles"; making them all the same
   }
   if(!isTRUE(names(df) %in% "file_name")){
-    df$file.name <- gsub(jfile,
+    df$file.name <- gsub(basename(jfile),
                          pattern = paste0(type, ".json"), #can change this depending on the file name
                          replacement = "")
   }

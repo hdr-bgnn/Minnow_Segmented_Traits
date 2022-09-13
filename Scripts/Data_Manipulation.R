@@ -15,6 +15,14 @@ b.df <- read.csv(file = dfs$Burress[1])
 minnow_filtered_path <- dfs$Minnow_Filtered[1]
 burress_minnow_filtered_path <- dfs$Burress_Minnow_Filtered[1]
 sampling_path <- dfs$Sampling[1]
+presence_absence_matrix_path <- dfs$Presence_Absence_Matrix[1]
+sampling_species_burress_path <- dfs$Sampling_Species_Burress[1]
+sampling_minnows_seg_path <- dfs$Sampling_Minnows_Seg[1]
+sampling_df_seg_path <- dfs$Sampling_DF_Seg[1]
+presence_absence_dist_path <- dfs$Presence_Absence_Dist_Image[1]
+heatmap_avg_blob_path <- dfs$Heatmap_Avg_Blob_Image[1]
+heatmap_sd_blob_path <- dfs$Heatmap_SD_Blob_Image[1]
+
 
 #### manipulate data ----
 

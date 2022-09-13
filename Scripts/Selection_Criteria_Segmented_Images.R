@@ -1,13 +1,13 @@
 # selection of the segmented images for analyses
 # Meghan Balk 
 # balk@battelleecology.org
-
-## MAKE SURE WD IS IN REPO
-#setwd("minnowTraits")
+library(dplyr)
+library(ggplot2)
+library(reshape2)
+source("Scripts/init.R")
 
 #### add to sampling.df ----
-sampling.df <- read.csv(file = file.path(results, "sampling.df.IQM.csv"),
-                        header = TRUE)
+sampling.df <- read.csv(file = sampling_path, header = TRUE)
 
 # Files created by this script:
 # 1. presence absence matrix from the folder "Presence"
@@ -24,12 +24,9 @@ sampling.df <- read.csv(file = file.path(results, "sampling.df.IQM.csv"),
 #### json to df ----
 # files are the in the Presences folder
 # get list of file names
-
-p.files <- list.files(path = file.path("/fs/ess/PAS2136/BGNN/Burress_et_al_2017_minnows", presence), pattern = '*.json')
+p.files <- list.files(path = presence, pattern = '*.json', full.names=TRUE)
 
 # turn into csv
-# need to set to file path to open them
-setwd(file.path("/fs/ess/PAS2136/BGNN/Burress_et_al_2017_minnows", presence))
 presence.df <- lapply(p.files, json_df, type = "_presence") %>% 
   dplyr::bind_rows() # collapses list of data frames into a single data frame
 
@@ -39,11 +36,9 @@ names(presence.df) <- gsub(x = names(presence.df),
                            replacement = "_")  
 
 # write data frame to Results directory
-## RESET DIRECTORY
-setwd("/users/PAS2136/balkm/minnowTraits")
 
 write.csv(presence.df, 
-          file = file.path(results, "presence.absence.matrix.csv"), 
+          file = presence_absence_matrix_path,
           row.names = FALSE) #no index
 
 #### merge with metadata ----
@@ -121,7 +116,7 @@ df.fin.per.sample.dist <- ggplot(data = df.fin.per.sample, aes(x = sample)) +
         panel.background = element_blank(), axis.line = element_line(colour = "black"))
 
 ggsave(df.fin.per.sample.dist, 
-       file = file.path(results, "presence.absence.sample.dist.png"), 
+       file = presence_absence_dist_path,
        width = 20, height = 15, units = "cm")
 
 #### statistics about the data ----
@@ -232,7 +227,7 @@ hm.avg <- ggplot(melt_stats_avg, aes(Var2, Var1)) +
         panel.background = element_blank(), axis.line = element_line(colour = "black"))
 
 ggsave(hm.avg, 
-       file = file.path(results, "heatmap.avg.blob.png"), 
+       file = heatmap_avg_blob_path,
        width = 14, height = 20, units = "cm")
 
 min(melt_stats_avg$value) #81 is smallest average size
@@ -256,7 +251,7 @@ hm.sd <- ggplot(melt_stats_avg, aes(Var2, Var1)) +
         panel.background = element_blank(), axis.line = element_line(colour = "black"))
 
 ggsave(hm.avg, 
-       file = file.path(results, "heatmap.sd.blob.png"), 
+       file = heatmap_sd_blob_path,
        width = 14, height = 20, units = "cm")
 
 max(melt_stats_sd$value) #.34 largest standard deviation
@@ -307,7 +302,7 @@ sampling.df$Burress_et_al._2017_Overlap_Images_sp[9] <- paste0(nrow(df.fin.b.95.
 b.sampling <- as.data.frame(table(df.fin.b.95.3$scientific_name))
 colnames(b.sampling) <- c("Scientific_Name", "Sample_Size")
 write.csv(b.sampling,
-          file = file.path(results, "sampling.species.in.Burress.csv"),
+          file = sampling_species_burress_path,
           row.names = FALSE)
 
 ## how much does the total dataset get reduced if all traits are at a 95% cut off?
@@ -337,9 +332,9 @@ colnames(sampling.95.3) <- c("Scientific_Name", "Sample_Size")
 nrow(sampling.95.3) #41 sp; don't lose any!
 
 write.csv(sampling.95.3,
-          file = file.path(results, "sampling.minnows.95.blob.3.segments.csv"),
+          file = sampling_minnows_seg_path,
           row.names = FALSE)
 
 write.csv(sampling.df,
-          file = file.path(results, "sampling.df.seg.csv"),
+          file = sampling_df_seg_path,
           row.names = FALSE)

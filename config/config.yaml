@@ -9,3 +9,12 @@ Burress: Files/Previous Fish Measurements - Burress et al. 2016.csv
 Minnow_Filtered: Results/minnow.filtered.from.iqm.csv
 Burress_Minnow_Filtered: Results/burress.minnow.sp.filtered.from.iqm.csv
 Sampling: Results/sampling.df.IQM.csv
+
+Presence_Absence_Matrix: Results/presence.absence.matrix.csv
+Sampling_Species_Burress: Results/sampling.species.in.Burress.csv
+Sampling_Minnows_Seg: Results/sampling.minnows.95.blob.3.segments.csv
+Sampling_DF_Seg: Results/sampling.df.seg.csv
+
+Presence_Absence_Dist_Image: Results/presence.absence.sample.dist.png
+Heatmap_Avg_Blob_Image: Results/heatmap.avg.blob.png
+Heatmap_SD_Blob_Image: Results/heatmap.sd.blob.png
