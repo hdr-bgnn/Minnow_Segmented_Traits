@@ -5,23 +5,23 @@
 #### read yaml file ----
 dfs <- yaml::read_yaml(file = config_file)
 
-meta.df <- read.csv(file = dfs$Image_Metadata[1])
+meta.df <- read.csv(file = dfs$Image_Metadata)
 
-iqm.df <- read.csv(file = dfs$Image_Quality_Metadata[1])
+iqm.df <- read.csv(file = dfs$Image_Quality_Metadata)
 
-b.df <- read.csv(file = dfs$Burress[1])
+b.df <- read.csv(file = dfs$Burress)
 
 # Output file paths
-minnow_filtered_path <- dfs$Minnow_Filtered[1]
-burress_minnow_filtered_path <- dfs$Burress_Minnow_Filtered[1]
-sampling_path <- dfs$Sampling[1]
-presence_absence_matrix_path <- dfs$Presence_Absence_Matrix[1]
-sampling_species_burress_path <- dfs$Sampling_Species_Burress[1]
-sampling_minnows_seg_path <- dfs$Sampling_Minnows_Seg[1]
-sampling_df_seg_path <- dfs$Sampling_DF_Seg[1]
-presence_absence_dist_path <- dfs$Presence_Absence_Dist_Image[1]
-heatmap_avg_blob_path <- dfs$Heatmap_Avg_Blob_Image[1]
-heatmap_sd_blob_path <- dfs$Heatmap_SD_Blob_Image[1]
+minnow_filtered_path <- dfs$Minnow_Filtered
+burress_minnow_filtered_path <- dfs$Burress_Minnow_Filtered
+sampling_path <- dfs$Sampling
+presence_absence_matrix_path <- dfs$Presence_Absence_Matrix
+sampling_species_burress_path <- dfs$Sampling_Species_Burress
+sampling_minnows_seg_path <- dfs$Sampling_Minnows_Seg
+sampling_df_seg_path <- dfs$Sampling_DF_Seg
+presence_absence_dist_path <- dfs$Presence_Absence_Dist_Image
+heatmap_avg_blob_path <- dfs$Heatmap_Avg_Blob_Image
+heatmap_sd_blob_path <- dfs$Heatmap_SD_Blob_Image
 
 
 #### manipulate data ----
