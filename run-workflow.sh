@@ -1,6 +1,7 @@
 #!/bin/bash
 #SBATCH --account=PAS2136
 #SBATCH --job-name=MinnowTraits
+#SBATCH --time=03:00:00
 # Runs the Minnow Traits snakemake workflow 
 
 # Usage:
