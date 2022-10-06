@@ -1,7 +1,11 @@
+import os
 import pandas as pd
 
 configfile: "config/config.yaml"
     # names come from the config file
+
+DATAVERSE_CONFIG_PATH = os.path.expanduser('~/.dataverse')
+DATAVERSE_CONTAINER = 'docker://ghcr.io/imageomics/dataverse-access:0.0.3'
 
 def get_image_names(csv_filename):
     df = pd.read_csv(csv_filename)
@@ -16,7 +20,10 @@ def selection_criteria_inputs(wildcards):
     presence_files = [f"segmentation/Morphology/Presence/{i}_presence.json" for i in names]
     return {
         "presence_files": presence_files,
-        "sampling": config["Sampling"]
+        "sampling": config["Sampling"],
+        "image_metadata": config["Image_Metadata"],
+        "image_quality_metadata": config["Image_Quality_Metadata"],
+        "burress": config["Burress"]
     }
 
 rule all:
@@ -29,6 +36,33 @@ rule all:
         heatmap_avg_blob_image=config["Heatmap_Avg_Blob_Image"],
         heatmap_sd_blob_image=config["Heatmap_SD_Blob_Image"]
  
+rule download_image_metadata:
+    output: config["Image_Metadata"]
+    params:
+        doi=config["Image_Metadata_DOI"],
+        config=DATAVERSE_CONFIG_PATH
+    container:
+        DATAVERSE_CONTAINER
+    shell: 'DATAVERSE_CONFIG_PATH={params.config} dva download {params.doi} Files/'
+
+rule download_image_quality_metadata:
+    output: config["Image_Quality_Metadata"]
+    params:
+        doi=config["Image_Quality_Metadata_DOI"],
+        config=DATAVERSE_CONFIG_PATH
+    container:
+        DATAVERSE_CONTAINER
+    shell: 'DATAVERSE_CONFIG_PATH={params.config} dva download {params.doi} Files/'
+
+rule download_burress:
+    output: config["Burress"]
+    params:
+        doi=config["Burress_DOI"],
+        config=DATAVERSE_CONFIG_PATH
+    container:
+        DATAVERSE_CONTAINER
+    shell: 'DATAVERSE_CONFIG_PATH={params.config} dva download {params.doi} Files/'
+
 checkpoint select_minnow_images:
     input:
         config["Image_Metadata"],
