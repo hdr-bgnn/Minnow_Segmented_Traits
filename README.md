@@ -177,5 +177,5 @@ sbatch run-workflow.sh
 
 To check the status of the job:
 ```
-squeuqe -u $USER
+squeue -u $USER
 ```
