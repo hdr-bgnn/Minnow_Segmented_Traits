@@ -160,6 +160,29 @@ module load R/4.2.1-gnu11.2
 Rscript dependencies.R 
 ```
 
+### Dataverse configuration
+To download the unpublished input files from our Dataverse instance requires
+supplying the URL to the instance and a Dataverse API Token.
+The URL and API Token need to be placed into a config file stored in your home
+directory name ".dataverse".
+
+To find your token visit [datacommons.tdai.osu.edu]( https://datacommons.tdai.osu.edu/),
+after logging in click your name in the top right corner, click API Token.
+You should see a screen for managing your API Token.
+
+Then run the following command to create your config file:
+```
+singularity run docker://ghcr.io/imageomics/dataverse-access:0.0.3 dva setup
+```
+This command will download the dva container and create your `~/.dataverse` config file.
+You will see two prompts. For the `URL` prompt enter `https://datacommons.tdai.osu.edu/`.
+For `API Token` prompt enter your API token.
+```
+Enter Dataverse URL: https://datacommons.tdai.osu.edu/
+Enter your Dataverse API Token: <yourtoken>
+```
+
+
 ### Running snakemake
 
 Activate snakemake:
