@@ -17,6 +17,8 @@ def selection_criteria_inputs(wildcards):
     # Returns output morphology presence filenames
     with checkpoints.select_minnow_images.get(**wildcards).output[1].open() as f:
        names = get_image_names(f)
+       if config["limit_images"]:
+            names = names[:int(config["limit_images"])]
     presence_files = [f"segmentation/Morphology/Presence/{i}_presence.json" for i in names]
     return {
         "presence_files": presence_files,
