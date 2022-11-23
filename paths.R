@@ -1,5 +1,5 @@
 # set paths for files
-# Meghan Balk 
+# Meghan Balk
 # balk@battelleecology.org
 
 #put directory to cloned repo

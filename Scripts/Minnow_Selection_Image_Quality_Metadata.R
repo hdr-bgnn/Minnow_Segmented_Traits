@@ -1,5 +1,5 @@
 # selection of minnow images for the workflow
-# Meghan Balk 
+# Meghan Balk
 # balk@battelleecology.org
 library(dplyr)
 
@@ -15,10 +15,10 @@ source("Scripts/init.R")
 #    that contain the species in Burress et al. 2017
 
 #### create table to be appended ----
-c.names <- c("Selection_Criteria", 
+c.names <- c("Selection_Criteria",
              "All_Minnows_Images_sp",
              "Burress_et_al._2017_Overlap_Images_sp")
-sampling.df = data.frame(matrix(nrow = 15, ncol = length(c.names))) 
+sampling.df = data.frame(matrix(nrow = 15, ncol = length(c.names)))
 colnames(sampling.df) = c.names
 
 #### 1. sampling of the metadata ----
@@ -80,7 +80,7 @@ minnow.keep <- minnow.iqm[minnow.iqm$specimen_viewing == "left" & #facing left
                           minnow.iqm$if_focus == "True" &
                           minnow.iqm$if_missing_parts == "False" &
                           minnow.iqm$if_parts_visible == "True" &
-                          minnow.iqm$fins_folded_oddly == "False",] 
+                          minnow.iqm$fins_folded_oddly == "False",]
 
 length(unique(minnow.keep$image_name)) #7811
 length(unique(minnow.keep$scientific_name)) #115
@@ -108,8 +108,8 @@ length(unique(minnow.keep$scientific_name[minnow.keep$if_background_uniform == "
 #link on image.data$file_name and image.quality$image_name
 #must have "original_file_name" for snakemake
 
-images.minnows <- merge(meta.df, minnow.keep, 
-                        by.x = "original_file_name", 
+images.minnows <- merge(meta.df, minnow.keep,
+                        by.x = "original_file_name",
                         by.y = "image_name")
 
 #### 4. get rid of dupes ----
@@ -147,7 +147,7 @@ unique(images.minnows.trim$institution)
 nrow(images.minnows.trim) #6481
 length(unique(images.minnows.trim$scientific_name.x)) #92
 
-unique(images.minnows.trim$fish_number) 
+unique(images.minnows.trim$fish_number)
 #should be 1; don't want multiple fish per images because currently don't have a good way to keep metadata
 
 sampling.df$All_Minnows_Images_sp[5] <- paste0(nrow(images.minnows.trim),
@@ -242,20 +242,20 @@ nrow(images.minnows.10[images.minnows.10$scientific_name.x %in% b.sp,]) #446
 length(unique(images.minnows.10$scientific_name.x[images.minnows.10$scientific_name.x %in% b.sp])) #8
 
 sampling.df$Burress_et_al._2017_Overlap_Images_sp[7] <- paste0(nrow(images.minnows.10[images.minnows.10$scientific_name.x %in% b.sp,]),
-                                                               " (", 
+                                                               " (",
                                                                length(unique(images.minnows.10$scientific_name.x[images.minnows.10$scientific_name.x %in% b.sp])),
                                                                ")")
 
 #### write datasets ----
 
 #write dataset without index
-write.csv(images.minnows.10, 
+write.csv(images.minnows.10,
           file = minnow_filtered_path,
           row.names = FALSE)
 
 #write dataset trimmed to Burress
 images.minnows.burress <- images.minnows.10[images.minnows.10$scientific_name.x %in% b.sp,]
-write.csv(images.minnows.burress, 
+write.csv(images.minnows.burress,
           file = burress_minnow_filtered_path,
           row.names = FALSE)
 

@@ -11,35 +11,35 @@ We use a segmentation model to extract morphological traits from minnows (Family
 ## Folder Organization
 
 *Scripts*
-- code used for image selection
+- code for manipulating and merging data files (<a href="https://github.com/hdr-bgnn/Minnow_Traits/blob/streamline/Scripts/Data_Manipulation.R">Data_Manipulation.R</a>)
+- code for image selection (<a href="https://github.com/hdr-bgnn/Minnow_Traits/blob/streamline/Scripts/Minnow_Selection_Image_Quality_Metadata.R">Minnow_Selection_Image_Quality_Metadata.R</a>)
+- code for analyzing machine learning outputs (<a href="https://github.com/hdr-bgnn/Minnow_Traits/blob/streamline/Scripts/Presence_Absence_Analysis.R">Presence_Absence_Analysis.R</a>)
+- code to load functions (<a href="https://github.com/hdr-bgnn/Minnow_Traits/blob/streamline/Scripts/init.R">init.R</a>) and all the functions (in <a href="https://github.com/hdr-bgnn/Minnow_Traits/tree/streamline/Scripts/Functions">Functions</a>)
 
 *Files*
-- contains files used in the code
+- contains files from <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/jeb.13024">Burress et al. 2017</a>
+- contains image metadata and image quality metadata files
 
 *OSC*
-- files used to upload to the OSC for the <a href="https://github.com/hdr-bgnn/BGNN_Snakemake">Snakemake workflow</a>
+- a folder for the unsaved outputs from the workflow
 
-*PDFs*
-- papers relevant to the trait selection
+*Library*
+- a folder to hold the R package dependencies
 
-*Traits*
-- csv for trait selection and definition
-- images to describe trait selection
+*Results*
+- contains outputs from workflow
 
-*Prelim Results*
-- contains plots from preliminary statistics
-
-## Minnow image selection
+## Images
 
 The fish images are from the Great Lakes Invasives Network (<a href="https://glin.com/">GLIN</a>) and stored on the Tulane server. We're using images specifically from the <a href="https://inhs.illinois.edu/">Illinois Natural History Survey</a> (<a href="http://www.tubri.org/HDR/INHS/">INHS images</a>) and from the <a href="https://uwzm.integrativebiology.wisc.edu/">University of Wisconsin Zoological Museum</a> (<a href="http://www.tubri.org/HDR/UWZM/">UWZM images</a>).
 
 ### Selection of images to run through the workflow
 
-**This section describes the creation of minnow.filtered.from.imagequalitymetadata_7Jun2022.csv using minnowSelectionImageQualityMetadata.R**    
-R code (Minnows.R) was used to filter out high quality, minnow images using:
+**This section describes the creation of minnow.filtered.from.iqm.csv using Minnow_Selection_Image_Quality_Metadata.R**    
+R code (Minnow_Selection_Image_Quality_Metadata.R) was used to filter out high quality, minnow images using:
 
 - Image_Quality_Metadata_v1_202111206_151204.csv : list of fish, url species information
-- Image_Metadata_v1_20211206_151152.csv. : List of quality metadata including manually extracted information on the quality of the images and their content.
+- Image_Metadata_v1_20211206_151152.csv : List of quality metadata including manually extracted information on the quality of the images and their content.
 
 Those two lists are download from <a href="https://bgnn.tulane.edu/hdrweb/hdr/imagemetadata/">Tulane sever</a>. The lists have been generated using the <a href="https://bgnn.tulane.edu/">Tulane worflow</a>.
 
@@ -68,11 +68,11 @@ We ignored if_background_uniform == "True" because it reduced the sample size to
 
 The resulting dataset was then merged with the <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Files/Image_Quality_Metadata_v1_20211206_151204.csv">Image_Metadata_v1_20211206_151152.csv</a>.
 
-### Selection of which segmented images to analyze
+### Analysis of segmented images
 
 Each segmented image has the following traits: trunk, head, eye, dorsal fin, caudal fin, anal fin, pelvic fin, and pectoral fin. For each segmented trait, there may be more than one "blob", or group of pixels identifying a trait. We created a matrix of <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Files/presence.absence.matrix.csv"> presence.absence.matrix.csv</a>.
 
-We removed images where a trait was missing. That removed only 40 images.
+We removed images where a trait and the scale were missing. That removed only X images.
 
 For each trait, we counted the number of blobs and the percentage of the largest blob. We analyzed this matrix using the <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Scripts/selectionCriteraSegmentedImages.R">selectionCriteriaSegmentedImages.R</a> in Scripts and results can be found in the folder Preliminary Results.
 
@@ -90,50 +90,20 @@ Selecting only the species in Burress et al. 2017, We are left with 446 images a
 * <i>Notropis ammophilus</i> (15)
 * <i>Notropis stilbius</i> (23)
 
-### Analyses on segmented images
+### Heatmaps of trait presence
 
-*This section will describe the analyses*
+We created a heatmap to show the success of the machine learning to detect traits from the images.
 
 ## Minnow trait selection
 
-These images below contain all the traits discussed by our team. This section outlines which traits we are focusing on for this study. We have created descriptions of the traits for <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/MinnowMeasurements%20(trimmed%2028Jun2022).csv">measurements</a> and <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/MinnowLandmarks%20(trimmed%2028Jun2022).csv">landmarks</a>.
-
-### Measurements
-![Minnow Measurements](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow_Measurements_Burress_et_al_2017.png)
-
-All traits except head depth through the midline of the eye (HH) were done using both landmarks (with suffix "_lm") and a bounding box (with suffix "_bbox"). See <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow_Measurements_Burress_et_al_2017.csv">Minnow_Measurements_Burress_et_al_2017.csv</a> for descriptions of the measurements.
-
-**Standard length (SL)**: edge of head to beginning of caudal fin along nose line[ <a href="https://www.sciencedirect.com/science/article/abs/pii/S1055790312000668">Nagel & Simons 2012</a>; <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/jeb.13024">Burress et al. 2017</a>].
-
-**Head length (HL)**: tip of snout to posterior tip of opercle; anterior-posterior length of head segmentation [<a href="https://onlinelibrary.wiley.com/doi/full/10.1111/jeb.13024">Burress et al. 2017</a>].
-
-**Eye diameter (ED)**: anterior-posterior length of eye segmentation [<a href="https://onlinelibrary.wiley.com/doi/full/10.1111/jeb.13024">Burress et al. 2017</a>].
-
-**Head height (HH)**: vertical distance of head dorso-ventrally through the center of the eye [called head depth in <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/jeb.13024">Burress et al. 2017</a>].
-
-**Preorbital depth (pOD)**: anterior tip of head to anterior eye [called snout length (SnL) in <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/jeb.13024">Burress et al. 2017</a>].
-
-### Landmarks
-**Fin and eye positions**: a series of landmarks [<a href="https://www.biotaxa.org/Zootaxa/article/view/zootaxa.3586.1.3/44599">Armbruster 2012</a>]; we can use the segmentation to our advantage:
-
-![Minnow Landmarks](https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow_Landmarks_Burress_et_al_2017.png)
-
-See <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Traits/Minnow_Landmarks_Burress_et_al_2017.csv">Minnow_Landmarks_Burress_et_al_2017.csv</a> for descriptions of the position of the landmarks.
-
-1. Anterior portion of head
-6. Posterior caudal fin connection with trunk
-12. Posterior part of head segmentation
-14. posterior of eye
-15. anterior of eye
-18. centroid of eye
-
-### Trait extraction
-More information on trait extraction can be found on the <a href="https://github.com/hdr-bgnn/Morphology-analysis">Morphological Analysis repository</a>
+WHY THESE BLOBS??
 
 ## Running the Workflow
+
 This workflow requires R, conda, and singularity to run.
 
 ### Installing snakemake
+
 To run the workflow we use snakemake.
 See the [official instructions for installing snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html).
 
@@ -150,14 +120,14 @@ conda info -e
 ```
 
 ### Installing R packages
-The R packages required by the pipeline must be installed into the `Library` directory.
+The R packages required by the pipeline must be installed into the `Library` directory that is created.
 This can be accomplished by running `Rscript dependencies.R`.
 On the OSC cluster this can be done like so:
 ```
 mkdir Library
 module load cmake #defaukts to version on node
 module load R/4.2.1-gnu11.2
-Rscript dependencies.R 
+Rscript dependencies.R
 ```
 
 ### Dataverse configuration
@@ -182,7 +152,6 @@ Enter Dataverse URL: https://datacommons.tdai.osu.edu/
 Enter your Dataverse API Token: <yourtoken>
 ```
 
-
 ### Running snakemake
 
 Activate snakemake:
@@ -193,7 +162,7 @@ source activate snakemake
 To run on a local computer:
 After activating R and snakemake the pipeline can be run using `snakemake --cores 1`.
 
-To run on the OSC cluster: 
+To run on the OSC cluster:
 ```
 sbatch run-workflow.sh
 ```

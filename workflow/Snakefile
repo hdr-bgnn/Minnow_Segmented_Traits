@@ -37,7 +37,7 @@ rule all:
         presence_absence_dist_image=config["Presence_Absence_Dist_Image"],
         heatmap_avg_blob_image=config["Heatmap_Avg_Blob_Image"],
         heatmap_sd_blob_image=config["Heatmap_SD_Blob_Image"]
- 
+
 rule download_image_metadata:
     output: config["Image_Metadata"]
     params:
@@ -89,7 +89,7 @@ module segmentation:
     prefix: "segmentation"
 use rule * from segmentation as seg_*
 
-rule selection_criteria_segmented_images:
+rule presence_absence_analysis:
     input:
        unpack(selection_criteria_inputs)
     output:
@@ -101,7 +101,6 @@ rule selection_criteria_segmented_images:
        heatmap_avg_blob_image=config["Heatmap_Avg_Blob_Image"],
        heatmap_sd_blob_image=config["Heatmap_SD_Blob_Image"]
     params:
-        script=srcdir("../Scripts/Selection_Criteria_Segmented_Images.R"),
+        script=srcdir("../Scripts/Presence_Absence_Analysis.R"),
     shell:
         "R_LIBS_USER=Library Rscript {params.script}"
-
