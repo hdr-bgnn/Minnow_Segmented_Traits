@@ -56,7 +56,7 @@ presence.meta <- merge(presence.df, meta.df,
 sampling.df$Selection_Criteria[10] <- "Has ruler scale"
 
 unique(presence.meta$unit) #None means no scale was detected or extracted
-errors <- presence.meta[presence.meta$unit == "None",] %>% drop_na(unit)
+errors <- presence.meta[presence.meta$unit == "None",] %>% tidyr::drop_na(unit)
 nrow(errors) #18 images
 
 write.csv(errors,
