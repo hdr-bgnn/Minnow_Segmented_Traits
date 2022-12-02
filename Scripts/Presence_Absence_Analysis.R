@@ -6,7 +6,6 @@ library(ggplot2)
 library(reshape2)
 source("Scripts/init.R")
 
-#### add to sampling.df ----
 sampling.df <- read.csv(file = sampling_path, header = TRUE)
 
 # Files created by this script:
@@ -55,8 +54,8 @@ presence.meta <- merge(presence.df, meta.df,
 
 sampling.df$Selection_Criteria[10] <- "Has ruler scale"
 
-unique(presence.meta$unit) #None means no scale was detected or extracted
-errors <- presence.meta[presence.meta$unit == "None",] %>% tidyr::drop_na(unit)
+unique(presence.meta$ruler_unit) #None means no scale was detected or extracted
+errors <- presence.meta[presence.meta$ruler_unit == "None",] %>% tidyr::drop_na(ruler_unit)
 nrow(errors) #18 images
 
 write.csv(errors,
@@ -65,7 +64,7 @@ write.csv(errors,
 
 presence.meta.scale <- presence.meta[!(presence.meta$base_name %in% errors$base_name),]
 
-write.csv(df.scale,
+write.csv(presence.meta.scale,
           file = file.path(results, "df.errors.removed.csv"),
           row.names = FALSE)
 
