@@ -111,6 +111,7 @@ Criteria chosen:
 
 We ignored if_background_uniform == "True" because it reduced the sample size too much.
 
+OUTPUT FILE HERE!
 
 ### Analysis
 
@@ -118,7 +119,7 @@ See more details in [Morphology-analysis](https://github.com/hdr-bgnn/Morphology
 
 Each segmented image has the following traits: trunk, head, eye, dorsal fin, caudal fin, anal fin, pelvic fin, and pectoral fin. For each segmented trait, there may be more than one "blob", or group of pixels identifying a trait. We created a matrix of <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Files/presence.absence.matrix.csv"> presence.absence.matrix.csv</a>.
 
-We removed images where a trait and the scale were missing. That removed X images.
+We removed images where a trait and the scale were missing. That removed X images. OUTPUT FILE HERE!
 
 For each trait, we counted the number of "blobs" and the percentage of the largest blob as a proportion of all blobs for a trait.
 
@@ -134,12 +135,15 @@ Selecting only the species in Burress et al. 2017, We are left with 446 images a
 * <i>Notropis ammophilus</i> (X)
 * <i>Notropis stilbius</i> (X)
 
+OUTPUT FILE HERE!
+
 
 #### Figures
 
 We created a heat map to show the success of the segmentation to detect traits from the images.
 
-Figures are in the folder "Results".
+Figures are in the folder "Results". OUTPUT FILE HERE!
+
 
 ## Running the Workflow
 
