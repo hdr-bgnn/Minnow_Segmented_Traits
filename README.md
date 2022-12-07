@@ -46,9 +46,9 @@ Finally, with the help of the Duke Team, we create an automated workflow.
 
 All input files are stored in the [Fish Traits](https://covid-commons.osu.edu/dataverse/fish-traits) dataverse hosted by OSU.
 
-- [Minnow trait measurements](https://covid-commons.osu.edu/dataset.xhtml?persistentId=doi:10.5072/FK2/KLN3CS&version=DRAFT) from [Burress et al. 2017](https://onlinelibrary.wiley.com/doi/full/10.1111/jeb.13024) [Supplemental Information](https://github.com/hdr-bgnn/Minnow_Segmented_Traits/blob/streamline/Files/jeb13024-sup-0001-supinfo.docx).
-- [Image Quality Metadata v1_20211206_151204 (IQM)](https://covid-commons.osu.edu/dataset.xhtml?persistentId=doi:10.5072/FK2/ZIFDTJ&version=DRAFT): metadata about the image quality (downloaded from the Tulane API)
-- [Image Metadata v1_20211206_151152 (IM)](https://covid-commons.osu.edu/dataset.xhtml?persistentId=doi:10.5072/FK2/QOHJGD&version=DRAFT): metadata about the specimen image (downloaded from the Tulane API)
+- [Minnow trait measurements](https://covid-commons.osu.edu/dataset.xhtml?persistentId=doi:10.5072/FK2/KLN3CS&version=DRAFT) from [Burress et al. 2017](https://onlinelibrary.wiley.com/doi/full/10.1111/jeb.13024) [Supplemental Information](https://github.com/hdr-bgnn/Minnow_Segmented_Traits/blob/streamline/Files/jeb13024-sup-0001-supinfo.docx)
+- [Image Quality Metadata v1_20211206_151204 (IQM)](https://covid-commons.osu.edu/dataset.xhtml?persistentId=doi:10.5072/FK2/ZIFDTJ&version=DRAFT): metadata about the image quality (downloaded from the [Tulane Fish API](https://bgnn.tulane.edu/api/docs#/))
+- [Image Metadata v1_20211206_151152 (IM)](https://covid-commons.osu.edu/dataset.xhtml?persistentId=doi:10.5072/FK2/QOHJGD&version=DRAFT): metadata about the specimen image (downloaded from the [Tulane Fish API](https://bgnn.tulane.edu/api/docs#/))
 
 ### Components
 
