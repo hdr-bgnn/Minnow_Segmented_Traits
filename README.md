@@ -58,6 +58,15 @@ All weights and dependencies for all components of the workflow are stored in th
   - Object detection of fish and rule from fish images
   - [Repository](https://github.com/hdr-bgnn/drexel_metadata)
   - [Model Weights](https://covid-commons.osu.edu/dataset.xhtml?persistentId=doi:10.5072/FK2/MMX6FY&version=DRAFT)
+  
+* Reformatting of metadata
+  - Trim metadata output from Metadata step to only the values necessary for this project
+  - [Repository](https://github.com/hdr-bgnn/drexel_metadata_formatter)
+
+* Crop Image
+  - Extract bounding box information from metadata file
+  - Resizes and crops fish from image
+  - [Repository](https://github.com/hdr-bgnn/Crop_image)
 
 * Segmentation Model by Virginia Tech Team
   - Segments fish traits from fish images
