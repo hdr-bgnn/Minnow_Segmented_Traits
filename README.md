@@ -4,7 +4,7 @@ We use a segmentation model to extract traits from minnows (Family: Cyprinidae).
 
 This repository serves as a case study of an automated workflow and extraction of morphological traits using machine learning on image data. 
 
-We expand upon work already done by BGNN, including metadata collection by the [Tulane Team](https://bgnn.tulane.edu/) and the [Drexel Team](https://github.com/hdr-bgnn/drexel_metadata_formatter) (see [Leipzig et al. 2021](https://link.springer.com/chapter/10.1007/978-3-030-71903-6_1), [Pepper et al. 2021](https://ieeexplore.ieee.org/abstract/document/9651834?casa_token=gzgYa9cfbZAAAAAA:mFhU1Wc4bkBbL066-2Iwsec-eY2u_1h4FfgoDgGMnNqS5NLOTsJ0Jn78GOzU7tbbz4J-sw), and [Narnani et al. 2022](https://www.researchsquare.com/article/rs-1506561/latest.pdf)), and a segmentation model developed by the [Virginia Tech Team](https://github.com/hdr-bgnn/BGNN-trait-segmentation). We developed morphology extraction tools ([Morphology-analysis](https://github.com/hdr-bgnn/Morphology-analysis)) with the help of the Tulane Team. We incorporate these tools into [BGNN_Snakemake](https://github.com/hdr-bgnn/BGNN_Snakemake).
+We expand upon work already done by BGNN, including metadata collection by the [Tulane Team](https://bgnn.tulane.edu/) and the [Drexel Team](https://github.com/hdr-bgnn/drexel_metadata) (see [Leipzig et al. 2021](https://link.springer.com/chapter/10.1007/978-3-030-71903-6_1), [Pepper et al. 2021](https://ieeexplore.ieee.org/abstract/document/9651834?casa_token=gzgYa9cfbZAAAAAA:mFhU1Wc4bkBbL066-2Iwsec-eY2u_1h4FfgoDgGMnNqS5NLOTsJ0Jn78GOzU7tbbz4J-sw), and [Narnani et al. 2022](https://www.researchsquare.com/article/rs-1506561/latest.pdf)), and a segmentation model developed by the [Virginia Tech Team](https://github.com/hdr-bgnn/BGNN-trait-segmentation). We developed morphology extraction tools ([Morphology-analysis](https://github.com/hdr-bgnn/Morphology-analysis)) with the help of the Tulane Team. We incorporate these tools into [BGNN_Snakemake](https://github.com/hdr-bgnn/BGNN_Snakemake).
 
 Finally, with the help of the Duke Team, we create an automated workflow.
 
@@ -56,7 +56,7 @@ All weights and dependencies for all components of the workflow are stored in th
 
 * Metadata by Drexel Team
   - Object detection of fish and rule from fish images
-  - [Repository](https://github.com/hdr-bgnn/drexel_metadata_formatter)
+  - [Repository](https://github.com/hdr-bgnn/drexel_metadata)
   - [Model Weights](https://covid-commons.osu.edu/dataset.xhtml?persistentId=doi:10.5072/FK2/MMX6FY&version=DRAFT)
 
 * Segmentation Model by Virginia Tech Team
