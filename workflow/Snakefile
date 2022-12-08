@@ -58,10 +58,10 @@ checkpoint select_minnow_images:
     shell:
         "R_LIBS_USER=Library Rscript {params.script}"
 
-# import BGNN_Snakemake rules used to create morpology presence.json files for images
+# import BGNN_Core_Workflow rules used to detect fishes, crop, and segment images
 module segmentation:
     snakefile:
-        github("hdr-bgnn/BGNN_Snakemake", path="workflow/Snakefile", tag="715bcad75e983a821d3d2b0e3bedb76ea4656be6")
+        github("hdr-bgnn/BGNN_Core_Workflow", path="workflow/Snakefile", tag="715bcad75e983a821d3d2b0e3bedb76ea4656be6")
     # Use output from Minnow_Selection_Image_Quality_Metadata.R as input files
     config: { "list": config["Burress_Minnow_Filtered"] }
     # Store all files in a subdirectory
