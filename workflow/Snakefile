@@ -7,25 +7,6 @@ configfile: "config/config.yaml"
 DATAVERSE_CONFIG_PATH = os.path.expanduser('~/.dataverse')
 DATAVERSE_CONTAINER = 'docker://ghcr.io/imageomics/dataverse-access:0.0.3'
 
-def get_image_names(csv_filename):
-    df = pd.read_csv(csv_filename)
-    # Create 'name' column by removing the filename extension from 'original_file_name'
-    names = df['original_file_name'].apply(lambda x : os.path.splitext(x)[0])
-    return names.tolist()
-
-def selection_criteria_inputs(wildcards):
-    # Returns output morphology presence filenames
-    with checkpoints.select_minnow_images.get(**wildcards).output[1].open() as f:
-       names = get_image_names(f)
-    presence_files = [f"segmentation/Morphology/Presence/{i}_presence.json" for i in names]
-    return {
-        "presence_files": presence_files,
-        "sampling": config["Sampling"],
-        "image_metadata": config["Image_Metadata"],
-        "image_quality_metadata": config["Image_Quality_Metadata"],
-        "burress": config["Burress"]
-    }
-
 rule all:
     input:
         presence_absence_matrix=config["Presence_Absence_Matrix"],
@@ -91,7 +72,37 @@ use rule generate_metadata from segmentation as seg_generate_metadata
 use rule transform_metadata from segmentation as seg_transform_metadata
 use rule crop_image from segmentation as seg_crop_image
 use rule segment_image from segmentation as seg_segment_image
-use rule create_morphological_analysis from segmentation as seg_create_morphological_analysis
+
+rule create_morphological_analysis:
+    input:
+        image = 'Segmented/{image}_segmented.png',
+        metadata = 'Metadata/{image}.json'
+    output: 'Morphology/Presence/{image}_presence.json'
+    log: 'logs/create_morphological_analysis_{image}.log'
+    container:
+        "docker://jbradley/morphology-analysis:dev"
+    shell:
+        'Morphology_main.py {input.image} {output} > {log} 2>&1'
+
+# functions used by the selection_criteria_segmented_images rule
+def selection_criteria_inputs(wildcards):
+    # Returns output morphology presence filenames
+    with checkpoints.select_minnow_images.get(**wildcards).output[1].open() as f:
+       names = get_image_names(f)
+    presence_files = [f"segmentation/Morphology/Presence/{i}_presence.json" for i in names]
+    return {
+        "presence_files": presence_files,
+        "sampling": config["Sampling"],
+        "image_metadata": config["Image_Metadata"],
+        "image_quality_metadata": config["Image_Quality_Metadata"],
+        "burress": config["Burress"]
+    }
+
+def get_image_names(csv_filename):
+    df = pd.read_csv(csv_filename)
+    # Create 'name' column by removing the filename extension from 'original_file_name'
+    names = df['original_file_name'].apply(lambda x : os.path.splitext(x)[0])
+    return names.tolist()
 
 rule selection_criteria_segmented_images:
     input:
