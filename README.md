@@ -22,7 +22,7 @@ Finally, with the help of the Duke Team, we create an automated workflow.
 ## Organization
 
 *Scripts*
-- [Data_Manipulation.R](https://github.com/hdr-bgnn/Minnow_Traits/blob/streamline/Scripts/Data_Manipulation.R):code for manipulating and merging data files
+- [Data_Manipulation.R](https://github.com/hdr-bgnn/Minnow_Traits/blob/streamline/Scripts/Data_Manipulation.R): code for manipulating and merging data files
 - [Minnow_Selection_Image_Quality_Metadata.R](https://github.com/hdr-bgnn/Minnow_Traits/blob/streamline/Scripts/Minnow_Selection_Image_Quality_Metadata.R): code for image selection
 - [Presence_Absence_Analysis.R](https://github.com/hdr-bgnn/Minnow_Traits/blob/streamline/Scripts/Presence_Absence_Analysis.R): code for analyzing machine learning outputs
 - [init.R](https://github.com/hdr-bgnn/Minnow_Traits/blob/streamline/Scripts/init.R): code to load functions in [Functions](https://github.com/hdr-bgnn/Minnow_Traits/tree/streamline/Scripts/Functions)
