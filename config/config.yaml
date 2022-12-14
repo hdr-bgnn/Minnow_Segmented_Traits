@@ -1,10 +1,11 @@
 # "Name:" becomes the object for the Snakefile
 
 # Input paths
-Image_Metadata: Files/Image_Metadata_v1_20211206_151152.csv
-Image_Metadata_DOI: doi:10.5072/FK2/QOHJGD
-Image_Quality_Metadata: Files/Image_Quality_Metadata_v1_20211206_151204.csv
-Image_Quality_Metadata_DOI: doi:10.5072/FK2/ZIFDTJ
+TU_Fish_DOI: doi:10.5072/FK2/VBAEXS
+Image_Metadata: Files/Image_Metadata.csv
+#Image_Metadata_DOI: doi:10.5072/FK2/QOHJGD
+Image_Quality_Metadata: Files/Image_Quality_Metadata.csv
+#Image_Quality_Metadata_DOI: doi:10.5072/FK2/ZIFDTJ
 Burress: Files/Previous Fish Measurements - Burress et al. 2016.csv
 Burress_DOI: doi:10.5072/FK2/KLN3CS
 limit_images: "" #if "" will run all, otherwise must input in integer
