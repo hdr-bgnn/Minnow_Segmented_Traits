@@ -7,27 +7,6 @@ configfile: "config/config.yaml"
 DATAVERSE_CONFIG_PATH = os.path.expanduser('~/.dataverse')
 DATAVERSE_CONTAINER = 'docker://ghcr.io/imageomics/dataverse-access:0.0.3'
 
-def get_image_names(csv_filename):
-    df = pd.read_csv(csv_filename)
-    # Create 'name' column by removing the filename extension from 'original_file_name'
-    names = df['original_file_name'].apply(lambda x : os.path.splitext(x)[0])
-    return names.tolist()
-
-def selection_criteria_inputs(wildcards):
-    # Returns output morphology presence filenames
-    with checkpoints.select_minnow_images.get(**wildcards).output[1].open() as f:
-       names = get_image_names(f)
-       if config["limit_images"]:
-            names = names[:int(config["limit_images"])]
-    presence_files = [f"segmentation/Morphology/Presence/{i}_presence.json" for i in names]
-    return {
-        "presence_files": presence_files,
-        "sampling": config["Sampling"],
-        "image_metadata": config["Image_Metadata"],
-        "image_quality_metadata": config["Image_Quality_Metadata"],
-        "burress": config["Burress"]
-    }
-
 rule all:
     input:
         presence_absence_matrix=config["Presence_Absence_Matrix"],
@@ -38,23 +17,25 @@ rule all:
         heatmap_avg_blob_image=config["Heatmap_Avg_Blob_Image"],
         heatmap_sd_blob_image=config["Heatmap_SD_Blob_Image"]
 
-rule download_image_metadata:
-    output: config["Image_Metadata"]
+rule download_TU_FISH:
+    output: config["TU_FISH"]
     params:
-        doi=config["Image_Metadata_DOI"],
+        doi=config["TU_FISH_DOI"],
         config=DATAVERSE_CONFIG_PATH
     container:
         DATAVERSE_CONTAINER
     shell: 'DATAVERSE_CONFIG_PATH={params.config} dva download {params.doi} Files/'
 
-rule download_image_quality_metadata:
-    output: config["Image_Quality_Metadata"]
+rule extract_metadata:
+    output:
+        config["Image_Metadata"],
+        config["Image_Quality_Metadata"]
+    input:
+        config["TU_FISH"]
     params:
-        doi=config["Image_Quality_Metadata_DOI"],
-        config=DATAVERSE_CONFIG_PATH
-    container:
-        DATAVERSE_CONTAINER
-    shell: 'DATAVERSE_CONFIG_PATH={params.config} dva download {params.doi} Files/'
+        script=srcdir("../Scripts/Extract_Metadata.R")
+    shell:
+        "R_LIBS_USER=Library Rscript {params.script}"
 
 rule download_burress:
     output: config["Burress"]
@@ -70,6 +51,7 @@ checkpoint select_minnow_images:
         config["Image_Metadata"],
         config["Image_Quality_Metadata"],
         config["Burress"]
+
     output:
         config["Minnow_Filtered"],
         config["Burress_Minnow_Filtered"],
@@ -82,16 +64,51 @@ checkpoint select_minnow_images:
 # import BGNN_Snakemake rules used to create morpology presence.json files for images
 module segmentation:
     snakefile:
-        github("hdr-bgnn/BGNN_Snakemake", path="workflow/Snakefile", tag="84e3604a6f767c43b31259237ab1ffc61bac3be8")
+        github("hdr-bgnn/BGNN_Core_Workflow", path="workflow/Snakefile", tag="1a90325e24a942bb818b46c96aa3745aeae4e2ec")
     # Use output from Minnow_Selection_Image_Quality_Metadata.R as input files
     config: { "list": config["Burress_Minnow_Filtered"] }
     # Store all files in a subdirectory
     prefix: "segmentation"
-use rule * from segmentation as seg_*
+
+use rule download_image from segmentation as seg_download_image
+use rule generate_metadata from segmentation as seg_generate_metadata
+use rule transform_metadata from segmentation as seg_transform_metadata
+use rule crop_image from segmentation as seg_crop_image
+use rule segment_image from segmentation as seg_segment_image
+
+rule create_morphological_analysis:
+    input:
+        image = 'Segmented/{image}_segmented.png',
+        metadata = 'Metadata/{image}.json'
+    output: 'Morphology/Presence/{image}_presence.json'
+    log: 'logs/create_morphological_analysis_{image}.log'
+    container:
+        "docker://jbradley/morphology-analysis:dev"
+    shell:
+        'Morphology_main.py {input.image} {output} > {log} 2>&1'
+
+def get_image_names(csv_filename):
+    df = pd.read_csv(csv_filename)
+    # Create 'name' column by removing the filename extension from 'original_file_name'
+    names = df['original_file_name'].apply(lambda x : os.path.splitext(x)[0])
+    return names.tolist()
+
+def presence_absence_analysis_inputs(wildcards):
+    # Returns output morphology presence filenames
+    with checkpoints.select_minnow_images.get(**wildcards).output[1].open() as f:
+       names = get_image_names(f)
+    presence_files = [f"segmentation/Morphology/Presence/{i}_presence.json" for i in names]
+    return {
+        "presence_files": presence_files,
+        "sampling": config["Sampling"],
+        "image_metadata": config["Image_Metadata"],
+        "image_quality_metadata": config["Image_Quality_Metadata"],
+        "burress": config["Burress"]
+    }
 
 rule presence_absence_analysis:
     input:
-       unpack(selection_criteria_inputs)
+       unpack(presence_absence_analysis_inputs)
     output:
        presence_absence_matrix=config["Presence_Absence_Matrix"],
        sampling_species_burress=config["Sampling_Species_Burress"],

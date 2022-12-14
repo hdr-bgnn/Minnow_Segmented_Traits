@@ -1,7 +1,8 @@
 # "Name:" becomes the object for the Snakefile
 
 # Input paths
-TU_Fish_DOI: doi:10.5072/FK2/VBAEXS
+TU_FISH: Files/TU_FISH_dts7s76z75zr.zip
+TU_FISH_DOI: doi:10.5072/FK2/VBAEXS
 Image_Metadata: Files/Image_Metadata.csv
 #Image_Metadata_DOI: doi:10.5072/FK2/QOHJGD
 Image_Quality_Metadata: Files/Image_Quality_Metadata.csv

@@ -1,9 +1,13 @@
 # set paths for files
-# Meghan Balk 
+# Meghan Balk
 # balk@battelleecology.org
 
 #### read yaml file ----
 dfs <- yaml::read_yaml(file = config_file)
+
+# if dfs$limit_images ASSIGN variable; and tell user this is where they change it in CONFIG
+checkpoint.limit_image <- dfs$limit_images
+use variable somewhjere else to set # of images DL
 
 meta.df <- read.csv(file = dfs$Image_Metadata)
 
@@ -51,4 +55,3 @@ b.sp <- unique(b.df$Species)
 # label measurements with "b_" to show they're from Burress et al. 2017
 
 names(b.df)[2:10] <- paste0("b.",names(b.df)[2:10])
-
