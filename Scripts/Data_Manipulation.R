@@ -4,10 +4,7 @@
 
 #### read yaml file ----
 dfs <- yaml::read_yaml(file = config_file)
-
-# if dfs$limit_images ASSIGN variable; and tell user this is where they change it in CONFIG
 checkpoint.limit_image <- dfs$limit_images
-use variable somewhjere else to set # of images DL
 
 meta.df <- read.csv(file = dfs$Image_Metadata)
 

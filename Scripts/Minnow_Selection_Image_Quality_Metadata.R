@@ -1,7 +1,6 @@
 # selection of minnow images for the workflow
 # Meghan Balk
 # balk@battelleecology.org
-library(dplyr)
 
 ## MAKE SURE WD IS IN REPO
 #setwd("minnowTraits")
@@ -246,15 +245,24 @@ sampling.df$Burress_et_al._2017_Overlap_Images_sp[7] <- paste0(nrow(images.minno
                                                                length(unique(images.minnows.10$scientific_name.x[images.minnows.10$scientific_name.x %in% b.sp])),
                                                                ")")
 
+### limit species
+if(isTRUE(checkpoint.limit_image == "")){
+  images.minnows.limit <- images.minnows.10
+} else if(isTRUE(is.integer(checkpoint.limit_image))){
+  images.minnows.limit <- images.minnows.10[checkpoint.limit_image,] #selects all columns, limits rows to number selected
+} else {
+  print("The value for limit_image is invalid. Accepted values are '' or an integer.")
+}
+
 #### write datasets ----
 
 #write dataset without index
-write.csv(images.minnows.10,
+write.csv(images.minnows.limit,
           file = minnow_filtered_path,
           row.names = FALSE)
 
 #write dataset trimmed to Burress
-images.minnows.burress <- images.minnows.10[images.minnows.10$scientific_name.x %in% b.sp,]
+images.minnows.burress <- images.minnows.limit[images.minnows.limit$scientific_name.x %in% b.sp,]
 write.csv(images.minnows.burress,
           file = burress_minnow_filtered_path,
           row.names = FALSE)

@@ -3,9 +3,9 @@
 # Input paths
 TU_FISH: Files/TU_FISH_dts7s76z75zr.zip
 TU_FISH_DOI: doi:10.5072/FK2/VBAEXS
-Image_Metadata: Files/Image_Metadata.csv
+Image_Metadata: Files/extendedImageMetadata.csv
 #Image_Metadata_DOI: doi:10.5072/FK2/QOHJGD
-Image_Quality_Metadata: Files/Image_Quality_Metadata.csv
+Image_Quality_Metadata: Files/imageQualityMetadata.csv
 #Image_Quality_Metadata_DOI: doi:10.5072/FK2/ZIFDTJ
 Burress: Files/Previous Fish Measurements - Burress et al. 2016.csv
 Burress_DOI: doi:10.5072/FK2/KLN3CS

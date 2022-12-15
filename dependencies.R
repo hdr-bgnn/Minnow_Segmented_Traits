@@ -30,6 +30,10 @@ remotes::install_version("yaml",
                          lib = lib.path)
 
 #data manipulation packages
+remotes::install_version("utils",
+                         version = "3.6.2",
+                         upgrade = "never",
+                         lib = lib.path)
 remotes::install_version("stringr",
                          version = "1.4.0",
                          upgrade = "never",
