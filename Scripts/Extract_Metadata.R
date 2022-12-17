@@ -18,7 +18,7 @@
 
 #unzip and clean up files
 utils::unzip(zipfile = dfs$TU_FISH, 
-             exdir = paste0(files))
+             exdir = files)
 
 base::file.remove(txtFiles)
 base::file.remove(xmlFiles)
