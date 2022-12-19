@@ -18,9 +18,9 @@ library(remotes,
         lib.loc = lib.path)
 
 #turn json files to R objects
-remotes::install_version("rjson",
-                         version = "0.2.21",
-                         upgrade = "never",
+install.packages("rjson",
+                #         version = "0.2.21",
+                #         upgrade = "never",
                          lib = lib.path)
 
 #read yaml files
