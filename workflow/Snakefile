@@ -37,6 +37,10 @@ rule download_burress:
         DATAVERSE_CONTAINER
     shell: 'DATAVERSE_CONFIG_PATH={params.config} dva download {params.doi} Files/'
 
+rule dependencies:
+    input: "dependecies.R"
+    output: "Library"
+
 checkpoint select_minnow_images:
     input:
         config["Image_Metadata"],
