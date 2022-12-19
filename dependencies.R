@@ -3,6 +3,9 @@
 # balk@battelleecology.org
 source("paths.R")
 
+#create Library folder
+dir.create(“Library“)
+
 ## create new library for versions
 .libPaths(c(.libPaths(), file.path(getwd(), library))) #creates place to store package versions
 .libPaths() #make sure it was created
