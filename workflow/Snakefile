@@ -6,6 +6,7 @@ configfile: "config/config.yaml"
 
 DATAVERSE_CONFIG_PATH = os.path.expanduser('~/.dataverse')
 DATAVERSE_CONTAINER = 'docker://ghcr.io/imageomics/dataverse-access:0.0.3'
+R_CONTAINER = 'docker://ghcr.io/rocker-org/verse:4.2.2'
 
 rule all:
     input:
@@ -38,23 +39,28 @@ rule download_burress:
     shell: 'DATAVERSE_CONFIG_PATH={params.config} dva download {params.doi} Files/'
 
 rule dependencies:
-    input: "dependecies.R"
-    output: "Library"
+    input:
+        script="dependencies.R"
+    output: directory("Library")
+    container:
+        R_CONTAINER
+    shell: "Rscript {input.script}"
 
 checkpoint select_minnow_images:
     input:
-        config["Image_Metadata"],
-        config["Image_Quality_Metadata"],
-        config["Burress"]
-
+        script=srcdir("../Scripts/Minnow_Selection_Image_Quality_Metadata.R"),
+        library="Library",
+        metadata=config["Image_Metadata"],
+        quality_metadata=config["Image_Quality_Metadata"],
+        burress=config["Burress"]
     output:
         config["Minnow_Filtered"],
         config["Burress_Minnow_Filtered"],
         config["Sampling"]
-    params:
-        script=srcdir("../Scripts/Minnow_Selection_Image_Quality_Metadata.R")
+    container:
+        R_CONTAINER
     shell:
-        "R_LIBS_USER=Library Rscript {params.script}"
+        "R_LIBS_USER=Library Rscript {input.script}"
 
 # import BGNN_Snakemake rules used to create morpology presence.json files for images
 module segmentation:
@@ -95,15 +101,18 @@ def presence_absence_analysis_inputs(wildcards):
     presence_files = [f"segmentation/Morphology/Presence/{i}_presence.json" for i in names]
     return {
         "presence_files": presence_files,
-        "sampling": config["Sampling"],
-        "image_metadata": config["Image_Metadata"],
-        "image_quality_metadata": config["Image_Quality_Metadata"],
-        "burress": config["Burress"]
     }
 
 rule presence_absence_analysis:
     input:
-       unpack(presence_absence_analysis_inputs)
+       unpack(presence_absence_analysis_inputs),
+       script=srcdir("../Scripts/Presence_Absence_Analysis.R"),
+       library="Library",
+       sampling=config["Sampling"],
+       image_metadata=config["Image_Metadata"],
+       image_quality_metadata=config["Image_Quality_Metadata"],
+       burress=config["Burress"]
+
     output:
        presence_absence_matrix=config["Presence_Absence_Matrix"],
        sampling_species_burress=config["Sampling_Species_Burress"],
@@ -114,5 +123,7 @@ rule presence_absence_analysis:
        heatmap_sd_blob_image=config["Heatmap_SD_Blob_Image"]
     params:
         script=srcdir("../Scripts/Presence_Absence_Analysis.R"),
+    container:
+        R_CONTAINER
     shell:
-        "R_LIBS_USER=Library Rscript {params.script}"
+        "R_LIBS_USER=Library Rscript {input.script}"
