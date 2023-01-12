@@ -10,6 +10,8 @@ meta.df <- read.csv(file = dfs$Image_Metadata)
 
 iqm.df <- read.csv(file = dfs$Image_Quality_Metadata)
 
+multi.df <- read.csv(file = dfs$Multimedia)
+
 b.df <- read.csv(file = dfs$Burress)
 
 # Output file paths
@@ -29,17 +31,32 @@ heatmap_sd_blob_path <- dfs$Heatmap_SD_Blob_Image
 
 ## metadata image files
 # downloaded from https://bgnn.tulane.edu/hdrweb/hdr/imagemetadata/
-# meta.data is metadata about the images
+# meta is metadata about the images
 # iqm is metadata about image quality
+# multi is metadata about the multimedia files
+
+#fix meta arkId to arkID
+colnames(meta.df)[colnames(meta.df) == "arkId"] <- "arkID"
+
+# will combine all the files to one metadata file for ease of use
+meta.iqm <- left_join(meta.df, iqm.df,
+                      by = "arkID",
+                      suffix = c("", ".iqm"))
+meta.multi <- left_join(meta.iqm, multi.df,
+                        by = "arkID",
+                        suffix = c("", ".multi"))
+mm1 <- meta.multi %>% mutate(fileNameAsDelivered = ifelse(is.na(fileNameAsDelivered), fileNameAsDelivered.multi, fileNameAsDelivered))
+mm.df <- mm1 %>% select(-fileNameAsDelivered.multi)
+
+#how many rows have empty iqm fields? using "quality" to test
+nrow(mm.df) #42423
+nrow(mm.df %>% drop_na(quality)) #20719
+#difference: 21704 without IQM data
 
 # remove ".jpg" from file name to more easily align with file name in presence.df
-meta.df$original_file_name <- gsub(meta.df$original_file_name,
-                                   pattern = ".jpg",
-                                   replacement = "")
-
-iqm.df$image_name <- gsub(iqm.df$image_name,
-                          pattern = "\\..*",
-                          replacement = "")
+mm.df$fileNameAsDelivered <- gsub(meta.df$fileNameAsDelivered,
+                                  pattern = ".jpg",
+                                  replacement = "")
 
 ## burress previous measurements
 # measurements from Burress et al. 2017 (see PDFs/Burress et al. 2017  Ecological diversification associated with the benthic‐to‐pelagic transition supinfo.docx)
