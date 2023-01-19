@@ -22,7 +22,7 @@ colnames(sampling.df) = c.names
 
 #### 1. sampling of the metadata ----
 
-#how many species and images in image metadata?
+#how many species and images in image metadata (mm.df)?
 sampling.df$Selection_Criteria[1] <- "Metadata files"
 
 length(unique(mm.df$arkID))
@@ -163,7 +163,7 @@ sampling.df$Selection_Criteria[6] <- "No empty URLs"
 ##INHS_FISH_33814.jpg
 test <- images.minnows.trim[images.minnows.trim$fileNameAsDelivered == "INHS_FISH_33814" |
                             images.minnows.trim$accessURI == "https://bgnn.tulane.edu/hdr-share/ftp/ark/89609/GLIN/INHS/bg976724.jpg",]
-
+empty <- c()
 for(i in 1:nrow(test)){
   if(!isTRUE(valid_url(test$accessURI[i]))){
     empty <- c(empty, test$accessURI[i])
