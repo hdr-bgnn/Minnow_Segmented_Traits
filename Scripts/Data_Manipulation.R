@@ -39,18 +39,21 @@ heatmap_sd_blob_path <- dfs$Heatmap_SD_Blob_Image
 colnames(meta.df)[colnames(meta.df) == "arkId"] <- "arkID"
 
 # will combine all the files to one metadata file for ease of use
-meta.iqm <- left_join(meta.df, iqm.df,
-                      by = "arkID",
-                      suffix = c("", ".iqm"))
-meta.multi <- left_join(meta.iqm, multi.df,
-                        by = "arkID",
-                        suffix = c("", ".multi"))
-mm1 <- meta.multi %>% mutate(fileNameAsDelivered = ifelse(is.na(fileNameAsDelivered), fileNameAsDelivered.multi, fileNameAsDelivered))
-mm.df <- mm1 %>% select(-fileNameAsDelivered.multi)
+meta.iqm <- dplyr::left_join(meta.df, iqm.df,
+                             by = "arkID",
+                             suffix = c("", ".iqm"))
+meta.multi <- dplyr::left_join(meta.iqm, multi.df,
+                               by = "arkID",
+                               suffix = c("", ".multi"))
+mm1 <- meta.multi %>% 
+  dplyr::mutate(fileNameAsDelivered = ifelse(is.na(fileNameAsDelivered), fileNameAsDelivered.multi, fileNameAsDelivered))
+mm.df <- mm1 %>% 
+  dplyr::select(-fileNameAsDelivered.multi)
 
 #how many rows have empty iqm fields? using "quality" to test
 nrow(mm.df) #42423
-nrow(mm.df %>% drop_na(quality)) #20719
+nrow(mm.df %>% 
+       tidyr::drop_na(quality)) #20719
 #difference: 21704 without IQM data
 
 # remove ".jpg" from file name to more easily align with file name in presence.df
