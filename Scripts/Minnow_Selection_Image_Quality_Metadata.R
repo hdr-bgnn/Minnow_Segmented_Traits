@@ -43,49 +43,26 @@ sampling.df$Burress_et_al._2017_Overlap_Images_sp[1] <- paste0(length(unique(mm.
                                                                length(unique(mm.df$scientificName[mm.df$scientificName %in% b.sp])),
                                                                ")")
 
-#### 2. selection based on IQM ----
+#### 2. use image quality metadata to select for minnow images ----
 
-sampling.df$Selection_Criteria[2] <- "Select for Minnows"
+sampling.df$Selection_Criteria[2] <- "Image Quality Metadata Selection"
 
-#extract just the minnows
-minnow.meta <-  mm.df[mm.df$family == "Cyprinidae",]
-length(unique(minnow.meta$arkID))
-length(unique(minnow.meta$scientificName))
-
-sampling.df$All_Minnows_Images_sp[2] <- paste0(length(unique(minnow.meta$arkID)),
-                                               " (",
-                                               length(unique(minnow.meta$scientificName)),
-                                               ")")
-
-##compared to Burress et al. 2017
-length(unique(minnow.meta$arkID[minnow.meta$scientificName %in% b.sp])) #1333
-length(unique(minnow.meta$scientificName[minnow.meta$scientificName %in% b.sp])) #22
-
-sampling.df$Burress_et_al._2017_Overlap_Images_sp[2] <- paste0(length(unique(minnow.meta$arkID[minnow.meta$scientificName %in% b.sp])),
-                                                               " (",
-                                                               length(unique(minnow.meta$scientificName[minnow.meta$scientificName %in% b.sp])),
-                                                               ")")
-
-#### 3. use image quality metadata to select for minnow images ----
-
-sampling.df$Selection_Criteria[3] <- "Image Quality Metadata Selection"
-
-minnow.keep <- minnow.meta[minnow.meta$specimenView == "left" | minnow.meta$specimenView == "9" & #facing left
-                           minnow.meta$specimenCurved == "straight"&
-                           minnow.meta$brightness == "normal" &
-                           minnow.meta$colorIssue == "none" &
-                           minnow.meta$containsScaleBar == "True" & 
-                           minnow.meta$partsOverlapping == "False" &
-                           minnow.meta$onFocus == "True" &
-                           minnow.meta$partsMissing == "False" &
-                           minnow.meta$allPartsVisible == "True" &
-                           minnow.meta$partsFolded == "False" &
-                           minnow.meta$uniformBackground == "True",]
+minnow.keep <- mm.df[mm.df$specimenView == "left" | mm.df$specimenView == "9" & #facing left
+                     mm.df$specimenCurved == "straight"&
+                     mm.df$brightness == "normal" &
+                     mm.df$colorIssue == "none" &
+                     mm.df$containsScaleBar == "True" & 
+                     mm.df$partsOverlapping == "False" &
+                     mm.df$onFocus == "True" &
+                     mm.df$partsMissing == "False" &
+                     mm.df$allPartsVisible == "True" &
+                     mm.df$partsFolded == "False" &
+                     mm.df$uniformBackground == "True",]
 
 length(unique(minnow.keep$arkID))
 length(unique(minnow.keep$scientificName))
 
-sampling.df$All_Minnows_Images_sp[3] <- paste0(length(unique(minnow.keep$arkID)),
+sampling.df$All_Minnows_Images_sp[2] <- paste0(length(unique(minnow.keep$arkID)),
                                                " (",
                                                length(unique(minnow.keep$scientificName)),
                                                ")")
@@ -94,48 +71,24 @@ sampling.df$All_Minnows_Images_sp[3] <- paste0(length(unique(minnow.keep$arkID))
 length(unique(minnow.keep$arkID[minnow.keep$scientificName %in% b.sp]))
 length(unique(minnow.keep$scientificName[minnow.keep$scientificName %in% b.sp]))
 
-sampling.df$Burress_et_al._2017_Overlap_Images_sp[3] <- paste0(length(unique(minnow.keep$arkID[minnow.keep$scientificName %in% b.sp])),
+sampling.df$Burress_et_al._2017_Overlap_Images_sp[2] <- paste0(length(unique(minnow.keep$arkID[minnow.keep$scientificName %in% b.sp])),
                                                                " (",
                                                                length(unique(minnow.keep$scientificName[minnow.keep$scientificName %in% b.sp])),
                                                                ")")
 
-#### 4. get rid of dupes ----
-# image metadata has multiple users, so duplicates per fish
+#### 3. only INHS, UWZM ----
 
-sampling.df$Selection_Criteria[4] <- "Removing dupes from image quality metadata file"
-
-images.minnows.clean <- minnow.keep[!duplicated(minnow.keep$fileNameAsDelivered),]
-
-#how many species and images in image metadata?
-nrow(images.minnows.clean)
-length(unique(images.minnows.clean$scientificName))
-
-sampling.df$All_Minnows_Images_sp[4] <- paste0(nrow(images.minnows.clean),
-                                               " (",
-                                               length(unique(images.minnows.clean$scientificName)),
-                                               ")")
-
-#now reduce to Burress et al. 2017
-nrow(images.minnows.clean[images.minnows.clean$scientificName %in% b.sp,])
-length(unique(images.minnows.clean$scientificName[images.minnows.clean$scientificName %in% b.sp]))
-
-sampling.df$Burress_et_al._2017_Overlap_Images_sp[4] <- paste0(nrow(images.minnows.clean[images.minnows.clean$scientificName %in% b.sp,]),
-                                                               " (",
-                                                               length(unique(images.minnows.clean$scientificName[images.minnows.clean$scientificName %in% b.sp])),
-                                                               ")")
-
-#### 5. only INHS, UWZM ----
-
-sampling.df$Selection_Criteria[5] <- "Only INHS or UWZM (none from UWZM)"
+sampling.df$Selection_Criteria[3] <- "Only INHS or UWZM (none from UWZM)"
 
 institutions <- c("Illinois Natural History Survey - Fish (ILLS-F)", 
                   "University of Wisconsin-Madison Zoological Museum - Fish (UWZM-F)")
-images.minnows.trim <- images.minnows.clean[images.minnows.clean$ownerInstitutionCode.multi %in% institutions,]
+images.minnows.trim <- minnow.keep[minnow.keep$ownerInstitutionCode.multi %in% institutions,]
+
 unique(images.minnows.trim$ownerInstitutionCode.multi)
 nrow(images.minnows.trim)
 length(unique(images.minnows.trim$scientificName))
 
-sampling.df$All_Minnows_Images_sp[5] <- paste0(nrow(images.minnows.trim),
+sampling.df$All_Minnows_Images_sp[3] <- paste0(nrow(images.minnows.trim),
                                                " (",
                                                length(unique(images.minnows.trim$scientificName)),
                                                ")")
@@ -144,13 +97,13 @@ sampling.df$All_Minnows_Images_sp[5] <- paste0(nrow(images.minnows.trim),
 nrow(images.minnows.trim[images.minnows.trim$scientificName %in% b.sp,])
 length(unique(images.minnows.trim$scientificName[images.minnows.trim$scientificName %in% b.sp]))
 
-sampling.df$Burress_et_al._2017_Overlap_Images_sp[5] <- paste0(nrow(images.minnows.trim[images.minnows.trim$scientificName %in% b.sp,]),
+sampling.df$Burress_et_al._2017_Overlap_Images_sp[3] <- paste0(nrow(images.minnows.trim[images.minnows.trim$scientificName %in% b.sp,]),
                                                                " (",
                                                                length(unique(images.minnows.trim$scientificName[images.minnows.trim$scientificName %in% b.sp])),
                                                                ")")
-#### 6. remove empty URLs ----
+#### 4. remove empty URLs ----
 
-sampling.df$Selection_Criteria[6] <- "No empty URLs"
+sampling.df$Selection_Criteria[4] <- "No empty URLs"
 
 ##ask if url is empty and remove if it is
 #1) see if url resolves
@@ -198,7 +151,7 @@ images.minnows.resolve <- images.minnows.trim[!(images.minnows.trim$accessURI %i
 nrow(images.minnows.resolve) #6479
 length(unique(images.minnows.resolve$scientificName)) #92
 
-sampling.df$All_Minnows_Images_sp[6] <- paste0(nrow(images.minnows.resolve),
+sampling.df$All_Minnows_Images_sp[4] <- paste0(nrow(images.minnows.resolve),
                                                " (",
                                                length(unique(images.minnows.resolve$scientificName)),
                                                ")")
@@ -207,7 +160,7 @@ sampling.df$All_Minnows_Images_sp[6] <- paste0(nrow(images.minnows.resolve),
 nrow(images.minnows.resolve[images.minnows.resolve$scientificName %in% b.sp,]) #477
 length(unique(images.minnows.resolve$scientificName[images.minnows.resolve$scientificName %in% b.sp])) #17
 
-sampling.df$Burress_et_al._2017_Overlap_Images_sp[6] <- paste0(nrow(images.minnows.resolve[images.minnows.resolve$scientificName %in% b.sp,]),
+sampling.df$Burress_et_al._2017_Overlap_Images_sp[4] <- paste0(nrow(images.minnows.resolve[images.minnows.resolve$scientificName %in% b.sp,]),
                                                                " (",
                                                                length(unique(images.minnows.resolve$scientificName[images.minnows.resolve$scientificName %in% b.sp])),
                                                                ")")
