@@ -2,9 +2,8 @@
 
 # Input paths
 #TU_FISH: Files/TU_FISH_dts7s76z75zr.zip
-#TU_FISH_DOI: doi:10.5072/FK2/VBAEXS
+TU_FISH_DOI: doi:10.5072/FK2/VBAEXS
 Image_Metadata: Files/Tulane/Fish/extendedImageMetadata.csv
-Metadata_DOI: doi:10.5072/FK2/VBAEXS
 Image_Quality_Metadata: Files/Tulane/Fish/imageQualityMetadata.csv
 Multimedia: Files/Tulane/Fish/multimedia.csv
 Burress: Files/Previous Fish Measurements - Burress et al. 2016.csv
