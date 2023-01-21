@@ -148,8 +148,8 @@ length(empty) #16
 images.minnows.resolve <- images.minnows.trim[!(images.minnows.trim$accessURI %in% empty),]
 
 ##new counts
-nrow(images.minnows.resolve) #6479
-length(unique(images.minnows.resolve$scientificName)) #92
+nrow(images.minnows.resolve) 
+length(unique(images.minnows.resolve$scientificName)) 
 
 sampling.df$All_Minnows_Images_sp[4] <- paste0(nrow(images.minnows.resolve),
                                                " (",
@@ -165,35 +165,35 @@ sampling.df$Burress_et_al._2017_Overlap_Images_sp[4] <- paste0(nrow(images.minno
                                                                length(unique(images.minnows.resolve$scientificName[images.minnows.resolve$scientificName %in% b.sp])),
                                                                ")")
 
-#### 7. At least 10 samples ----
+#### 5. At least 10 samples ----
 
-sampling.df$Selection_Criteria[7] <- "At least 10 samples"
+sampling.df$Selection_Criteria[5] <- "At least 10 samples"
 
 #get sample size (number of images per species)
 table.sp <- images.minnows.resolve %>%
-  group_by(scientificName) %>%
-  summarise(sample.size = n())
-nrow(table.sp) #92 sp
+  dplyr::group_by(scientificName) %>%
+  dplyr::summarise(sample.size = n())
+nrow(table.sp) #111
 
 #retain only species for which there are 10 images
 table.sp.10 <- table.sp$scientificName[table.sp$sample.size >= 10]
-length(table.sp.10) #41 sp
+length(table.sp.10) #54 sp
 
 #trim dataset to match species with at least 10 species
 images.minnows.10 <- images.minnows.resolve[images.minnows.resolve$scientificName %in% table.sp.10,]
-nrow(images.minnows.10) #6300
-length(unique(images.minnows.10$scientificName)) #41
+nrow(images.minnows.10) 
+length(unique(images.minnows.10$scientificName)) 
 
-sampling.df$All_Minnows_Images_sp[7] <- paste0(nrow(images.minnows.10),
+sampling.df$All_Minnows_Images_sp[5] <- paste0(nrow(images.minnows.10),
                                                " (",
                                                length(unique(images.minnows.10$scientificName)),
                                                ")")
 
 #compared to Burress et al. 2017
-nrow(images.minnows.10[images.minnows.10$scientificName %in% b.sp,]) #446
-length(unique(images.minnows.10$scientificName[images.minnows.10$scientificName %in% b.sp])) #8
+nrow(images.minnows.10[images.minnows.10$scientificName %in% b.sp,])
+length(unique(images.minnows.10$scientificName[images.minnows.10$scientificName %in% b.sp]))
 
-sampling.df$Burress_et_al._2017_Overlap_Images_sp[7] <- paste0(nrow(images.minnows.10[images.minnows.10$scientificName %in% b.sp,]),
+sampling.df$Burress_et_al._2017_Overlap_Images_sp[5] <- paste0(nrow(images.minnows.10[images.minnows.10$scientificName %in% b.sp,]),
                                                                " (",
                                                                length(unique(images.minnows.10$scientificName[images.minnows.10$scientificName %in% b.sp])),
                                                                ")")
