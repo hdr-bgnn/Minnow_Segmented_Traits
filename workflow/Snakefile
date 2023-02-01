@@ -6,6 +6,7 @@ configfile: "config/config.yaml"
 
 DATAVERSE_CONFIG_PATH = os.path.expanduser('~/.dataverse')
 DATAVERSE_CONTAINER = 'docker://ghcr.io/imageomics/dataverse-access:0.0.3'
+R_CONTAINER = 'docker://ghcr.io/rocker-org/tidyverse:4.2.2'
 
 rule all:
     input:
@@ -22,7 +23,7 @@ rule download_metadata:
         config["Image_Metadata"],
         config["Image_Quality_Metadata"]
     params:
-        doi=config["Metadata_DOI"],
+        doi=config["TU_FISH_DOI"],
         config=DATAVERSE_CONFIG_PATH
     container:
         DATAVERSE_CONTAINER
@@ -38,14 +39,18 @@ rule download_burress:
     shell: 'DATAVERSE_CONFIG_PATH={params.config} dva download {params.doi} Files/'
 
 rule dependencies:
-    input: "dependecies.R"
-    output: "Library"
+    input: "dependencies.R"
+    output: directory("Library")
+    container:
+        R_CONTAINER
+    shell: 'Rscript dependencies.R'
 
 checkpoint select_minnow_images:
     input:
         config["Image_Metadata"],
         config["Image_Quality_Metadata"],
-        config["Burress"]
+        config["Burress"],
+        "Library"
 
     output:
         config["Minnow_Filtered"],
@@ -53,6 +58,8 @@ checkpoint select_minnow_images:
         config["Sampling"]
     params:
         script=srcdir("../Scripts/Minnow_Selection_Image_Quality_Metadata.R")
+    container:
+        R_CONTAINER
     shell:
         "R_LIBS_USER=Library Rscript {params.script}"
 
@@ -84,8 +91,8 @@ rule create_morphological_analysis:
 
 def get_image_names(csv_filename):
     df = pd.read_csv(csv_filename)
-    # Create 'name' column by removing the filename extension from 'original_file_name'
-    names = df['original_file_name'].apply(lambda x : os.path.splitext(x)[0])
+    # Create 'name' column by removing the filename extension from 'fileNameAsDelivered'
+    names = df['fileNameAsDelivered'].apply(lambda x : os.path.splitext(x)[0])
     return names.tolist()
 
 def presence_absence_analysis_inputs(wildcards):
@@ -98,7 +105,8 @@ def presence_absence_analysis_inputs(wildcards):
         "sampling": config["Sampling"],
         "image_metadata": config["Image_Metadata"],
         "image_quality_metadata": config["Image_Quality_Metadata"],
-        "burress": config["Burress"]
+        "burress": config["Burress"],
+        "library": "Library"
     }
 
 rule presence_absence_analysis:
@@ -114,5 +122,7 @@ rule presence_absence_analysis:
        heatmap_sd_blob_image=config["Heatmap_SD_Blob_Image"]
     params:
         script=srcdir("../Scripts/Presence_Absence_Analysis.R"),
+    container:
+        R_CONTAINER
     shell:
         "R_LIBS_USER=Library Rscript {params.script}"

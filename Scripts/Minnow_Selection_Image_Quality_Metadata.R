@@ -4,6 +4,7 @@
 
 ## MAKE SURE WD IS IN REPO
 #setwd("minnowTraits")
+library(dplyr)
 
 source("Scripts/init.R")
 
@@ -128,6 +129,9 @@ for(i in 1:nrow(test)){
     next
   }
 }
+# DEBUG: truncate image list to 20 images
+images.minnows.trim <- head(images.minnows.trim, n=20)
+
 
 ## now for all:
 empty <- c()

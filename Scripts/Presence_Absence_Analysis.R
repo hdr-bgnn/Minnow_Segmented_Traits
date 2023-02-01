@@ -43,11 +43,12 @@ write.csv(presence.df,
 
 #### merge with metadata ----
 #combine with metadata to get taxonomic hierarchy
+print("cols")
 colnames(meta.df) #loaded in from paths.R
 
 presence.meta <- merge(presence.df, meta.df,
                        by.x = "file_name",
-                       by.y = "original_file_name",
+                       by.y = "fileNameAsDelivered",
                        all.x = TRUE, all.y = FALSE)
 
 #### 8. sampling after segmentation ----
@@ -56,7 +57,9 @@ sampling.df$Selection_Criteria[8] <- "After segmentation"
 
 #check df (need to re-run w everything)
 nrow(presence.meta) #6297
+print("here1")
 length(unique(presence.meta$scientific_name)) #41
+print("here2")
 
 sampling.df$All_Minnows_Images_sp[8] <- paste0(nrow(presence.meta),
                                                " (",
@@ -118,6 +121,7 @@ df <- select(presence.meta.scale, - c("adipos_fin_number", "adipos_fin_percentag
 no.abs <- df[apply(df, 1, function(row) all(row !=0 )), ]  # Remove zero-rows
 nrow(df) - nrow(no.abs) #40; 10 from Burress
 
+print(colnames(df))
 ## how many have all fins? ====
 df.fin.per <- select(df, c("scientific_name", contains("percentage")))
 df.fin.per$total <- rowSums(df.fin.per[ , 2:9], na.rm=TRUE)
