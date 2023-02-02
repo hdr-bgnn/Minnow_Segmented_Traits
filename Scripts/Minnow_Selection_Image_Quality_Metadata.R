@@ -134,7 +134,7 @@ sampling.df$Selection_Criteria[4] <- "No empty URLs"
 
 # Filter to a smaller subset of data for testing
 images.minnows.trim <- images.minnows.trim %>% 
-    filter(scientificName %in% c("Notropis ammophilus"))
+    filter(scientificName %in% c("Notropis ammophilus","Phenacobius catostomus"))
 
 ## now for all:
 empty <- c()

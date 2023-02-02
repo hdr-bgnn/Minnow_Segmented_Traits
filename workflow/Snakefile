@@ -91,19 +91,15 @@ rule create_morphological_analysis:
         'Morphology_main.py {input.image} --metadata {input.metadata} {output} > {log} 2>&1'
 
 def get_image_names(csv_filename):
-    print(csv_filename)
     df = pd.read_csv(csv_filename)
     # Create 'name' column by removing the filename extension from 'fileNameAsDelivered'
-    print(df)
     names = df['fileNameAsDelivered'].apply(lambda x : os.path.splitext(x)[0])
-    print(names)
     return names.tolist()
 
 def presence_absence_analysis_inputs(wildcards):
     # Returns output morphology presence filenames
     with checkpoints.select_minnow_images.get(**wildcards).output[1].open() as f:
        names = get_image_names(f)
-    print(names)
     presence_files = [f"Morphology/Presence/{i}_presence.json" for i in names]
     a = {
         "presence_files": presence_files,
