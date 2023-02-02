@@ -21,7 +21,8 @@ rule all:
 rule download_metadata:
     output:
         config["Image_Metadata"],
-        config["Image_Quality_Metadata"]
+        config["Image_Quality_Metadata"],
+        config["Multimedia"]
     params:
         doi=config["TU_FISH_DOI"],
         config=DATAVERSE_CONFIG_PATH
@@ -49,9 +50,9 @@ checkpoint select_minnow_images:
     input:
         config["Image_Metadata"],
         config["Image_Quality_Metadata"],
+        config["Multimedia"],
         config["Burress"],
         "Library"
-
     output:
         config["Minnow_Filtered"],
         config["Burress_Minnow_Filtered"],
@@ -66,7 +67,7 @@ checkpoint select_minnow_images:
 # import BGNN_Snakemake rules used to create morpology presence.json files for images
 module segmentation:
     snakefile:
-        github("hdr-bgnn/BGNN_Core_Workflow", path="workflow/Snakefile", tag="84e3604a6f767c43b31259237ab1ffc61bac3be8")
+        github("hdr-bgnn/BGNN_Core_Workflow", path="workflow/Snakefile", tag="bada44223ae2bb64ba2643524fe7fb3d21c8208e")
     # Use output from Minnow_Selection_Image_Quality_Metadata.R as input files
     config: { "list": config["Burress_Minnow_Filtered"] }
     # Store all files in a subdirectory
@@ -80,27 +81,31 @@ use rule segment_image from segmentation as seg_segment_image
 
 rule create_morphological_analysis:
     input:
-        image = 'Segmented/{image}_segmented.png',
-        metadata = 'Metadata/{image}.json'
+        image = 'segmentation/Segmented/{image}_segmented.png',
+        metadata = 'segmentation/Metadata/{image}.json'
     output: 'Morphology/Presence/{image}_presence.json'
     log: 'logs/create_morphological_analysis_{image}.log'
     container:
-        "docker://jbradley/morphology-analysis:dev"
+        "docker://ghcr.io/hdr-bgnn/morphology-analysis/morphology:0.3.0"
     shell:
-        'Morphology_main.py {input.image} {output} > {log} 2>&1'
+        'Morphology_main.py {input.image} --metadata {input.metadata} {output} > {log} 2>&1'
 
 def get_image_names(csv_filename):
+    print(csv_filename)
     df = pd.read_csv(csv_filename)
     # Create 'name' column by removing the filename extension from 'fileNameAsDelivered'
+    print(df)
     names = df['fileNameAsDelivered'].apply(lambda x : os.path.splitext(x)[0])
+    print(names)
     return names.tolist()
 
 def presence_absence_analysis_inputs(wildcards):
     # Returns output morphology presence filenames
     with checkpoints.select_minnow_images.get(**wildcards).output[1].open() as f:
        names = get_image_names(f)
-    presence_files = [f"segmentation/Morphology/Presence/{i}_presence.json" for i in names]
-    return {
+    print(names)
+    presence_files = [f"Morphology/Presence/{i}_presence.json" for i in names]
+    a = {
         "presence_files": presence_files,
         "sampling": config["Sampling"],
         "image_metadata": config["Image_Metadata"],
@@ -108,6 +113,7 @@ def presence_absence_analysis_inputs(wildcards):
         "burress": config["Burress"],
         "library": "Library"
     }
+    return a
 
 rule presence_absence_analysis:
     input:

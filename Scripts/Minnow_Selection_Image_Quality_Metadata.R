@@ -115,23 +115,26 @@ sampling.df$Selection_Criteria[4] <- "No empty URLs"
 #test with a known url
 ##http://www.tubri.org/HDR/INHS/INHS_FISH_65294.jpg
 ##INHS_FISH_33814.jpg
-test <- images.minnows.trim[images.minnows.trim$fileNameAsDelivered == "INHS_FISH_33814" |
-                            images.minnows.trim$accessURI == "https://bgnn.tulane.edu/hdr-share/ftp/ark/89609/GLIN/INHS/bg976724.jpg",]
-empty <- c()
-for(i in 1:nrow(test)){
-  if(!isTRUE(valid_url(test$accessURI[i]))){
-    empty <- c(empty, test$accessURI[i])
-  }
-  else if(isTRUE(download_size(test$accessURI[i]) < 1048576)){ #smallest sized image we found
-    empty <- c(empty, test$accessURI[i])
-  }
-  else{
-    next
-  }
-}
-# DEBUG: truncate image list to 20 images
-images.minnows.trim <- head(images.minnows.trim, n=20)
+# I removed the following code since it fails when a user provides their
+# own dataset
+#test <- images.minnows.trim[images.minnows.trim$fileNameAsDelivered == "INHS_FISH_33814" |
+#                            images.minnows.trim$accessURI == "https://bgnn.tulane.edu/hdr-share/ftp/ark/89609/GLIN/INHS/bg976724.jpg",]
+#empty <- c()
+#for(i in 1:nrow(test)){
+#  if(!isTRUE(valid_url(test$accessURI[i]))){
+#    empty <- c(empty, test$accessURI[i])
+#  }
+#  else if(isTRUE(download_size(test$accessURI[i]) < 1048576)){ #smallest sized image we found
+#    empty <- c(empty, test$accessURI[i])
+#  }
+#  else{
+#    next
+#  }
+#}
 
+# Filter to a smaller subset of data for testing
+images.minnows.trim <- images.minnows.trim %>% 
+    filter(scientificName %in% c("Notropis ammophilus"))
 
 ## now for all:
 empty <- c()
@@ -210,6 +213,13 @@ if(isTRUE(checkpoint.limit_image == "")){
 } else {
   print("The value for limit_image is invalid. Accepted values are '' or an integer.")
 }
+
+#### Fix column names for compatibility with BGNN_Core_Workflow
+
+images.minnows.limit$original_file_name <- images.minnows.limit$fileNameAsDelivered
+images.minnows.limit$path <- images.minnows.limit$accessURI
+sampling.df$original_file_name <- sampling.df$fileNameAsDelivered
+sampling.df$path <- sampling.df$accessURI
 
 #### write datasets ----
 
