@@ -245,7 +245,7 @@ sampling.df$Burress_et_al._2017_Overlap_Images_sp[7] <- paste0(nrow(images.minno
 if(isTRUE(checkpoint.limit_image == "")){
   images.minnows.limit <- images.minnows.10
 } else if(isTRUE(is.integer(checkpoint.limit_image))){
-  images.minnows.limit <- images.minnows.10[checkpoint.limit_image,] #selects all columns, limits rows to number selected
+  images.minnows.limit <- head(images.minnows.10, n=checkpoint.limit_image)
 } else {
   print("The value for limit_image is invalid. Accepted values are '' or an integer.")
 }
