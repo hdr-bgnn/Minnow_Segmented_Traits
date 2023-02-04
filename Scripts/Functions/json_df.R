@@ -7,6 +7,10 @@ library(rjson)
 json_df <- function(jfile, type){
   input <- fromJSON(file = jfile, unexpected.escape = "keep")
   df <- as.data.frame(input)
+  # Prevent error in bind_rows() because it cannot combine ruler.scale with <double> and <character> values
+  if (df$ruler.scale == "None") {
+     df$ruler.scale <- NaN
+  }
   if(isTRUE("scale" %in% colnames(df))){
     df$scale <- as.numeric(df$scale) #for some reason there are "doubles"; making them all the same
   }

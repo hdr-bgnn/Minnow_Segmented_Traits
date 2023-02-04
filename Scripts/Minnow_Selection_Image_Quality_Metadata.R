@@ -2,8 +2,7 @@
 # Meghan Balk
 # balk@battelleecology.org
 
-## MAKE SURE WD IS IN REPO
-#setwd("minnowTraits")
+library(dplyr) # to provide %>%
 
 source("Scripts/init.R")
 
@@ -172,13 +171,10 @@ sampling.df$Selection_Criteria[6] <- "No empty URLs"
 #3) if resolves & not empty, keep the path
 #4) remove all other paths
 
-#test with a known url that doesn't work
-##http://www.tubri.org/HDR/INHS/INHS_FISH_65294.jpg
-##INHS_FISH_33814.jpg
-test <- images.minnows.trim[images.minnows.trim$original_file_name == "INHS_FISH_33814.jpg" |
-                            images.minnows.trim$path == "http://www.tubri.org/HDR/INHS/INHS_FISH_65294.jpg",]
+# Filter images to those with scientific_name in Burress data
+images.minnows.trim <- images.minnows.trim[images.minnows.trim$scientific_name.x %in% b.sp,]
 
-## now for all:
+## Ensure all image URLs work
 empty <- c()
 for(i in 1:nrow(images.minnows.trim)){
   if(!isTRUE(valid_url(images.minnows.trim$path[i]))){
@@ -256,14 +252,8 @@ if(isTRUE(checkpoint.limit_image == "")){
 
 #### write datasets ----
 
-#write dataset without index
+#write dataset to Burress
 write.csv(images.minnows.limit,
-          file = minnow_filtered_path,
-          row.names = FALSE)
-
-#write dataset trimmed to Burress
-images.minnows.burress <- images.minnows.limit[images.minnows.limit$scientific_name.x %in% b.sp,]
-write.csv(images.minnows.burress,
           file = burress_minnow_filtered_path,
           row.names = FALSE)
 

@@ -64,10 +64,10 @@ sampling.df$All_Minnows_Images_sp[8] <- paste0(nrow(presence.meta),
                                                ")")
 
 #compare to Burress et al. 2017
-nrow(presence.meta[presence.meta$scientific_name %in% b.sp]) #446
+nrow(presence.meta[presence.meta$scientific_name %in% b.sp,]) #446
 length(unique(presence.meta$scientific_name[presence.meta$scientific_name %in% b.sp])) #8
 
-sampling.df$Burress_et_al._2017_Overlap_Images_sp[8] <- paste0(nrow(presence.meta[presence.meta$scinetific_name %in% b.sp]),
+sampling.df$Burress_et_al._2017_Overlap_Images_sp[8] <- paste0(nrow(presence.meta[presence.meta$scientific_name %in% b.sp,]),
                                                                " (",
                                                                length(unique(presence.meta$scientific_name[presence.meta$scientific_name %in% b.sp])),
                                                                ")")
@@ -91,7 +91,7 @@ sampling.df$All_Minnows_Images_sp[9] <- paste0(nrow(presence.meta.scale),
                                                ")")
 
 #compare to Burress et al. 2017
-nrow(presence.meta.scale[presence.meta.scale$scientific_name %in% b.sp]) #446
+nrow(presence.meta.scale[presence.meta.scale$scientific_name %in% b.sp,]) #446
 length(unique(presence.meta.scale$scientific_name[presence.meta.scale$scientific_name %in% b.sp])) #8
 
 sampling.df$Burress_et_al._2017_Overlap_Images_sp[9] <- paste0(nrow(presence.meta.scale[presence.meta.scale$scientific_name.x %in% b.sp,]),
