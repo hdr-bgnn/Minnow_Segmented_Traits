@@ -8,6 +8,7 @@ Image_Quality_Metadata_DOI: doi:10.5072/FK2/ZIFDTJ
 Burress: Files/Previous Fish Measurements - Burress et al. 2016.csv
 Burress_DOI: doi:10.5072/FK2/KLN3CS
 limit_images: "" #if "" will run all, otherwise must input in integer
+check_urls: Y # if Y will validate image URLs
 
 # Output paths
 Burress_Minnow_Filtered: Results/burress.minnow.sp.filtered.from.iqm.csv

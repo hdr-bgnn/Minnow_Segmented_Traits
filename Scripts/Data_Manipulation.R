@@ -4,6 +4,7 @@
 
 #### read yaml file ----
 dfs <- yaml::read_yaml(file = config_file)
+check_urls <- dfs$check_urls
 checkpoint.limit_image <- dfs$limit_images
 
 meta.df <- read.csv(file = dfs$Image_Metadata)
