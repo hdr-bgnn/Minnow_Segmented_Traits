@@ -83,7 +83,7 @@ rule create_morphological_analysis:
     input:
         image = 'segmentation/Segmented/{image}_segmented.png',
         metadata = 'segmentation/Metadata/{image}.json'
-    output: 'segmentation/Morphology/Presence/{image}_presence.json'
+    output: 'Morphology/Presence/{image}_presence.json'
     log: 'logs/create_morphological_analysis_{image}.log'
     container:
         "docker://ghcr.io/hdr-bgnn/morphology-analysis/morphology:1.0.0"
@@ -100,7 +100,7 @@ def presence_absence_analysis_inputs(wildcards):
     # Returns output morphology presence filenames based on Burress_Minnow_Filtered
     with checkpoints.select_minnow_images.get(**wildcards).output[0].open() as f:
        names = get_image_names(f)
-    presence_files = [f"segmentation/Morphology/Presence/{i}_presence.json" for i in names]
+    presence_files = [f"Morphology/Presence/{i}_presence.json" for i in names]
     return {
         "presence_files": presence_files,
         "sampling": config["Sampling"],
