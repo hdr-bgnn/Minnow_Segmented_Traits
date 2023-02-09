@@ -176,17 +176,15 @@ images.minnows.trim <- images.minnows.trim[images.minnows.trim$scientific_name.x
 
 ## Ensure all image URLs work
 empty <- c()
-if (check_urls) {
-  for(i in 1:nrow(images.minnows.trim)){
-    if(!isTRUE(valid_url(images.minnows.trim$path[i]))){
-      empty <- c(empty, images.minnows.trim$path[i])
-    }
-    else if(isTRUE(download_size(images.minnows.trim$path[i]) < 1048576)){ #smallest sized image we found
-      empty <- c(empty, images.minnows.trim$path[i])
-    }
-    else{
-      next
-    }
+for(i in 1:nrow(images.minnows.trim)){
+  if(!isTRUE(valid_url(images.minnows.trim$path[i]))){
+    empty <- c(empty, images.minnows.trim$path[i])
+  }
+  else if(isTRUE(download_size(images.minnows.trim$path[i]) < 1048576)){ #smallest sized image we found
+    empty <- c(empty, images.minnows.trim$path[i])
+  }
+  else{
+    next
   }
 }
 
