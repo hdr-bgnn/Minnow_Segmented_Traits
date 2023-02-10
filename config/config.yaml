@@ -7,12 +7,14 @@ Image_Quality_Metadata: Files/Image_Quality_Metadata_v1_20211206_151204.csv
 Image_Quality_Metadata_DOI: doi:10.5072/FK2/ZIFDTJ
 Burress: Files/Previous Fish Measurements - Burress et al. 2016.csv
 Burress_DOI: doi:10.5072/FK2/KLN3CS
+limit_images: "" #if "" will run all, otherwise must input in integer
 
 # Output paths
-Minnow_Filtered: Results/minnow.filtered.from.iqm.csv
 Burress_Minnow_Filtered: Results/burress.minnow.sp.filtered.from.iqm.csv
 Sampling: Results/sampling.df.IQM.csv
 
+DF_Missing_Scale: Results/df.missing.scale.csv
+DF_Errors_Removed: Results/df.errors.removed.csv
 Presence_Absence_Matrix: Results/presence.absence.matrix.csv
 Sampling_Species_Burress: Results/sampling.species.in.Burress.csv
 Sampling_Minnows_Seg: Results/sampling.minnows.95.blob.3.segments.csv

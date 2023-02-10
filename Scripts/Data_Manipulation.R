@@ -1,9 +1,10 @@
 # set paths for files
-# Meghan Balk 
+# Meghan Balk
 # balk@battelleecology.org
 
 #### read yaml file ----
 dfs <- yaml::read_yaml(file = config_file)
+checkpoint.limit_image <- dfs$limit_images
 
 meta.df <- read.csv(file = dfs$Image_Metadata)
 
@@ -12,7 +13,6 @@ iqm.df <- read.csv(file = dfs$Image_Quality_Metadata)
 b.df <- read.csv(file = dfs$Burress)
 
 # Output file paths
-minnow_filtered_path <- dfs$Minnow_Filtered
 burress_minnow_filtered_path <- dfs$Burress_Minnow_Filtered
 sampling_path <- dfs$Sampling
 presence_absence_matrix_path <- dfs$Presence_Absence_Matrix
@@ -51,4 +51,3 @@ b.sp <- unique(b.df$Species)
 # label measurements with "b_" to show they're from Burress et al. 2017
 
 names(b.df)[2:10] <- paste0("b.",names(b.df)[2:10])
-
