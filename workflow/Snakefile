@@ -68,12 +68,19 @@ checkpoint select_minnow_images:
 module segmentation:
     snakefile:
         github("hdr-bgnn/BGNN_Core_Workflow", path="workflow/Snakefile", tag="1.0.0")
-    # Use output from Minnow_Selection_Image_Quality_Metadata.R as input files
-    config: { "list": config["Burress_Minnow_Filtered"] }
     # Store all files in a subdirectory
     prefix: "segmentation"
 
-use rule download_image from segmentation as seg_download_image
+def get_image_url(wildcards):
+   filename = checkpoints.select_minnow_images.get().output[0]
+   df = pd.read_csv(filename)
+   # The segmentation workflow names images 'Images/{image}.jpg' so for us `image` is an arkID
+   row = df[df["arkID"] == wildcards.image]
+   url = row["accessURI"].item()
+   return url
+
+use rule download_image from segmentation as seg_download_image with:
+   params: download_link=get_image_url
 use rule generate_metadata from segmentation as seg_generate_metadata
 use rule transform_metadata from segmentation as seg_transform_metadata
 use rule crop_image from segmentation as seg_crop_image
