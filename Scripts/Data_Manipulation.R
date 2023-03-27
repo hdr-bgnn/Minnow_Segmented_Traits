@@ -2,13 +2,48 @@
 # Meghan Balk
 # balk@battelleecology.org
 
+source("Scripts/fish-air.R")
+
 #### read yaml file ----
 dfs <- yaml::read_yaml(file = config_file)
 checkpoint.limit_image <- dfs$limit_images
 
-meta.df <- read.csv(file = dfs$Image_Metadata)
+meta.df.term_to_colname <- list(
+  "http://purl.org/dc/terms/identifier" = "ARKID",
+  "http://rs.tdwg.org/ac/terms/accessURI" = "accessURI",
+  "http://rs.tdwg.org/dwc/terms/scientificName" = "scientificName",
+  "http://rs.tdwg.org/dwc/terms/genus" = "genus",
+  "http://rs.tdwg.org/dwc/terms/family" = "family"
+)
+meta.df <- fa_read_csv(
+  csv_path = dfs$Image_Metadata,
+  meta_xml_path = dfs$File_Metadata,
+  term_to_colname = meta.df.term_to_colname)
 
-iqm.df <- read.csv(file = dfs$Image_Quality_Metadata)
+iqm.df.term_to_colname <- list(
+  "http://purl.org/dc/terms/identifier" = "ARKID",
+  "http://rs.tdwg.org/dwc/terms/occurrenceRemarks_specimenView" = "specimenView",
+  "http://rs.tdwg.org/dwc/terms/occurrenceRemarks_specimenCurved" = "specimenCurved",
+  "http://rs.tdwg.org/dwc/terms/occurrenceRemarks_brightness" = "brightness",
+  "http://rs.tdwg.org/dwc/terms/occurrenceRemarks_colorIssue" = "colorIssue",
+  "http://rs.tdwg.org/dwc/terms/occurrenceRemarks_containsScaleBar"= "containsScaleBar", # formerly contains_ruler
+  "http://rs.tdwg.org/dwc/terms/occurrenceRemarks_partsOverlapping" = "partsOverlapping",
+  "http://rs.tdwg.org/dwc/terms/occurrenceRemarks_onFocus" = "onFocus",
+  "http://rs.tdwg.org/dwc/terms/occurrenceRemarks_partsMissing" = "partsMissing",
+  "http://rs.tdwg.org/dwc/terms/occurrenceRemarks_allPartsVisible" = "allPartsVisible",
+  "http://rs.tdwg.org/dwc/terms/occurrenceRemarks_partsFolded" = "partsFolded",
+  "http://rs.tdwg.org/dwc/terms/occurrenceRemarks_uniformBackground" = "uniformBackground",
+  "http://rs.tdwg.org/dwc/terms/ownerInstitutionCode" = "ownerInstitutionCode",
+  "http://rs.tdwg.org/dwc/terms/organismQuantity" = "organismQuantity"
+)
+iqm.df <- fa_read_csv(
+  csv_path = dfs$Image_Quality_Metadata,
+  meta_xml_path = dfs$File_Metadata,
+  term_to_colname = iqm.df.term_to_colname)
+
+# Add scientificName, genus, family, and accessURI to iqm.df from meta.df
+iqm.df <- merge(iqm.df, meta.df[,c("ARKID", "scientificName", "genus", "family")], by="ARKID", all.x = TRUE)
+
 
 b.df <- read.csv(file = dfs$Burress)
 
@@ -27,18 +62,8 @@ heatmap_sd_blob_path <- dfs$Heatmap_SD_Blob_Image
 #### manipulate data ----
 
 ## metadata image files
-# downloaded from https://bgnn.tulane.edu/hdrweb/hdr/imagemetadata/
 # meta.data is metadata about the images
 # iqm is metadata about image quality
-
-# remove ".jpg" from file name to more easily align with file name in presence.df
-meta.df$original_file_name <- gsub(meta.df$original_file_name,
-                                   pattern = ".jpg",
-                                   replacement = "")
-
-iqm.df$image_name <- gsub(iqm.df$image_name,
-                          pattern = "\\..*",
-                          replacement = "")
 
 ## burress previous measurements
 # measurements from Burress et al. 2017 (see PDFs/Burress et al. 2017  Ecological diversification associated with the benthic‐to‐pelagic transition supinfo.docx)

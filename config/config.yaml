@@ -1,13 +1,17 @@
 # "Name:" becomes the object for the Snakefile
 
 # Input paths
-Image_Metadata: Files/Image_Metadata_v1_20211206_151152.csv
-Image_Metadata_DOI: doi:10.5072/FK2/QOHJGD
-Image_Quality_Metadata: Files/Image_Quality_Metadata_v1_20211206_151204.csv
-Image_Quality_Metadata_DOI: doi:10.5072/FK2/ZIFDTJ
+Image_DOI: doi:10.5072/FK2/QOHJGD
+File_Metadata: Files/Fish-AIR/Tulane/dtsdq42h11wx/meta.xml
+Image_Metadata: Files/Fish-AIR/Tulane/dtsdq42h11wx/multimedia.csv
+Image_Quality_Metadata: Files/Fish-AIR/Tulane/dtsdq42h11wx/imageQualityMetadata.csv
 Burress: Files/Previous Fish Measurements - Burress et al. 2016.csv
 Burress_DOI: doi:10.5072/FK2/KLN3CS
+
+# Input settings
 limit_images: "" #if "" will run all, otherwise must input in integer
+Term_ARK: http://purl.org/dc/terms/identifier
+Term_URL: http://rs.tdwg.org/ac/terms/accessURI
 
 # Output paths
 Burress_Minnow_Filtered: Results/burress.minnow.sp.filtered.from.iqm.csv

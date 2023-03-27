@@ -1,11 +1,14 @@
 import os
 import pandas as pd
+import xml.etree.ElementTree as ET
 
 configfile: "config/config.yaml"
-    # names come from the config file
+# names come from the config file
 
 DATAVERSE_CONFIG_PATH = os.path.expanduser('~/.dataverse')
 DATAVERSE_CONTAINER = 'docker://ghcr.io/imageomics/dataverse-access:1'
+
+
 
 rule all:
     input:
@@ -17,19 +20,13 @@ rule all:
         heatmap_avg_blob_image=config["Heatmap_Avg_Blob_Image"],
         heatmap_sd_blob_image=config["Heatmap_SD_Blob_Image"]
 
-rule download_image_metadata:
-    output: config["Image_Metadata"]
-    params:
-        doi=config["Image_Metadata_DOI"],
-        config=DATAVERSE_CONFIG_PATH
-    container:
-        DATAVERSE_CONTAINER
-    shell: 'DATAVERSE_CONFIG_PATH={params.config} dva download {params.doi} Files/'
 
-rule download_image_quality_metadata:
-    output: config["Image_Quality_Metadata"]
+rule download_fish_air_data:
+    output: 
+        config["Image_Metadata"],
+        config["Image_Quality_Metadata"]
     params:
-        doi=config["Image_Quality_Metadata_DOI"],
+        doi=config["Image_DOI"],
         config=DATAVERSE_CONFIG_PATH
     container:
         DATAVERSE_CONTAINER
@@ -71,13 +68,35 @@ module segmentation:
     # Store all files in a subdirectory
     prefix: "segmentation"
 
+def get_term_map(meta_path, target_file):
+    """
+    Create a dictionary of term to column number for a filename(target_file)
+    in the read Fish-AIR meta.xml file(meta_path).
+    """
+    tree = ET.parse(meta_path)
+    root = tree.getroot()
+    for fileinfo in root:
+        location = fileinfo.find("files").find("location").text
+        if location == target_file:
+            term_map = {}
+            for fieldinfo in fileinfo:
+                index = fieldinfo.attrib.get("index")
+                term = fieldinfo.attrib.get("term")
+                if term and index:
+                    term_map[term] = int(index)
+            return term_map
+    raise ValueError(f"No term info found for {target_file} in {meta_path}")
+
 def get_image_url(wildcards):
-   filename = checkpoints.select_minnow_images.get().output[0]
-   df = pd.read_csv(filename)
-   # The segmentation workflow names images 'Images/{image}.jpg' so for us `image` is an arkID
-   row = df[df["arkID"] == wildcards.image]
-   url = row["accessURI"].item()
-   return url
+    filename = checkpoints.select_minnow_images.get().output[0]
+    df = pd.read_csv(filename)
+    term_map = get_term_map(config["File_Metadata"], os.path.basename(filename))
+    ark_id_idx = term_map.get(config["Term_ARK"])
+    url_column_idx = term_map.get(config["Term_URL"])
+    # The segmentation workflow names images 'Images/{image}.jpg' so for us `image` is an arkID
+    row = df[df.iloc[:,ark_id_idx] == wildcards.image]
+    url = row.iloc[:, url_column_idx].item()
+    return url
 
 use rule download_image from segmentation as seg_download_image with:
    params: download_link=get_image_url
