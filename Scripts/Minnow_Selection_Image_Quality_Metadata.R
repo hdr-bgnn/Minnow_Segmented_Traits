@@ -143,7 +143,7 @@ for(i in 1:nrow(images.minnows.trim)){
   }
 }
 
-length(empty) #16
+length(empty) #28
 
 images.minnows.resolve <- images.minnows.trim[!(images.minnows.trim$accessURI %in% empty),]
 

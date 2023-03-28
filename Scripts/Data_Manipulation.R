@@ -35,9 +35,6 @@ heatmap_sd_blob_path <- dfs$Heatmap_SD_Blob_Image
 # iqm is metadata about image quality
 # multi is metadata about the multimedia files
 
-#fix meta arkId to arkID
-colnames(meta.df)[colnames(meta.df) == "arkId"] <- "arkID"
-
 # will combine all the files to one metadata file for ease of use
 meta.iqm <- dplyr::left_join(meta.df, iqm.df,
                              by = "arkID",
