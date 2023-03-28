@@ -15,7 +15,6 @@ multi.df <- read.csv(file = dfs$Multimedia)
 b.df <- read.csv(file = dfs$Burress)
 
 # Output file paths
-minnow_filtered_path <- dfs$Minnow_Filtered
 burress_minnow_filtered_path <- dfs$Burress_Minnow_Filtered
 sampling_path <- dfs$Sampling
 presence_absence_matrix_path <- dfs$Presence_Absence_Matrix

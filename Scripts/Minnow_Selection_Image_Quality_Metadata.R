@@ -2,8 +2,7 @@
 # Meghan Balk
 # balk@battelleecology.org
 
-## MAKE SURE WD IS IN REPO
-#setwd("minnowTraits")
+library(dplyr) # to provide %>%
 
 source("Scripts/init.R")
 
@@ -129,7 +128,7 @@ for(i in 1:nrow(test)){
   }
 }
 
-## now for all:
+## Ensure all image URLs work
 empty <- c()
 for(i in 1:nrow(images.minnows.trim)){
   if(!isTRUE(valid_url(images.minnows.trim$accessURI[i]))){
@@ -202,14 +201,14 @@ sampling.df$Burress_et_al._2017_Overlap_Images_sp[5] <- paste0(nrow(images.minno
 if(isTRUE(checkpoint.limit_image == "")){
   images.minnows.limit <- images.minnows.10
 } else if(isTRUE(is.integer(checkpoint.limit_image))){
-  images.minnows.limit <- images.minnows.10[checkpoint.limit_image,] #selects all columns, limits rows to number selected
+  images.minnows.limit <- head(images.minnows.10, n=checkpoint.limit_image)
 } else {
   print("The value for limit_image is invalid. Accepted values are '' or an integer.")
 }
 
 #### write datasets ----
 
-#write dataset without index
+#write dataset to Burress
 write.csv(images.minnows.limit,
           file = minnow_filtered_path,
           row.names = FALSE)

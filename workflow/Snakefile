@@ -5,7 +5,7 @@ configfile: "config/config.yaml"
     # names come from the config file
 
 DATAVERSE_CONFIG_PATH = os.path.expanduser('~/.dataverse')
-DATAVERSE_CONTAINER = 'docker://ghcr.io/imageomics/dataverse-access:0.0.3'
+DATAVERSE_CONTAINER = 'docker://ghcr.io/imageomics/dataverse-access:1'
 
 rule all:
     input:
@@ -17,12 +17,19 @@ rule all:
         heatmap_avg_blob_image=config["Heatmap_Avg_Blob_Image"],
         heatmap_sd_blob_image=config["Heatmap_SD_Blob_Image"]
 
-rule download_metadata:
-    output:
-        config["Image_Metadata"],
-        config["Image_Quality_Metadata"]
+rule download_image_metadata:
+    output: config["Image_Metadata"]
     params:
-        doi=config["Metadata_DOI"],
+        doi=config["Image_Metadata_DOI"],
+        config=DATAVERSE_CONFIG_PATH
+    container:
+        DATAVERSE_CONTAINER
+    shell: 'DATAVERSE_CONFIG_PATH={params.config} dva download {params.doi} Files/'
+
+rule download_image_quality_metadata:
+    output: config["Image_Quality_Metadata"]
+    params:
+        doi=config["Image_Quality_Metadata_DOI"],
         config=DATAVERSE_CONFIG_PATH
     container:
         DATAVERSE_CONTAINER
@@ -38,17 +45,18 @@ rule download_burress:
     shell: 'DATAVERSE_CONFIG_PATH={params.config} dva download {params.doi} Files/'
 
 rule dependencies:
-    input: "dependecies.R"
-    output: "Library"
+    input: "dependencies.R"
+    output: directory("Library")
+    shell: 'mkdir Library && R_LIBS_USER=Library Rscript dependencies.R'
 
 checkpoint select_minnow_images:
     input:
         config["Image_Metadata"],
         config["Image_Quality_Metadata"],
-        config["Burress"]
+        config["Burress"],
+        "Library"
 
     output:
-        config["Minnow_Filtered"],
         config["Burress_Minnow_Filtered"],
         config["Sampling"]
     params:
@@ -59,7 +67,7 @@ checkpoint select_minnow_images:
 # import BGNN_Snakemake rules used to create morpology presence.json files for images
 module segmentation:
     snakefile:
-        github("hdr-bgnn/BGNN_Core_Workflow", path="workflow/Snakefile", tag="84e3604a6f767c43b31259237ab1ffc61bac3be8")
+        github("hdr-bgnn/BGNN_Core_Workflow", path="workflow/Snakefile", tag="1.0.0")
     # Use output from Minnow_Selection_Image_Quality_Metadata.R as input files
     config: { "list": config["Burress_Minnow_Filtered"] }
     # Store all files in a subdirectory
@@ -73,14 +81,14 @@ use rule segment_image from segmentation as seg_segment_image
 
 rule create_morphological_analysis:
     input:
-        image = 'Segmented/{image}_segmented.png',
-        metadata = 'Metadata/{image}.json'
+        image = 'segmentation/Segmented/{image}_segmented.png',
+        metadata = 'segmentation/Metadata/{image}.json'
     output: 'Morphology/Presence/{image}_presence.json'
     log: 'logs/create_morphological_analysis_{image}.log'
     container:
-        "docker://jbradley/morphology-analysis:dev"
+        "docker://ghcr.io/hdr-bgnn/morphology-analysis/morphology:1.0.0"
     shell:
-        'Morphology_main.py {input.image} {output} > {log} 2>&1'
+        'Morphology_main.py {input.image} --metadata {input.metadata} {output} > {log} 2>&1'
 
 def get_image_names(csv_filename):
     df = pd.read_csv(csv_filename)
@@ -89,16 +97,17 @@ def get_image_names(csv_filename):
     return names.tolist()
 
 def presence_absence_analysis_inputs(wildcards):
-    # Returns output morphology presence filenames
-    with checkpoints.select_minnow_images.get(**wildcards).output[1].open() as f:
+    # Returns output morphology presence filenames based on Burress_Minnow_Filtered
+    with checkpoints.select_minnow_images.get(**wildcards).output[0].open() as f:
        names = get_image_names(f)
-    presence_files = [f"segmentation/Morphology/Presence/{i}_presence.json" for i in names]
+    presence_files = [f"Morphology/Presence/{i}_presence.json" for i in names]
     return {
         "presence_files": presence_files,
         "sampling": config["Sampling"],
         "image_metadata": config["Image_Metadata"],
         "image_quality_metadata": config["Image_Quality_Metadata"],
-        "burress": config["Burress"]
+        "burress": config["Burress"],
+        "library": "Library"
     }
 
 rule presence_absence_analysis:
