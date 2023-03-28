@@ -12,5 +12,4 @@ files <- "Files" # folder with files to read into scripts
 results <- "Results" # folder to store outputs of scripts
 figures <- file.path("Results", "Figures")
 workflow <- file.path("Workflow")
-presence <- file.path("Morphology", "Presence") # this data is produced by the BGNN_Snakemake workflow
-#measure <- file.path("segmentation", "Morphology", "Measure") # this data is produced by the BGNN_Snakemake workflow
+presence <- file.path("segmentation", "Morphology", "Presence") # this data is produced by the BGNN_Snakemake workflow

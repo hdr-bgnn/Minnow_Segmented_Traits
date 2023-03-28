@@ -3,6 +3,14 @@
 # balk@battelleecology.org
 source("paths.R")
 
+#create Library folder
+dir.create(path = '/Library')
+
+## create new library for versions
+.libPaths(c(.libPaths(), file.path(getwd(), library))) #creates place to store package versions
+.libPaths() #make sure it was created
+lib.path <- file.path(tail(.libPaths(), 1)) #last path created
+
 ## install all necessary packages
 options(install.packages.check.source = "no", repos = "https://cloud.r-project.org")
 
