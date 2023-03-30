@@ -136,8 +136,8 @@ sampling.df$Burress_et_al._2017_Overlap_Images_sp[4] <- paste0(nrow(images.minno
 
 sampling.df$Selection_Criteria[5] <- "Only INHS or UWZM (none from UWZM)"
 
-institutions <- c("TUBRI", "INHS", "UWZM") #no uwzm
-images.minnows.trim <- images.minnows.clean[images.minnows.clean$ownerInstitutionCode %in% institutions,]
+institutions <- c("INHS", "UWZM") #no uwzm
+images.minnows.trim <- images.minnows.clean[images.minnows.clean$imageOwnerInstitutionCode.x %in% institutions,]
 unique(images.minnows.trim$ownerInstitutionCode)
 nrow(images.minnows.trim) #6481
 length(unique(images.minnows.trim$scientificName.x)) #92

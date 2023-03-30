@@ -90,15 +90,14 @@ def get_term_map(meta_path, target_file):
 def get_image_url(wildcards):
     filename = checkpoints.select_minnow_images.get().output[0]
     df = pd.read_csv(filename)
-    term_map = get_term_map(config["File_Metadata"], os.path.basename(filename))
-    ark_id_idx = term_map.get(config["Term_ARK"])
-    url_column_idx = term_map.get(config["Term_URL"])
     # The segmentation workflow names images 'Images/{image}.jpg' so for us `image` is an arkID
-    row = df[df.iloc[:,ark_id_idx] == wildcards.image]
-    url = row.iloc[:, url_column_idx].item()
+    row = df[df["ARKID"] == wildcards.image]
+    url = row["accessURI"].item()
     return url
 
 use rule download_image from segmentation as seg_download_image with:
+   input: config["Burress_Minnow_Filtered"]
+   container: 'docker://quay.io/biocontainers/gnu-wget:1.18--h60da905_7'
    params: download_link=get_image_url
 use rule generate_metadata from segmentation as seg_generate_metadata
 use rule transform_metadata from segmentation as seg_transform_metadata
@@ -117,9 +116,11 @@ rule create_morphological_analysis:
         'Morphology_main.py {input.image} --metadata {input.metadata} {output} > {log} 2>&1'
 
 def get_image_names(csv_filename):
+    # We do not need to use meta.xml term to column name lookup since 
+    # we are reading the result CSV from the filter R script that
+    # already performed the term to column name transformation.
     df = pd.read_csv(csv_filename)
-    # Create 'name' column by removing the filename extension from 'original_file_name'
-    names = df['original_file_name'].apply(lambda x : os.path.splitext(x)[0])
+    names = df['ARKID']
     return names.tolist()
 
 def presence_absence_analysis_inputs(wildcards):

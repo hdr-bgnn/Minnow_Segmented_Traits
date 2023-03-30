@@ -15,7 +15,6 @@ NUM_JOBS=20
 
 module load miniconda3
 source activate snakemake
-module load R/4.2.1-gnu11.2
 snakemake \
     --jobs $NUM_JOBS \
     --use-singularity \

@@ -13,7 +13,8 @@ meta.df.term_to_colname <- list(
   "http://rs.tdwg.org/ac/terms/accessURI" = "accessURI",
   "http://rs.tdwg.org/dwc/terms/scientificName" = "scientificName",
   "http://rs.tdwg.org/dwc/terms/genus" = "genus",
-  "http://rs.tdwg.org/dwc/terms/family" = "family"
+  "http://rs.tdwg.org/dwc/terms/family" = "family",
+  "http://rs.tdwg.org/dwc/terms/ownerInstitutionCode" = "imageOwnerInstitutionCode"
 )
 meta.df <- fa_read_csv(
   csv_path = dfs$Image_Metadata,
@@ -41,8 +42,9 @@ iqm.df <- fa_read_csv(
   meta_xml_path = dfs$File_Metadata,
   term_to_colname = iqm.df.term_to_colname)
 
-# Add scientificName, genus, family, and accessURI to iqm.df from meta.df
-iqm.df <- merge(iqm.df, meta.df[,c("ARKID", "scientificName", "genus", "family")], by="ARKID", all.x = TRUE)
+# Add scientificName, genus, family, and ownerInstitutionCode to iqm.df from meta.df
+# Note ownerInstitutionCode in meta.df has a different value/meaning from iqm.df
+iqm.df <- merge(iqm.df, meta.df[,c("ARKID", "scientificName", "genus", "family", "imageOwnerInstitutionCode")], by="ARKID", all.x = TRUE)
 
 
 b.df <- read.csv(file = dfs$Burress)
