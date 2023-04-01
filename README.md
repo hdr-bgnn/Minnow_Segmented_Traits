@@ -166,7 +166,7 @@ See the [official instructions for installing snakemake](https://snakemake.readt
 To install snakemake on the OSC cluster run:
 ```
 module load miniconda3
-conda create -n snakemake -c bioconda -c conda-forge snakemake -y
+conda create -n snakemake -c bioconda -c conda-forge -c r snakemake r-essentials r-xml -y
 ```
 
 where -n designates the name, "snakemake", -c designates the channel(s), "bioconda" and "conda-forge".

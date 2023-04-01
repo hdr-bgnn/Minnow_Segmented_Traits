@@ -13,9 +13,8 @@ export SBATCH_ACCOUNT=$SLURM_JOB_ACCOUNT
 # Configure Snakemake to run up to 20 jobs at once
 NUM_JOBS=20
 
-module load miniconda3
+module load miniconda3/4.10.3-py37
 source activate snakemake
-module load R/4.2.1-gnu11.2
 snakemake \
     --jobs $NUM_JOBS \
     --profile slurm/ \
