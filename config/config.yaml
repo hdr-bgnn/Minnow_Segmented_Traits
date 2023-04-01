@@ -9,7 +9,7 @@ Burress: Files/Previous Fish Measurements - Burress et al. 2016.csv
 Burress_DOI: doi:10.5072/FK2/KLN3CS
 
 # Input settings
-limit_images: 5 #if "" will run all, otherwise must input in integer
+limit_images: 20 #if "" will run all, otherwise must input in integer
 
 # Output paths
 Minnow_Filtered: Results/minnow.filtered.from.iqm.csv
