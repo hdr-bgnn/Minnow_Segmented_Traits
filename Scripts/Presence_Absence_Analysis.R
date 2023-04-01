@@ -43,9 +43,9 @@ write.csv(presence.df,
 
 #### merge with metadata ----
 #combine with metadata to get taxonomic hierarchy
-colnames(meta.df) #loaded in from paths.R
+colnames(mm.df) #loaded in from paths.R
 
-presence.meta <- merge(presence.df, meta.df,
+presence.meta <- merge(presence.df, mm.df,
                        by.x = "file_name",
                        by.y = "ARKID",
                        all.x = TRUE, all.y = FALSE)
