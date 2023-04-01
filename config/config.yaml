@@ -2,9 +2,9 @@
 
 # Input paths
 Image_DOI: doi:10.5072/FK2/QOHJGD
-File_Metadata: Files/Fish-AIR/Tulane/dtsdq42h11wx/meta.xml
-Image_Metadata: Files/Fish-AIR/Tulane/dtsdq42h11wx/multimedia.csv
-Image_Quality_Metadata: Files/Fish-AIR/Tulane/dtsdq42h11wx/imageQualityMetadata.csv
+File_Metadata: Files/Fish-AIR/Tulane/dtsv562685gm/meta.xml
+Image_Metadata: Files/Fish-AIR/Tulane/dtsv562685gm/multimedia.csv
+Image_Quality_Metadata: Files/Fish-AIR/Tulane/dtsv562685gm/imageQualityMetadata.csv
 Burress: Files/Previous Fish Measurements - Burress et al. 2016.csv
 Burress_DOI: doi:10.5072/FK2/KLN3CS
 

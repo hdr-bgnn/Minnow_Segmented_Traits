@@ -142,7 +142,7 @@ unique(images.minnows.trim$ownerInstitutionCode)
 nrow(images.minnows.trim) #6481
 length(unique(images.minnows.trim$scientificName.x)) #92
 
-unique(images.minnows.trim$organismQuantity)
+unique(images.minnows.trim$specimenQuantity)
 #should be 1; don't want multiple fish per images because currently don't have a good way to keep metadata
 
 sampling.df$All_Minnows_Images_sp[5] <- paste0(nrow(images.minnows.trim),

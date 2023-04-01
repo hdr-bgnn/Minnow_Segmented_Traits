@@ -9,7 +9,7 @@ dfs <- yaml::read_yaml(file = config_file)
 checkpoint.limit_image <- dfs$limit_images
 
 meta.df.term_to_colname <- list(
-  "http://purl.org/dc/terms/identifier" = "ARKID",
+  "https://fishair.org/terms/ARKID" = "ARKID",
   "http://rs.tdwg.org/ac/terms/accessURI" = "accessURI",
   "http://rs.tdwg.org/dwc/terms/scientificName" = "scientificName",
   "http://rs.tdwg.org/dwc/terms/genus" = "genus",
@@ -22,20 +22,20 @@ meta.df <- fa_read_csv(
   term_to_colname = meta.df.term_to_colname)
 
 iqm.df.term_to_colname <- list(
-  "http://purl.org/dc/terms/identifier" = "ARKID",
-  "http://rs.tdwg.org/dwc/terms/occurrenceRemarks_specimenView" = "specimenView",
-  "http://rs.tdwg.org/dwc/terms/occurrenceRemarks_specimenCurved" = "specimenCurved",
-  "http://rs.tdwg.org/dwc/terms/occurrenceRemarks_brightness" = "brightness",
-  "http://rs.tdwg.org/dwc/terms/occurrenceRemarks_colorIssue" = "colorIssue",
-  "http://rs.tdwg.org/dwc/terms/occurrenceRemarks_containsScaleBar"= "containsScaleBar", # formerly contains_ruler
-  "http://rs.tdwg.org/dwc/terms/occurrenceRemarks_partsOverlapping" = "partsOverlapping",
-  "http://rs.tdwg.org/dwc/terms/occurrenceRemarks_onFocus" = "onFocus",
-  "http://rs.tdwg.org/dwc/terms/occurrenceRemarks_partsMissing" = "partsMissing",
-  "http://rs.tdwg.org/dwc/terms/occurrenceRemarks_allPartsVisible" = "allPartsVisible",
-  "http://rs.tdwg.org/dwc/terms/occurrenceRemarks_partsFolded" = "partsFolded",
-  "http://rs.tdwg.org/dwc/terms/occurrenceRemarks_uniformBackground" = "uniformBackground",
+  "https://fishair.org/terms/ARKID" = "ARKID",
+  "https://fishair.org/terms/specimenView" = "specimenView",
+  "https://fishair.org/terms/specimenCurved" = "specimenCurved",
+  "https://fishair.org/terms/brightness" = "brightness",
+  "https://fishair.org/terms/colorIssue" = "colorIssue",
+  "https://fishair.org/terms/containsScaleBar" = "containsScaleBar", # formerly contains_ruler
+  "https://fishair.org/terms/partsOverlapping" = "partsOverlapping",
+  "https://fishair.org/terms/onFocus" = "onFocus",
+  "https://fishair.org/terms/partsMissing" = "partsMissing",
+  "https://fishair.org/terms/allPartsVisible" = "allPartsVisible",
+  "https://fishair.org/terms/partsFolded" = "partsFolded",
+  "https://fishair.org/terms/uniformBackground" = "uniformBackground",
   "http://rs.tdwg.org/dwc/terms/ownerInstitutionCode" = "ownerInstitutionCode",
-  "http://rs.tdwg.org/dwc/terms/organismQuantity" = "organismQuantity"
+  "https://fishair.org/terms/specimenQuantity" = "specimenQuantity"
 )
 iqm.df <- fa_read_csv(
   csv_path = dfs$Image_Quality_Metadata,
