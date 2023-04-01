@@ -79,9 +79,9 @@ sampling.df$Burress_et_al._2017_Overlap_Images_sp[2] <- paste0(length(unique(min
 
 sampling.df$Selection_Criteria[3] <- "Only INHS or UWZM (none from UWZM)"
 
-institutions <- c("Illinois Natural History Survey - Fish (ILLS-F)", 
-                  "University of Wisconsin-Madison Zoological Museum - Fish (UWZM-F)")
-images.minnows.trim <- minnow.keep[minnow.keep$ownerInstitutionCode.multi %in% institutions,]
+institutions <- c("INHS)", 
+                  "UWZM")
+images.minnows.trim <- minnow.keep[minnow.keep$imageOwnerInstitutionCode %in% institutions,]
 
 unique(images.minnows.trim$ownerInstitutionCode.multi)
 nrow(images.minnows.trim)
@@ -113,8 +113,7 @@ sampling.df$Selection_Criteria[4] <- "No empty URLs"
 #test with a known url
 ##http://www.tubri.org/HDR/INHS/INHS_FISH_65294.jpg
 ##INHS_FISH_33814.jpg
-test <- images.minnows.trim[images.minnows.trim$fileNameAsDelivered == "INHS_FISH_33814" |
-                            images.minnows.trim$accessURI == "https://bgnn.tulane.edu/hdr-share/ftp/ark/89609/GLIN/INHS/bg976724.jpg",]
+test <- images.minnows.trim[images.minnows.trim$ARKID == "0040g17t",]
 empty <- c()
 for(i in 1:nrow(test)){
   if(!isTRUE(valid_url(test$accessURI[i]))){
