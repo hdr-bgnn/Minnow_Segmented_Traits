@@ -69,10 +69,9 @@ heatmap_sd_blob_path <- dfs$Heatmap_SD_Blob_Image
 mm.df <- merge(iqm.df, meta.df, by="ARKID", all.x = TRUE)
 
 #how many rows have empty iqm fields? using "quality" to test
-nrow(mm.df) #42423
+nrow(mm.df) #20720
 nrow(mm.df %>% 
-       tidyr::drop_na(quality)) #20719
-#difference: 21704 without IQM data
+       tidyr::drop_na(quality)) #20720
 
 ## burress previous measurements
 # measurements from Burress et al. 2017 (see PDFs/Burress et al. 2017  Ecological diversification associated with the benthic‐to‐pelagic transition supinfo.docx)
