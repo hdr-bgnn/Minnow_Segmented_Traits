@@ -278,7 +278,8 @@ colnames(stats.sp.sd) #in correct order
 
 melt_stats_sd <- melt(stats.sp.sd)
 head(melt_stats_sd)
-melt_stats_sd.na <- melt_stats_sd %>% drop_na(value)
+melt_stats_sd.na <- melt_stats_sd %>% 
+  tidyr::drop_na(value)
 
 hm.sd <- ggplot(melt_stats_sd.na, aes(Var2, Var1)) +
   geom_tile(aes(fill = value), color = "white") +
