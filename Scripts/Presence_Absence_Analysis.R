@@ -247,11 +247,6 @@ colnames(stats.sp.sort) #these are in the correct order
 stats.sp.trim <- stats.sp[,-c(1:2)]
 stats.sp.trim <- as.matrix(stats.sp.trim)
 
-hm <- heatmap(stats.sp.trim,
-              labRow = rownames(stats.sp.trim),
-              labCol = colnames(stats.sp.trim),
-              main = "Heat Map")
-
 ## average ====
 stats.sp.avg <- select(stats.sp.sort, contains("avg."))
 colnames(stats.sp.avg) #in correct order
