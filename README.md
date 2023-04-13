@@ -169,7 +169,7 @@ module load miniconda3
 conda create -n snakemake -c bioconda -c conda-forge -c r snakemake r-essentials r-xml -y
 ```
 
-where -n designates the name, "snakemake", -c designates the channel(s), "bioconda" and "conda-forge".
+where `-n` designates the name, "snakemake", and `-c` designates the channel(s): "bioconda", "conda-forge", and "r".
 
 To check that the environment was made:
 ```
