@@ -53,7 +53,6 @@ presence.meta <- merge(presence.df, mm.df,
 
 colnames(presence.meta)[colnames(presence.meta) == 'base_name'] <- 'ARKID'
 
-
 #### 4. sampling after segmentation ----
 
 sampling.df$Selection_Criteria[4] <- "After segmentation"
