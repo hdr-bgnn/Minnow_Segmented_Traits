@@ -48,7 +48,11 @@ colnames(mm.df) #loaded in from paths.R
 presence.meta <- merge(presence.df, mm.df,
                        by.x = "base_name",
                        by.y = "ARKID",
-                       all.x = TRUE, all.y = FALSE)
+                       all.x = TRUE,
+                       all.y = FALSE)
+
+colnames(presence.meta)[colnames(presence.meta) == 'base_name'] <- 'ARKID'
+
 
 #### 4. sampling after segmentation ----
 
@@ -83,7 +87,7 @@ write.csv(errors,
           file = file.path(results, "df.missing.scale.csv"),
           row.names = FALSE)
 
-presence.meta.scale <- presence.meta[!(presence.meta$base_name %in% errors$base_name),]
+presence.meta.scale <- presence.meta[!(presence.meta$ARKID %in% errors$ARKID),]
 
 sampling.df$All_Minnows_Images_sp[5] <- paste0(nrow(presence.meta.scale),
                                                " (",
