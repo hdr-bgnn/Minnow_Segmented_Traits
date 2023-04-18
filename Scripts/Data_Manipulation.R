@@ -1,21 +1,53 @@
 # set paths for files
 # Meghan Balk
 # balk@battelleecology.org
+source("Scripts/fish-air.R")
 
 #### read yaml file ----
 dfs <- yaml::read_yaml(file = config_file)
 checkpoint.limit_image <- dfs$limit_images
 
-meta.df <- read.csv(file = dfs$Image_Metadata)
+meta.df.term_to_colname <- list(
+  "https://fishair.org/terms/ARKID" = "ARKID",
+  "http://rs.tdwg.org/ac/terms/accessURI" = "accessURI",
+  "http://rs.tdwg.org/dwc/terms/scientificName" = "scientificName",
+  "http://rs.tdwg.org/dwc/terms/genus" = "genus",
+  "http://rs.tdwg.org/dwc/terms/family" = "family",
+  "http://rs.tdwg.org/dwc/terms/ownerInstitutionCode" = "imageOwnerInstitutionCode"
+)
+meta.df <- fa_read_csv(
+  csv_path = dfs$Image_Metadata,
+  meta_xml_path = dfs$File_Metadata,
+  term_to_colname = meta.df.term_to_colname)
 
-iqm.df <- read.csv(file = dfs$Image_Quality_Metadata)
-
-multi.df <- read.csv(file = dfs$Multimedia)
+iqm.df.term_to_colname <- list(
+  "https://fishair.org/terms/ARKID" = "ARKID",
+  "https://fishair.org/terms/quality"="quality",
+  "https://fishair.org/terms/specimenView" = "specimenView",
+  "https://fishair.org/terms/specimenCurved" = "specimenCurved",
+  "https://fishair.org/terms/brightness" = "brightness",
+  "https://fishair.org/terms/colorIssue" = "colorIssue",
+  "https://fishair.org/terms/containsScaleBar" = "containsScaleBar", # formerly contains_ruler
+  "https://fishair.org/terms/partsOverlapping" = "partsOverlapping",
+  "https://fishair.org/terms/onFocus" = "onFocus",
+  "https://fishair.org/terms/partsMissing" = "partsMissing",
+  "https://fishair.org/terms/allPartsVisible" = "allPartsVisible",
+  "https://fishair.org/terms/partsFolded" = "partsFolded",
+  "https://fishair.org/terms/uniformBackground" = "uniformBackground",
+  "http://rs.tdwg.org/dwc/terms/ownerInstitutionCode" = "ownerInstitutionCode",
+  "https://fishair.org/terms/specimenQuantity" = "specimenQuantity"
+)
+iqm.df <- fa_read_csv(
+  csv_path = dfs$Image_Quality_Metadata,
+  meta_xml_path = dfs$File_Metadata,
+  term_to_colname = iqm.df.term_to_colname)
 
 b.df <- read.csv(file = dfs$Burress)
 
 # Output file paths
+
 burress_minnow_filtered_path <- dfs$Burress_Minnow_Filtered
+minnow_filtered_path <- dfs$Minnow_Filtered
 sampling_path <- dfs$Sampling
 presence_absence_matrix_path <- dfs$Presence_Absence_Matrix
 sampling_species_burress_path <- dfs$Sampling_Species_Burress
@@ -29,33 +61,17 @@ heatmap_sd_blob_path <- dfs$Heatmap_SD_Blob_Image
 #### manipulate data ----
 
 ## metadata image files
-# downloaded from https://bgnn.tulane.edu/hdrweb/hdr/imagemetadata/
-# meta is metadata about the images
+# downloaded from https://fishair.org/
+# meta is metadata about the image files
 # iqm is metadata about image quality
-# multi is metadata about the multimedia files
 
-# will combine all the files to one metadata file for ease of use
-meta.iqm <- dplyr::left_join(meta.df, iqm.df,
-                             by = "arkID",
-                             suffix = c("", ".iqm"))
-meta.multi <- dplyr::left_join(meta.iqm, multi.df,
-                               by = "arkID",
-                               suffix = c("", ".multi"))
-mm1 <- meta.multi %>% 
-  dplyr::mutate(fileNameAsDelivered = ifelse(is.na(fileNameAsDelivered), fileNameAsDelivered.multi, fileNameAsDelivered))
-mm.df <- mm1 %>% 
-  dplyr::select(-fileNameAsDelivered.multi)
+# Merge iqm.df and meta.df into a merged dataset
+mm.df <- merge(iqm.df, meta.df, by="ARKID", all.x = TRUE)
 
 #how many rows have empty iqm fields? using "quality" to test
-nrow(mm.df) #42423
+nrow(mm.df) #20720
 nrow(mm.df %>% 
-       tidyr::drop_na(quality)) #20719
-#difference: 21704 without IQM data
-
-# remove ".jpg" from file name to more easily align with file name in presence.df
-mm.df$fileNameAsDelivered <- gsub(meta.df$fileNameAsDelivered,
-                                  pattern = ".jpg",
-                                  replacement = "")
+       tidyr::drop_na(quality)) #20720
 
 ## burress previous measurements
 # measurements from Burress et al. 2017 (see PDFs/Burress et al. 2017  Ecological diversification associated with the benthic‐to‐pelagic transition supinfo.docx)

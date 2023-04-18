@@ -17,19 +17,12 @@ rule all:
         heatmap_avg_blob_image=config["Heatmap_Avg_Blob_Image"],
         heatmap_sd_blob_image=config["Heatmap_SD_Blob_Image"]
 
-rule download_image_metadata:
-    output: config["Image_Metadata"]
+rule download_fish_air_data:
+    output:
+        config["Image_Metadata"],
+        config["Image_Quality_Metadata"]
     params:
-        doi=config["Image_Metadata_DOI"],
-        config=DATAVERSE_CONFIG_PATH
-    container:
-        DATAVERSE_CONTAINER
-    shell: 'DATAVERSE_CONFIG_PATH={params.config} dva download {params.doi} Files/'
-
-rule download_image_quality_metadata:
-    output: config["Image_Quality_Metadata"]
-    params:
-        doi=config["Image_Quality_Metadata_DOI"],
+        doi=config["Image_DOI"],
         config=DATAVERSE_CONFIG_PATH
     container:
         DATAVERSE_CONTAINER
@@ -73,7 +66,24 @@ module segmentation:
     # Store all files in a subdirectory
     prefix: "segmentation"
 
-use rule download_image from segmentation as seg_download_image
+def get_image_url(wildcards):
+    """
+    Read the filtered CSV to lookup a URL(accessURI) for a file via the image wildcard(ARKID)
+    These column names do not need to be crosswalked with meta.xml because we are using the 
+    filtered CSV file that has already performed that step.
+    """
+    filename = checkpoints.select_minnow_images.get().output[0]
+    df = pd.read_csv(filename)
+    # The segmentation workflow names images 'Images/{image}.jpg' so for us `image` is an ARKID
+    row = df[df["ARKID"] == wildcards.image]
+    url = row["accessURI"].item()
+    return url
+
+use rule download_image from segmentation as seg_download_image with:
+   input: config["Burress_Minnow_Filtered"]
+   container: 'docker://quay.io/biocontainers/gnu-wget:1.18--h60da905_7'
+   params: download_link=get_image_url
+
 use rule generate_metadata from segmentation as seg_generate_metadata
 use rule transform_metadata from segmentation as seg_transform_metadata
 use rule crop_image from segmentation as seg_crop_image
@@ -90,29 +100,30 @@ rule create_morphological_analysis:
     shell:
         'Morphology_main.py {input.image} --metadata {input.metadata} {output} > {log} 2>&1'
 
-def get_image_names(csv_filename):
+def get_arkid_list(csv_filename):
+    """
+    Read the filtered CSV to lookup a list of ARKIDs.
+    These column names do not need to be crosswalked with meta.xml because we are using the 
+    filtered CSV file that has already performed that step.
+    """
     df = pd.read_csv(csv_filename)
-    # Create 'name' column by removing the filename extension from 'original_file_name'
-    names = df['original_file_name'].apply(lambda x : os.path.splitext(x)[0])
+    names = df['ARKID']
     return names.tolist()
 
-def presence_absence_analysis_inputs(wildcards):
+def presence_absence_files(wildcards):
     # Returns output morphology presence filenames based on Burress_Minnow_Filtered
     with checkpoints.select_minnow_images.get(**wildcards).output[0].open() as f:
-       names = get_image_names(f)
-    presence_files = [f"Morphology/Presence/{i}_presence.json" for i in names]
-    return {
-        "presence_files": presence_files,
-        "sampling": config["Sampling"],
-        "image_metadata": config["Image_Metadata"],
-        "image_quality_metadata": config["Image_Quality_Metadata"],
-        "burress": config["Burress"],
-        "library": "Library"
-    }
+       arkids = get_arkid_list(f)
+    return [f"Morphology/Presence/{i}_presence.json" for i in arkids]
 
 rule presence_absence_analysis:
     input:
-       unpack(presence_absence_analysis_inputs)
+       presence_files=presence_absence_files,
+       sampling=config["Sampling"],
+       image_metadata=config["Image_Metadata"],
+       image_quality_metadata=config["Image_Quality_Metadata"],
+       burress=config["Burress"],
+       library="Library"
     output:
        presence_absence_matrix=config["Presence_Absence_Matrix"],
        sampling_species_burress=config["Sampling_Species_Burress"],

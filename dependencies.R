@@ -28,6 +28,11 @@ remotes::install_version("yaml",
                          version = "2.3.5",
                          upgrade = "never")
 
+#read xml files
+remotes::install_version("XML",
+                         version = "3.99-0.11",
+                         upgrade = "never")
+
 #data manipulation packages
 remotes::install_version("stringr",
                          version = "1.4.0",
@@ -59,7 +64,7 @@ remotes::install_version("ggpubr",
                          upgrade = "never")
 
 ##load everything
-p <- c("rjson",
+p <- c("rjson", "XML",
        "stringr", "tidyr", "reshape2", "dplyr",
        "moments",
        "ggplot2", "RColorBrewer", "ggpubr")

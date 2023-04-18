@@ -1,16 +1,18 @@
 # "Name:" becomes the object for the Snakefile
 
 # Input paths
-#TU_FISH: Files/TU_FISH_dtsrc20qp16v.zip
-TU_FISH_DOI: doi:10.5072/FK2/VBAEXS
-Image_Metadata: Files/Tulane/Fish/extendedImageMetadata.csv
-Image_Quality_Metadata: Files/Tulane/Fish/imageQualityMetadata.csv
-Multimedia: Files/Tulane/Fish/multimedia.csv
+Image_DOI: doi:10.5072/FK2/GYHRV8
+File_Metadata: Files/Fish-AIR/Tulane/dtspz368c00q/meta.xml
+Image_Metadata: Files/Fish-AIR/Tulane/dtspz368c00q/multimedia.csv
+Image_Quality_Metadata: Files/Fish-AIR/Tulane/dtspz368c00q/imageQualityMetadata.csv
 Burress: Files/Previous Fish Measurements - Burress et al. 2016.csv
 Burress_DOI: doi:10.5072/FK2/KLN3CS
-limit_images: "10" #if "" will run all, otherwise must input in integer
+
+# Input settings
+limit_images: 20 #if "" will run all, otherwise must input in integer
 
 # Output paths
+Minnow_Filtered: Results/minnow.filtered.from.iqm.csv
 Burress_Minnow_Filtered: Results/burress.minnow.sp.filtered.from.iqm.csv
 Sampling: Results/sampling.df.IQM.csv
 

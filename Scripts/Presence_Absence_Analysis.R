@@ -43,60 +43,63 @@ write.csv(presence.df,
 
 #### merge with metadata ----
 #combine with metadata to get taxonomic hierarchy
-colnames(meta.df) #loaded in from paths.R
+colnames(mm.df) #loaded in from paths.R
 
-presence.meta <- merge(presence.df, meta.df,
-                       by.x = "file_name",
-                       by.y = "original_file_name",
-                       all.x = TRUE, all.y = FALSE)
+presence.meta <- merge(presence.df, mm.df,
+                       by.x = "base_name",
+                       by.y = "ARKID",
+                       all.x = TRUE,
+                       all.y = FALSE)
 
-#### 8. sampling after segmentation ----
+colnames(presence.meta)[colnames(presence.meta) == 'base_name'] <- 'ARKID'
 
-sampling.df$Selection_Criteria[8] <- "After segmentation"
+#### 4. sampling after segmentation ----
+
+sampling.df$Selection_Criteria[4] <- "After segmentation"
 
 #check df (need to re-run w everything)
-nrow(presence.meta) #6297
-length(unique(presence.meta$scientific_name)) #41
+nrow(presence.meta) #284
+length(unique(presence.meta$scientificName)) #4
 
-sampling.df$All_Minnows_Images_sp[8] <- paste0(nrow(presence.meta),
+sampling.df$All_Minnows_Images_sp[4] <- paste0(nrow(presence.meta),
                                                " (",
-                                               length(unique(presence.meta$scientific_name)),
+                                               length(unique(presence.meta$scientificName)),
                                                ")")
 
 #compare to Burress et al. 2017
-nrow(presence.meta[presence.meta$scientific_name %in% b.sp,]) #446
-length(unique(presence.meta$scientific_name[presence.meta$scientific_name %in% b.sp])) #8
+nrow(presence.meta[presence.meta$scientificName %in% b.sp,]) #9
+length(unique(presence.meta$scientificName[presence.meta$scientificName %in% b.sp])) #3
 
-sampling.df$Burress_et_al._2017_Overlap_Images_sp[8] <- paste0(nrow(presence.meta[presence.meta$scientific_name %in% b.sp,]),
+sampling.df$Burress_et_al._2017_Overlap_Images_sp[4] <- paste0(nrow(presence.meta[presence.meta$scientificName %in% b.sp,]),
                                                                " (",
-                                                               length(unique(presence.meta$scientific_name[presence.meta$scientific_name %in% b.sp])),
+                                                               length(unique(presence.meta$scientificName[presence.meta$scientificName %in% b.sp])),
                                                                ")")
-## 9. remove images that don't have a scale ----
+## 5. remove images that don't have a scale ----
 
-sampling.df$Selection_Criteria[9] <- "Has ruler scale"
+sampling.df$Selection_Criteria[5] <- "Has ruler scale"
 
 unique(presence.meta$ruler_unit) #None means no scale was detected or extracted
 errors <- presence.meta[presence.meta$ruler_unit == "None",] %>% tidyr::drop_na(ruler_unit)
-nrow(errors) #18 images
+nrow(errors) #11 images
 
 write.csv(errors,
           file = file.path(results, "df.missing.scale.csv"),
           row.names = FALSE)
 
-presence.meta.scale <- presence.meta[!(presence.meta$base_name %in% errors$base_name),]
+presence.meta.scale <- presence.meta[!(presence.meta$ARKID %in% errors$ARKID),]
 
-sampling.df$All_Minnows_Images_sp[9] <- paste0(nrow(presence.meta.scale),
+sampling.df$All_Minnows_Images_sp[5] <- paste0(nrow(presence.meta.scale),
                                                " (",
-                                               length(unique(presence.meta.scale$scientific_name.x)),
+                                               length(unique(presence.meta.scale$scientificName)),
                                                ")")
 
 #compare to Burress et al. 2017
-nrow(presence.meta.scale[presence.meta.scale$scientific_name %in% b.sp,]) #446
-length(unique(presence.meta.scale$scientific_name[presence.meta.scale$scientific_name %in% b.sp])) #8
+nrow(presence.meta.scale[presence.meta.scale$scientificName %in% b.sp,]) #9
+length(unique(presence.meta.scale$scientificName[presence.meta.scale$scientificName %in% b.sp])) #3
 
-sampling.df$Burress_et_al._2017_Overlap_Images_sp[9] <- paste0(nrow(presence.meta.scale[presence.meta.scale$scientific_name.x %in% b.sp,]),
+sampling.df$Burress_et_al._2017_Overlap_Images_sp[6] <- paste0(nrow(presence.meta.scale[presence.meta.scale$scientificName %in% b.sp,]),
                                                                " (",
-                                                               length(unique(presence.meta.scale$scientific_name.x[presence.meta.scale$scientific_name.x %in% b.sp])),
+                                                               length(unique(presence.meta.scale$scientificName[presence.meta.scale$scientificName %in% b.sp])),
                                                                ")")
 
 write.csv(presence.meta.scale,
@@ -111,38 +114,37 @@ write.csv(presence.meta.scale,
 #not using information about dimensions of the image
 df <- select(presence.meta.scale, - c("adipos_fin_number", "adipos_fin_percentage",
                                       "caudal_fin_ray_number", "caudal_fin_ray_percentage",
-                                      "alt_fin_ray_number", "alt_fin_ray_percentage",
-                                      "width", "size", "height"))
+                                      "alt_fin_ray_number", "alt_fin_ray_percentage"))
 
 ## how many 0s are there? ====
 no.abs <- df[apply(df, 1, function(row) all(row !=0 )), ]  # Remove zero-rows
-nrow(df) - nrow(no.abs) #40; 10 from Burress
+nrow(df) - nrow(no.abs) #6
 
 ## how many have all fins? ====
-df.fin.per <- select(df, c("scientific_name", contains("percentage")))
+df.fin.per <- select(df, c("scientificName", contains("percentage")))
 df.fin.per$total <- rowSums(df.fin.per[ , 2:9], na.rm=TRUE)
 nrow(df.fin.per[df.fin.per$total > 8,]) #none are perfect
 
-#### 10. sampling of data ----
+#### 6. sampling of data ----
 df.fin.per.sample <- df.fin.per %>%
-  group_by(scientific_name) %>%
+  group_by(scientificName) %>%
   summarize(sample = n()) %>%
   as.data.frame()
 
-sampling.df$Selection_Criteria[10] <- "All Traits Present"
+sampling.df$Selection_Criteria[6] <- "All Traits Present"
 
-sampling.df$All_Minnows_Images_sp[10] <- paste0(nrow(df.fin.per.sample),
+sampling.df$All_Minnows_Images_sp[6] <- paste0(nrow(df.fin.per.sample),
                                                " (",
-                                               length(unique(df.fin.per.sample$scientific_name.x)),
+                                               length(unique(df.fin.per.sample$scientificName)),
                                                ")")
 
 # compare to burress
-nrow(df.fin.per.sample[df.fin.per.sample$scientific_name %in% b.sp,]) #446
-length(unique(df.fin.per.sample$scientific_name[df.fin.per.sample$scientific_name %in% b.sp])) #8
+nrow(df.fin.per.sample[df.fin.per.sample$scientificName %in% b.sp,]) #
+length(unique(df.fin.per.sample$scientificName[df.fin.per.sample$scientificName %in% b.sp])) #
 
-sampling.df$Burress_et_al._2017_Overlap_Images_sp[10] <- paste0(nrow(df.fin.per.sample[df.fin.per.sample$scientific_name.x %in% b.sp,]),
+sampling.df$Burress_et_al._2017_Overlap_Images_sp[6] <- paste0(nrow(df.fin.per.sample[df.fin.per.sample$scientificName %in% b.sp,]),
                                                                 " (",
-                                                                length(unique(df.fin.per.sample$scientific_name.x[df.fin.per.sample$scientific_name.x %in% b.sp])),
+                                                                length(unique(df.fin.per.sample$scientificName[df.fin.per.sample$scientificName %in% b.sp])),
                                                                 ")")
 
 #### visualize sampling data ----
@@ -199,7 +201,7 @@ stats <- df %>%
 
 ## fins by species ====
 stats.sp <- df %>%
-  group_by(scientific_name) %>%
+  group_by(scientificName) %>%
   summarise(sample = n(),
             min.head = min(head_percentage),
             max.head = max(head_percentage),
@@ -235,23 +237,18 @@ stats.sp <- df %>%
             sd.pect = sd(pectoral_fin_percentage)) %>%
   as.data.frame()
 
-#### Head Map ----
+#### Heat Map ----
 
 #need to have matrix in the order we already want
 #need to label rows
 stats.sp.sort <- stats.sp[order(stats.sp$sample, decreasing = TRUE),]
-row.names(stats.sp.sort) <- paste(stats.sp.sort$scientific_name, " (", stats.sp.sort$sample, ")", sep = "")
+row.names(stats.sp.sort) <- paste(stats.sp.sort$scientificName, " (", stats.sp.sort$sample, ")", sep = "")
 #head, eye, trunk, dorsal, caudal, anal, pelvic, pectoral
 colnames(stats.sp.sort) #these are in the correct order
 
 #all stats
 stats.sp.trim <- stats.sp[,-c(1:2)]
 stats.sp.trim <- as.matrix(stats.sp.trim)
-
-hm <- heatmap(stats.sp.trim,
-              labRow = rownames(stats.sp.trim),
-              labCol = colnames(stats.sp.trim),
-              main = "Heat Map")
 
 ## average ====
 stats.sp.avg <- select(stats.sp.sort, contains("avg."))
@@ -284,8 +281,10 @@ colnames(stats.sp.sd) #in correct order
 
 melt_stats_sd <- melt(stats.sp.sd)
 head(melt_stats_sd)
+melt_stats_sd.na <- melt_stats_sd %>% 
+  tidyr::drop_na(value)
 
-hm.sd <- ggplot(melt_stats_avg, aes(Var2, Var1)) +
+hm.sd <- ggplot(melt_stats_sd.na, aes(Var2, Var1)) +
   geom_tile(aes(fill = value), color = "white") +
   scale_fill_gradient(low = "#FFFFCC", high = "#800026") +
   labs( x = "Trait",
@@ -295,11 +294,11 @@ hm.sd <- ggplot(melt_stats_avg, aes(Var2, Var1)) +
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black"))
 
-ggsave(hm.avg,
+ggsave(hm.sd,
        file = heatmap_sd_blob_path,
        width = 14, height = 20, units = "cm")
 
-max(melt_stats_sd$value) #.34 largest standard deviation
+max(melt_stats_sd$value, na.rm = TRUE) #0.58 largest standard deviation
 
 #a lot of species are missing fins, like dorsal, anal, pelvic, pectoral
 #caudal, eye, trunk perform the best
@@ -317,34 +316,34 @@ df.fin.0 <- df.fin.per[df.fin.per$head_percentage > 0 &
 nrow(df.fin.per) #6297
 nrow(df.fin.0) #6297, no loss
 
-## 11. 95% min for blob ====
+## 7. 95% min for blob ====
 
-sampling.df$Selection_Criteria[11] <- "95% blobb for head, eye, trunk"
+sampling.df$Selection_Criteria[7] <- "95% blobb for head, eye, trunk"
 
 #based on visualizations above, we decided to keep .95 blobs; only for the traits we care about
 df.fin.95.3 <- df.fin.per[df.fin.per$head_percentage > .95 &
                           df.fin.per$eye_percentage > .95 &
                           df.fin.per$trunk_percentage > .95,]
 nrow(df.fin.95.3) #6205 images
-length(unique(df.fin.95.3$scientific_name)) #41 species
+length(unique(df.fin.95.3$scientificName)) #41 species
 
-sampling.df$All_Minnows_Images_sp[11] <- paste0(nrow(df.fin.95.3),
+sampling.df$All_Minnows_Images_sp[7] <- paste0(nrow(df.fin.95.3),
                                                " (",
-                                               length(unique(df.fin.95.3$scientific_name)),
+                                               length(unique(df.fin.95.3$scientificName)),
                                                ")")
 
 ## compare to Burress et al. 2017
-df.fin.b.95.3 <- df.fin.95.3[df.fin.95.3$scientific_name %in% b.sp,]
+df.fin.b.95.3 <- df.fin.95.3[df.fin.95.3$scientificName %in% b.sp,]
 nrow(df.fin.b.95.3) #445
-length(unique(df.fin.b.95.3$scientific_name)) #8
+length(unique(df.fin.b.95.3$scientificName)) #8
 
-sampling.df$Burress_et_al._2017_Overlap_Images_sp[11] <- paste0(nrow(df.fin.b.95.3),
+sampling.df$Burress_et_al._2017_Overlap_Images_sp[7] <- paste0(nrow(df.fin.b.95.3),
                                                                " (",
-                                                               length(unique(df.fin.b.95.3$scientific_name)),
+                                                               length(unique(df.fin.b.95.3$scientificName)),
                                                                ")")
 
 #how is the sampling for these species?
-b.sampling <- as.data.frame(table(df.fin.b.95.3$scientific_name))
+b.sampling <- as.data.frame(table(df.fin.b.95.3$scientificName))
 colnames(b.sampling) <- c("Scientific_Name", "Sample_Size")
 write.csv(b.sampling,
           file = sampling_species_burress_path,
@@ -360,19 +359,19 @@ df.fin.95 <- df.fin.per[df.fin.per$head_percentage > .95 &
                         df.fin.per$pelvic_fin_percentage > .95 &
                         df.fin.per$pectoral_fin_percentage > .95,]
 nrow(df.fin.95) #4663
-length(unique(df.fin.95$scientific_name)) #41
+length(unique(df.fin.95$scientificName)) #41
 
-sort(table(df.fin.95$scientific_name)) #3 species have under 10 samples; lose 20 images
+sort(table(df.fin.95$scientificName)) #3 species have under 10 samples; lose 20 images
 
 ## how much does the total dataset get reduced for the 3 segmented traits at a 95% cut off?
 df.fin.95.3 <- df.fin.per[df.fin.per$head_percentage > .95 &
                           df.fin.per$eye_percentage > .95 &
                           df.fin.per$trunk_percentage > .95,]
 nrow(df.fin.95.3) #6205; a lot more!
-length(unique(df.fin.95.3$scientific_name)) #41
+length(unique(df.fin.95.3$scientificName)) #41
 
 # how is sampling?
-sampling.95.3 <- as.data.frame(sort(table(df.fin.95.3$scientific_name)))
+sampling.95.3 <- as.data.frame(sort(table(df.fin.95.3$scientificName)))
 colnames(sampling.95.3) <- c("Scientific_Name", "Sample_Size")
 nrow(sampling.95.3) #41 sp; don't lose any!
 
