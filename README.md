@@ -189,6 +189,10 @@ Enter Dataverse URL: https://datacommons.tdai.osu.edu/
 Enter your Dataverse API Token: <yourtoken>
 ```
 
+### Limit images
+
+In the config.yml file, the user can limit the number of images for a test run by change the integer under ```limit_images```, or run them all by entering ```""```.
+
 ### Running snakemake
 
 Activate snakemake:
