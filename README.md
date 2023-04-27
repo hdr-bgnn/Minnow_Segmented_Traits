@@ -4,17 +4,17 @@ We use a segmentation model to extract traits from minnows (Family: Cyprinidae).
 
 This repository serves as a case study of an automated workflow and extraction of morphological traits using machine learning on image data. 
 
-We expand upon work already done by BGNN, including metadata collection by the [Tulane Team](https://bgnn.tulane.edu/) and the [Drexel Team](https://github.com/hdr-bgnn/drexel_metadata) (see [Leipzig et al. 2021](https://link.springer.com/chapter/10.1007/978-3-030-71903-6_1), [Pepper et al. 2021](https://ieeexplore.ieee.org/abstract/document/9651834?casa_token=gzgYa9cfbZAAAAAA:mFhU1Wc4bkBbL066-2Iwsec-eY2u_1h4FfgoDgGMnNqS5NLOTsJ0Jn78GOzU7tbbz4J-sw), and [Narnani et al. 2022](https://www.researchsquare.com/article/rs-1506561/latest.pdf)), and a segmentation model developed by the [Virginia Tech Team](https://github.com/hdr-bgnn/BGNN-trait-segmentation). We developed morphology extraction tools ([Morphology-analysis](https://github.com/hdr-bgnn/Morphology-analysis)) with the help of the Tulane Team. We incorporate these tools into [BGNN_Snakemake](https://github.com/hdr-bgnn/BGNN_Snakemake).
+We expand upon work already done by BGNN, including metadata collection by the [Tulane Team](https://bgnn.tulane.edu/) and the [Drexel Team](https://github.com/hdr-bgnn/drexel_metadata) (see [Leipzig et al. 2021](https://link.springer.com/chapter/10.1007/978-3-030-71903-6_1), [Pepper et al. 2021](https://ieeexplore.ieee.org/abstract/document/9651834?casa_token=gzgYa9cfbZAAAAAA:mFhU1Wc4bkBbL066-2Iwsec-eY2u_1h4FfgoDgGMnNqS5NLOTsJ0Jn78GOzU7tbbz4J-sw), and [Narnani et al. 2022](https://www.researchsquare.com/article/rs-1506561/latest.pdf)), and a segmentation model developed by the [Virginia Tech Team](https://github.com/hdr-bgnn/BGNN-trait-segmentation). We developed morphology extraction tools ([Morphology-analysis](https://github.com/hdr-bgnn/Morphology-analysis)) with the help of the Tulane Team. We incorporate these tools into [BGNN_Core_Workflow](https://github.com/hdr-bgnn/BGNN_Core_Workflow).
 
 Finally, with the help of the Duke Team, we create an automated workflow.
 
 
-![workflow](https://github.com/hdr-bgnn/Minnow_Segmented_Traits/blob/streamline/Files/workflow%20use%20case.png)
+![workflow](https://github.com/hdr-bgnn/Minnow_Segmented_Traits/blob/readme-edits/workflow%20use%20case.png)
 
 
 ## Goals
 
-* Create a template for creating an automated workflow
+* Create a use case for using an automated workflow
 * Show best practices for interacting with other repositories
 * Show utility of using a machine learning segmentation model to accelerate trait extraction from images of specimens
 
@@ -29,10 +29,6 @@ Finally, with the help of the Duke Team, we create an automated workflow.
 
 *Files*
 - [Previous_Measurements](https://github.com/hdr-bgnn/Minnow_Segmented_Traits/blob/streamline/Files/Previoius_Measurements.xlsx): a file of measurements of minnow traits by  found in the supplemental information
-- [Workflow](https://github.com/hdr-bgnn/Minnow_Segmented_Traits/blob/streamline/Files/workflow%20use%20case.png): a schematic of the automated workflow for this project
-
-*Library*
-- a folder to hold the R package dependencies
 
 *Results*
 - a folder for the outputs from the workflow
@@ -46,9 +42,6 @@ Finally, with the help of the Duke Team, we create an automated workflow.
 
 All input files are stored in the [Fish Traits](https://covid-commons.osu.edu/dataverse/fish-traits) dataverse hosted by OSU.
 
-- [Minnow trait measurements](https://covid-commons.osu.edu/dataset.xhtml?persistentId=doi:10.5072/FK2/KLN3CS&version=DRAFT) from [Burress et al. 2017](https://onlinelibrary.wiley.com/doi/full/10.1111/jeb.13024) [Supplemental Information](https://github.com/hdr-bgnn/Minnow_Segmented_Traits/blob/streamline/Files/jeb13024-sup-0001-supinfo.docx)
-- [Image Quality Metadata v1_20211206_151204 (IQM)](https://covid-commons.osu.edu/dataset.xhtml?persistentId=doi:10.5072/FK2/ZIFDTJ&version=DRAFT): metadata about the image quality (downloaded from the [Tulane Fish API](https://bgnn.tulane.edu/api/docs#/))
-- [Image Metadata v1_20211206_151152 (IM)](https://covid-commons.osu.edu/dataset.xhtml?persistentId=doi:10.5072/FK2/QOHJGD&version=DRAFT): metadata about the specimen image (downloaded from the [Tulane Fish API](https://bgnn.tulane.edu/api/docs#/))
 
 ### Components
 
@@ -79,13 +72,13 @@ All weights and dependencies for all components of the workflow are stored in th
   - [Repository](https://github.com/hdr-bgnn/Morphology-analysis)
 
 * Machine Learning Workflow by Battelle Team and Duke Team
-  - Calls Metadata container and Segmentation container
-  - [Repository](https://github.com/hdr-bgnn/BGNN_Snakemake)
+  - Calls all the above containers
+  - [Repository](https://github.com/hdr-bgnn/BGNN_Core_Workflow)
 
 
 ### Images
 
-The fish images are from the Great Lakes Invasives Network [(GLIN)](https://glin.com/) and stored on the Tulane API (LINK). 
+The fish images are from the Great Lakes Invasives Network [(GLIN)](https://glin.com/) and stored on [Fish-AIR](https://fishair.org/). 
 We are using images specifically from the [Illinois Natural History Survey](https://inhs.illinois.edu/) [(INHS images)](http://www.tubri.org/HDR/INHS/).
 
 
@@ -93,34 +86,28 @@ We are using images specifically from the [Illinois Natural History Survey](http
     
 R code (Minnow_Selection_Image_Quality_Metadata.R) was used to filter out high quality, minnow images using the IQM and IM metadata files.
 
-IQM and IM are both downloaded from the Tulane API and the version used is stored on the OSC data commons under the Fish Traits dataverse. The metadata files have been generated using the [Tulane worflow](https://bgnn.tulane.edu/).
+All image metadata files are downloaded from [Fish-AIR](https://fishair.org/) and the version used is stored on the OSC data commons under the Fish Traits dataverse. The metadata files have been generated using the [Tulane worflow](https://bgnn.tulane.edu/).
 
 Criteria for selection of an image was based on findings from [Pepper et al. 2021](https://ieeexplore.ieee.org/abstract/document/9651834?casa_token=gzgYa9cfbZAAAAAA:mFhU1Wc4bkBbL066-2Iwsec-eY2u_1h4FfgoDgGMnNqS5NLOTsJ0Jn78GOzU7tbbz4J-sw).
 
 Criteria chosen:
 
 * family == "Cyprinidae"
-* specimen_viewing == "left"
-* straight_curved == "straight"
+* specimenView == "left"
+* specimenCurved == "straight"
+* allPartsVisible == "True"
+* partsOverlapping == "True"
+* partsFolded == "False"
+* uniformBackground == "True"
+* partsMissing == "False"
 * brightness == "normal"
-* color_issues == "none"
-* has_ruler == "True"
-* if_overlapping == "False"
-* if_focus == "True"
-* if_missing_parts == "False"
-* if_parts_visible == "True"
-* fins_folded_oddly == "False"
+* onFocus == "True"
+* colorIssues == "none"
+* containsScaleBar == "True"
 * from either INHS or UWZM institutions
-    - Note: there currently is not any image quality metadata for UWZM, so this institution is omitted
-* no duplicated original_file_names
-* removed any images that had an empty file or where the URL did not resolve
-* at least 10 images per species
 
-**The resulting dataset of 41 species and 6300 images.**
+**The resulting dataset of 18 species and 1021 images.**
 
-We ignored if_background_uniform == "True" because it reduced the sample size too much.
-
-OUTPUT FILE HERE!
 
 ### Analysis
 
@@ -128,30 +115,16 @@ See more details in [Morphology-analysis](https://github.com/hdr-bgnn/Morphology
 
 Each segmented image has the following traits: trunk, head, eye, dorsal fin, caudal fin, anal fin, pelvic fin, and pectoral fin. For each segmented trait, there may be more than one "blob", or group of pixels identifying a trait. We created a matrix of <a href="https://github.com/hdr-bgnn/minnowTraits/blob/main/Files/presence.absence.matrix.csv"> presence.absence.matrix.csv</a>.
 
-We removed images where a trait and the scale were missing. That removed X images. OUTPUT FILE HERE!
-
 For each trait, we counted the number of "blobs" and the percentage of the largest blob as a proportion of all blobs for a trait.
 
-All intermediate tables are saved in the folder "Results".
-
-Selecting only the species in Burress et al. 2017, We are left with 446 images and 8 species
-* <i>Notropis volcucellus</i> (X)
-* <i>Notropis texanus</i> (X)
-* <i>Notropis leuciodus</i> (X)
-* <i>Notropis rubellus</i> (X)
-* <i>Notropis photogenis</i> (X)
-* <i>Notropis baileyi</i> (X)
-* <i>Notropis ammophilus</i> (X)
-* <i>Notropis stilbius</i> (X)
-
-OUTPUT FILE HERE!
+All intermediate tables will be saved in the folder "Results".
 
 
 #### Figures
 
 We created a heat map to show the success of the segmentation to detect traits from the images.
 
-Figures are in the folder "Results". OUTPUT FILE HERE!
+Figures are in the folder "Results".
 
 
 ## Running the Workflow
