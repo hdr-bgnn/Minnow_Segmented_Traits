@@ -97,7 +97,7 @@ sampling.df$All_Minnows_Images_sp[5] <- paste0(nrow(presence.meta.scale),
 nrow(presence.meta.scale[presence.meta.scale$scientificName %in% b.sp,]) #9
 length(unique(presence.meta.scale$scientificName[presence.meta.scale$scientificName %in% b.sp])) #3
 
-sampling.df$Burress_et_al._2017_Overlap_Images_sp[6] <- paste0(nrow(presence.meta.scale[presence.meta.scale$scientificName %in% b.sp,]),
+sampling.df$Burress_et_al._2017_Overlap_Images_sp[5] <- paste0(nrow(presence.meta.scale[presence.meta.scale$scientificName %in% b.sp,]),
                                                                " (",
                                                                length(unique(presence.meta.scale$scientificName[presence.meta.scale$scientificName %in% b.sp])),
                                                                ")")
@@ -133,7 +133,7 @@ df.fin.per.sample <- df.fin.per %>%
 
 sampling.df$Selection_Criteria[6] <- "All Traits Present"
 
-sampling.df$All_Minnows_Images_sp[6] <- paste0(nrow(df.fin.per.sample),
+sampling.df$All_Minnows_Images_sp[6] <- paste0(sum(df.fin.per.sample$sample),
                                                " (",
                                                length(unique(df.fin.per.sample$scientificName)),
                                                ")")
@@ -142,7 +142,7 @@ sampling.df$All_Minnows_Images_sp[6] <- paste0(nrow(df.fin.per.sample),
 nrow(df.fin.per.sample[df.fin.per.sample$scientificName %in% b.sp,]) #
 length(unique(df.fin.per.sample$scientificName[df.fin.per.sample$scientificName %in% b.sp])) #
 
-sampling.df$Burress_et_al._2017_Overlap_Images_sp[6] <- paste0(nrow(df.fin.per.sample[df.fin.per.sample$scientificName %in% b.sp,]),
+sampling.df$Burress_et_al._2017_Overlap_Images_sp[6] <- paste0(sum(df.fin.per.sample$sample[df.fin.per.sample$scientificName %in% b.sp]),
                                                                 " (",
                                                                 length(unique(df.fin.per.sample$scientificName[df.fin.per.sample$scientificName %in% b.sp])),
                                                                 ")")
