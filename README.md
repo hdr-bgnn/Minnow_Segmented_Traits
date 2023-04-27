@@ -35,6 +35,9 @@ Finally, with the help of the Duke Team, we create an automated workflow.
   1. tables of results from analyses
   2. /Figures contains all figures created from analyses
 
+*Config*
+- contains the config.yml file
+  - the user can change the file inputs or number of images under ```limit_images```
 
 ## Inputs
 
