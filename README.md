@@ -48,6 +48,8 @@ All input files are stored in the [Fish Traits](https://covid-commons.osu.edu/da
 
 ### Components
 
+The total size of the components are 5.6G (as of 5 May 2023). 
+
 All weights and dependencies for all components of the workflow are stored in the [Fish Traits](https://covid-commons.osu.edu/dataverse/fish-traits) dataverse hosted by OSU.
 
 * Metadata by Drexel Team
