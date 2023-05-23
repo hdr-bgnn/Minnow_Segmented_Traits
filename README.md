@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/470771551.svg)](https://zenodo.org/badge/latestdoi/470771551)
+
 # Minnow Segmented Traits
 
 We use a segmentation model to extract traits from minnows (Family: Cyprinidae).
