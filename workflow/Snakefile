@@ -60,7 +60,7 @@ checkpoint select_minnow_images:
 # import BGNN_Snakemake rules used to create morpology presence.json files for images
 module segmentation:
     snakefile:
-        github("hdr-bgnn/BGNN_Core_Workflow", path="workflow/Snakefile", tag="1.0.0")
+        github("hdr-bgnn/BGNN_Core_Workflow", path="workflow/Snakefile", tag="1.0.1")
     # Use output from Minnow_Selection_Image_Quality_Metadata.R as input files
     config: { "list": config["Burress_Minnow_Filtered"] }
     # Store all files in a subdirectory
