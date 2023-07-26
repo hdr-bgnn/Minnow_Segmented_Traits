@@ -30,7 +30,7 @@ Finally, with the help of the Duke Team, we create an automated workflow.
 - [init.R](https://github.com/hdr-bgnn/Minnow_Traits/blob/streamline/Scripts/init.R): code to load functions in [Functions](https://github.com/hdr-bgnn/Minnow_Traits/tree/streamline/Scripts/Functions)
 
 *Files*
-- [Previous_Measurements](https://github.com/hdr-bgnn/Minnow_Segmented_Traits/blob/streamline/Files/Previoius_Measurements.xlsx): a file of measurements of minnow traits by  found in the supplemental information
+- [Previous_Measurements](https://github.com/hdr-bgnn/Minnow_Segmented_Traits/blob/streamline/Files/Previoius_Measurements.xlsx): a file of measurements of minnow traits by  found in the supplemental information. See [Burress.md](Files/Burress.md) for more details.
 
 *Results*
 - a folder for the outputs from the workflow

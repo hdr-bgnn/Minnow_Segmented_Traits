@@ -6,7 +6,6 @@ File_Metadata: Files/Fish-AIR/Tulane/dtspz368c00q/meta.xml
 Image_Metadata: Files/Fish-AIR/Tulane/dtspz368c00q/multimedia.csv
 Image_Quality_Metadata: Files/Fish-AIR/Tulane/dtspz368c00q/imageQualityMetadata.csv
 Burress: Files/Previous Fish Measurements - Burress et al. 2016.csv
-Burress_DOI: doi:10.5072/FK2/KLN3CS
 
 # Input settings
 limit_images: 20 #if "" will run all, otherwise must input in integer

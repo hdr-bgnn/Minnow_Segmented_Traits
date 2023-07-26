@@ -28,15 +28,6 @@ rule download_fish_air_data:
         DATAVERSE_CONTAINER
     shell: 'DATAVERSE_CONFIG_PATH={params.config} dva download {params.doi} Files/'
 
-rule download_burress:
-    output: config["Burress"]
-    params:
-        doi=config["Burress_DOI"],
-        config=DATAVERSE_CONFIG_PATH
-    container:
-        DATAVERSE_CONTAINER
-    shell: 'DATAVERSE_CONFIG_PATH={params.config} dva download {params.doi} Files/'
-
 rule dependencies:
     input: "dependencies.R"
     output: directory("Library")
