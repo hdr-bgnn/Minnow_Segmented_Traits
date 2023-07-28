@@ -1,10 +1,12 @@
 # "Name:" becomes the object for the Snakefile
 
+# API key from fishair.org
+Fish_AIR_API_Key: ""
+
 # Input paths
-Image_DOI: doi:10.5072/FK2/GYHRV8
-File_Metadata: Files/Fish-AIR/Tulane/dtspz368c00q/meta.xml
-Image_Metadata: Files/Fish-AIR/Tulane/dtspz368c00q/multimedia.csv
-Image_Quality_Metadata: Files/Fish-AIR/Tulane/dtspz368c00q/imageQualityMetadata.csv
+File_Metadata: Files/Fish-AIR/Tulane/meta.xml
+Image_Metadata: Files/Fish-AIR/Tulane/multimedia.csv
+Image_Quality_Metadata: Files/Fish-AIR/Tulane/imageQualityMetadata.csv
 Burress: Files/Previous Fish Measurements - Burress et al. 2016.csv
 
 # Input settings
