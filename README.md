@@ -30,7 +30,7 @@ Finally, with the help of the Duke Team, we create an automated workflow.
 - [init.R](https://github.com/hdr-bgnn/Minnow_Traits/blob/streamline/Scripts/init.R): code to load functions in [Functions](https://github.com/hdr-bgnn/Minnow_Traits/tree/streamline/Scripts/Functions)
 
 *Files*
-- [Previous_Measurements](https://github.com/hdr-bgnn/Minnow_Segmented_Traits/blob/streamline/Files/Previoius_Measurements.xlsx): a file of measurements of minnow traits by  found in the supplemental information. See [Burress.md](Files/Burress.md) for more details.
+- [Previous_Measurements](Files/Previous%20Fish%20Measurements%20-%20Burress%20et%20al.%202016.csv): a file of measurements of minnow traits by  found in the supplemental information. See [Burress.md](Files/Burress.md) for more details.
 
 *Results*
 - a folder for the outputs from the workflow
@@ -45,8 +45,11 @@ Finally, with the help of the Duke Team, we create an automated workflow.
 
 ### Data Files
 
-All input files are stored in the [Fish Traits](https://covid-commons.osu.edu/dataverse/fish-traits) dataverse hosted by OSU.
+The [Previous_Measurements](Files/Previous%20Fish%20Measurements%20-%20Burress%20et%20al.%202016.csv) file is included in this repository.
 
+The Fish-AIR input files will be downloaded from the [Fish-AIR API](https://fishair.org/).
+This requires a [Fish-AIR API key](https://fishair.org/) be added to `Fish_AIR_API_Key` in `config/config.yaml`.
+Alternatively you can download the Fish-AIR input files from Dryad and place them in the `Files/Fish-AIR/Tulane` directory.
 
 ### Components
 
@@ -168,32 +171,6 @@ mkdir Library
 module load cmake #defaukts to version on node
 module load R/4.2.1-gnu11.2
 Rscript dependencies.R
-```
-
-### Dataverse configuration
-
-To download the unpublished input files from our Dataverse instance requires
-supplying the URL to the instance and a Dataverse API Token.
-The URL and API Token need to be placed into a config file stored in your home
-directory name ".dataverse".
-
-To find your token visit [datacommons.tdai.osu.edu]( https://datacommons.tdai.osu.edu/),
-after logging in click your name in the top right corner, click API Token.
-You should see a screen for managing your API Token.
-
-Then run the following command to create your config file:
-
-```
-singularity run docker://ghcr.io/imageomics/dataverse-access:0.0.3 dva setup
-```
-
-This command will download the dva container and create your `~/.dataverse` config file.
-You will see two prompts. For the `URL` prompt enter `https://datacommons.tdai.osu.edu/`.
-For `API Token` prompt enter your API token.
-
-```
-Enter Dataverse URL: https://datacommons.tdai.osu.edu/
-Enter your Dataverse API Token: <yourtoken>
 ```
 
 ### Limit images
