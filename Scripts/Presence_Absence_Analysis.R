@@ -35,6 +35,8 @@ names(presence.df) <- gsub(x = names(presence.df),
                            pattern = "\\.",
                            replacement = "_")
 
+colnames(presence.df)[colnames(presence.df) == 'base_name'] <- 'ARKID'
+
 # write data frame to Results directory
 
 write.csv(presence.df,
@@ -46,8 +48,7 @@ write.csv(presence.df,
 colnames(mm.df) #loaded in from paths.R
 
 presence.meta <- merge(presence.df, mm.df,
-                       by.x = "base_name",
-                       by.y = "ARKID",
+                       by = "ARKID",
                        all.x = TRUE,
                        all.y = FALSE)
 
