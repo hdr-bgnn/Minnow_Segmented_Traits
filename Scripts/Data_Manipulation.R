@@ -1,6 +1,4 @@
 # set paths for files
-# Meghan Balk
-# balk@battelleecology.org
 source("Scripts/fish-air.R")
 
 #### read yaml file ----
