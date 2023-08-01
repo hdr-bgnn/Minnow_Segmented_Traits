@@ -1,6 +1,5 @@
 # import dependencies for R
-# Meghan Balk 
-# balk@battelleecology.org
+
 source("paths.R")
 
 #create Library folder
