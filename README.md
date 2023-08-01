@@ -116,8 +116,6 @@ Criteria chosen:
 * containsScaleBar == "True"
 * from either INHS or UWZM institutions
 
-**The resulting dataset of 18 species and 1021 images.**
-
 
 ### Analysis
 
