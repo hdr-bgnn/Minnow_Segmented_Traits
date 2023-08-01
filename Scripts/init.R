@@ -1,6 +1,4 @@
 # set paths for files
-# Meghan Balk 
-# balk@battelleecology.org
 
 #### load paths ----
 source("paths.R")
