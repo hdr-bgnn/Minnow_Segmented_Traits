@@ -55,35 +55,38 @@ Alternatively you can download the Fish-AIR input files from Dryad and place the
 
 The total size of the components are 5.6G (as of 5 May 2023). 
 
-All weights and dependencies for all components of the workflow are stored in the [Fish Traits](https://covid-commons.osu.edu/dataverse/fish-traits) dataverse hosted by OSU.
+All weights and dependencies for all components of the workflow are uploaded to Hugging Face or Zenodo.
 
 * Metadata by Drexel Team
   - Object detection of fish and rule from fish images
   - [Repository](https://github.com/hdr-bgnn/drexel_metadata)
-  - [Model Weights](https://covid-commons.osu.edu/dataset.xhtml?persistentId=doi:10.5072/FK2/MMX6FY&version=DRAFT)
+  - [Model Archive](https://doi.10.57967/hf/0904)
   
 * Reformatting of metadata
   - Trim metadata output from Metadata step to only the values necessary for this project
   - [Repository](https://github.com/hdr-bgnn/drexel_metadata_formatter)
+  - [Code Archive](https://doi.org/10.5281/zenodo.7987576)
 
 * Crop Image
   - Extract bounding box information from metadata file
   - Resizes and crops fish from image
   - [Repository](https://github.com/hdr-bgnn/Crop_image)
+  - [Code Archive](https://doi.org/10.5281/zenodo.7987485)
 
 * Segmentation Model by Virginia Tech Team
   - Segments fish traits from fish images
   - [Repository](https://github.com/hdr-bgnn/BGNN-trait-segmentation)
-  - [Pretrained Model Weights](https://covid-commons.osu.edu/dataset.xhtml?persistentId=doi:10.5072/FK2/CGWDW4)
-  - [Trained Model Weights](BGNN-trait-segmentation)
+  - [Model Archive](https://doi.org/10.57967/hf/0832)
 
 * Morphology analysis by Tulane Team and Battelle Team
   - Tool to calculate presence of traits
   - [Repository](https://github.com/hdr-bgnn/Morphology-analysis)
+  - [Code Archive](https://doi.org/10.5281/zenodo.7987697)
 
 * Machine Learning Workflow by Battelle Team and Duke Team
   - Calls all the above containers
   - [Repository](https://github.com/hdr-bgnn/BGNN_Core_Workflow)
+  - [Code Archive](https://doi.org/10.5281/zenodo.7987705)
 
 
 ### Images
