@@ -1,6 +1,5 @@
 # function for turning json files to dataframes
-# Meghan Balk 
-# balk@battelleecology.org
+
 library(rjson)
 
 #turn into data frame
