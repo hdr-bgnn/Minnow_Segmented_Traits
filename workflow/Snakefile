@@ -4,9 +4,6 @@ import pandas as pd
 configfile: "config/config.yaml"
     # names come from the config file
 
-DATAVERSE_CONFIG_PATH = os.path.expanduser('~/.dataverse')
-DATAVERSE_CONTAINER = 'docker://ghcr.io/imageomics/dataverse-access:1'
-
 rule all:
     input:
         presence_absence_matrix=config["Presence_Absence_Matrix"],
@@ -19,23 +16,13 @@ rule all:
 
 rule download_fish_air_data:
     output:
+        config["File_Metadata"],
         config["Image_Metadata"],
         config["Image_Quality_Metadata"]
     params:
-        doi=config["Image_DOI"],
-        config=DATAVERSE_CONFIG_PATH
-    container:
-        DATAVERSE_CONTAINER
-    shell: 'DATAVERSE_CONFIG_PATH={params.config} dva download {params.doi} Files/'
-
-rule download_burress:
-    output: config["Burress"]
-    params:
-        doi=config["Burress_DOI"],
-        config=DATAVERSE_CONFIG_PATH
-    container:
-        DATAVERSE_CONTAINER
-    shell: 'DATAVERSE_CONFIG_PATH={params.config} dva download {params.doi} Files/'
+        apikey=config["Fish_AIR_API_Key"],
+        script=srcdir("../Scripts/download-fish-air.sh")
+    shell: 'bash {params.script} {params.apikey}'
 
 rule dependencies:
     input: "dependencies.R"
@@ -60,7 +47,7 @@ checkpoint select_minnow_images:
 # import BGNN_Snakemake rules used to create morpology presence.json files for images
 module segmentation:
     snakefile:
-        github("hdr-bgnn/BGNN_Core_Workflow", path="workflow/Snakefile", tag="1.0.0")
+        github("hdr-bgnn/BGNN_Core_Workflow", path="workflow/Snakefile", tag="1.0.1")
     # Use output from Minnow_Selection_Image_Quality_Metadata.R as input files
     config: { "list": config["Burress_Minnow_Filtered"] }
     # Store all files in a subdirectory
