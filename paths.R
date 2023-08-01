@@ -1,6 +1,4 @@
 # set paths for files
-# Meghan Balk
-# balk@battelleecology.org
 
 #put directory to cloned repo
 config_file <- file.path("config", "config.yaml")
