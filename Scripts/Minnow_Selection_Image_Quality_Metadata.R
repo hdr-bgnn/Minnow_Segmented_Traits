@@ -1,6 +1,4 @@
 # selection of minnow images for the workflow
-# Meghan Balk
-# balk@battelleecology.org
 
 library(dplyr) # to provide %>%
 
