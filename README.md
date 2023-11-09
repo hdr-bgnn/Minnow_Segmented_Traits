@@ -160,20 +160,6 @@ To check that the environment was made:
 conda info -e
 ```
 
-### Installing R packages
-
-The R packages required by the pipeline must be installed into the `Library` directory that is created.
-This can be accomplished by running `Rscript dependencies.R`.
-
-On the OSC cluster this can be done like so:
-
-```
-mkdir Library
-module load cmake #defaukts to version on node
-module load R/4.2.1-gnu11.2
-Rscript dependencies.R
-```
-
 ### Limit images
 
 In the config.yml file, the user can limit the number of images for a test run by change the integer under ```limit_images```, or run them all by entering ```""```.
