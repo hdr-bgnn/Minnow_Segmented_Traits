@@ -140,7 +140,11 @@ Figures are in the folder "Results".
 
 ## Running the Workflow
 
-This workflow requires R, conda, and docker to run.
+### Requirements
+This workflow requires conda and singularity to be installed. 
+Using conda a conda environment will be created to hold the workflow runner (snakemake) and an R environment.
+The R environment is intentionally not containerized for ease of development.
+All other requirements are provided via singularity containers.
 
 ### Installing snakemake
 
