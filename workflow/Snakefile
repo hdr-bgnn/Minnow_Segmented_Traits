@@ -14,35 +14,47 @@ rule all:
         heatmap_avg_blob_image=config["Heatmap_Avg_Blob_Image"],
         heatmap_sd_blob_image=config["Heatmap_SD_Blob_Image"]
 
-rule download_fish_air_data:
-    output:
-        config["File_Metadata"],
-        config["Image_Metadata"],
-        config["Image_Quality_Metadata"]
-    params:
-        apikey=config["Fish_AIR_API_Key"],
-        script=srcdir("../Scripts/download-fish-air.sh")
-    shell: 'bash {params.script} {params.apikey}'
 
-rule dependencies:
-    input: "dependencies.R"
-    output: directory("Library")
-    shell: 'mkdir Library && R_LIBS_USER=Library Rscript dependencies.R'
+if config["Fish_AIR_API_Key"]:
+    # Use the Fish-AIR API if a key is in config/config.yaml
+    rule download_fish_air_data:
+        output:
+            config["File_Metadata"],
+            config["Image_Metadata"],
+            config["Image_Quality_Metadata"]
+        params:
+            apikey=config["Fish_AIR_API_Key"],
+            script=srcdir("../Scripts/download-fish-air.sh")
+        shell: 'bash {params.script} {params.apikey}'
+else:
+    # Use the Zenodo archive if no Fish-AIR key is provided
+    rule download_zenodo_data:
+        output:
+            config["File_Metadata"],
+            config["Image_Metadata"],
+            config["Image_Quality_Metadata"]
+        params:
+            doi=config["Zenodo_DOI"],
+            directory=os.path.dirname(config["File_Metadata"])
+        conda:
+            "../envs/zenodo_get.yaml"
+        shell: "zenodo_get -o {params.directory} {params.doi}"
+
 
 checkpoint select_minnow_images:
     input:
         config["Image_Metadata"],
         config["Image_Quality_Metadata"],
         config["Burress"],
-        "Library"
-
     output:
         config["Burress_Minnow_Filtered"],
         config["Sampling"]
     params:
         script=srcdir("../Scripts/Minnow_Selection_Image_Quality_Metadata.R")
+    conda: 
+        "../envs/r-minnows.yaml"
     shell:
-        "R_LIBS_USER=Library Rscript {params.script}"
+        "Rscript {params.script}"
 
 # import BGNN_Snakemake rules used to create morpology presence.json files for images
 module segmentation:
@@ -101,7 +113,7 @@ def presence_absence_files(wildcards):
     # Returns output morphology presence filenames based on Burress_Minnow_Filtered
     with checkpoints.select_minnow_images.get(**wildcards).output[0].open() as f:
        arkids = get_arkid_list(f)
-    return [f"Morphology/Presence/{i}_presence.json" for i in arkids]
+    return ["Morphology/Presence/" + i + "_presence.json" for i in arkids]
 
 rule presence_absence_analysis:
     input:
@@ -110,7 +122,6 @@ rule presence_absence_analysis:
        image_metadata=config["Image_Metadata"],
        image_quality_metadata=config["Image_Quality_Metadata"],
        burress=config["Burress"],
-       library="Library"
     output:
        presence_absence_matrix=config["Presence_Absence_Matrix"],
        sampling_species_burress=config["Sampling_Species_Burress"],
@@ -121,5 +132,7 @@ rule presence_absence_analysis:
        heatmap_sd_blob_image=config["Heatmap_SD_Blob_Image"]
     params:
         script=srcdir("../Scripts/Presence_Absence_Analysis.R"),
+    conda: 
+        "../envs/r-minnows.yaml"
     shell:
-        "R_LIBS_USER=Library Rscript {params.script}"
+        "Rscript {params.script}"

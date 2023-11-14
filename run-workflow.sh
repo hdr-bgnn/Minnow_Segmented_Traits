@@ -19,5 +19,5 @@ snakemake \
     --jobs $NUM_JOBS \
     --profile slurm/ \
     --use-singularity \
-    --singularity-args "--bind $HOME/.dataverse" \
+    --use-conda \
     "$@"
