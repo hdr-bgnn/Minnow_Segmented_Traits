@@ -1,19 +1,18 @@
 cff-version: 1.0.0
-authors:
-  - family-names: Balk
-    given-names: Meghan
-    orcid: "https://orcid.org/0000-0003-2699-3066"
-  - family-names: Bradley
-    given-names: John
-    orcid: "https://orcid.org/0000-0003-3858-848X"
-  - family-names: Tabarin
-    given-names: Thibault
-    orcid: "https://orcid.org/0000-0003-4256-849X"
-  - family-names: Lapp
-    given-names: Hilmar
-    orcid: "https://orcid.org/0000-0001-9107-0714"
-cff-version: 1.0.0
 date-released: "2023-05-23"
+authors:
+- family-names: Balk
+  given-names: Meghan
+  orcid: "https://orcid.org/0000-0003-2699-3066"
+- family-names: Bradley
+  given-names: John
+  orcid: "https://orcid.org/0000-0003-3858-848X"
+- family-names: Tabarin
+  given-names: Thibault
+  orcid: "https://orcid.org/0000-0003-4256-849X"
+- family-names: Lapp
+  given-names: Hilmar
+  orcid: "https://orcid.org/0000-0001-9107-0714"
 identifiers:
   - description: "This repository serves as a case study of an automated workflow and extraction of morphological traits using machine learning on image data. We use a segmentation model to extract traits from minnows (Family: Cyprinidae). We expand upon work already done by BGNN, including metadata collection by the Tulane Team and the Drexel Team (see Leipzig et al. 2021, Pepper et al. 2021, and Narnani et al. 2022), and a segmentation model developed by the Virginia Tech Team. We developed morphology extraction tools (Morphology-analysis) with the help of the Tulane Team. We incorporate these tools into BGNN_Core_Workflow. Finally, with the help of the Duke Team, we create an automated workflow."
     type: doi
