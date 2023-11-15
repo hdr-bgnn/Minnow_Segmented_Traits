@@ -137,16 +137,25 @@ We created a heat map to show the success of the segmentation to detect traits f
 
 Figures are in the folder "Results".
 
-
 ## Running the Workflow
 Instructions are provided for running the workflow on a single computer or a [SLURM cluster](https://slurm.schedmd.com/).
 
 ### Software Requirements
-To run the workflow [conda](https://docs.conda.io/projects/conda/en/stable/) and [singularity (aka apptainer)](https://apptainer.org/) must to be installed.
+To run the workflow [conda](https://docs.conda.io/projects/conda/en/stable/) and [singularity (aka Apptainer)](https://apptainer.org/) must to be installed.
+
+#### Component Software Dependencies
+This workflow will automatically download and setup the software dependencies required by the workflow components.
+These dependencies are provided using either Singularity Containers or Conda Environments.
+Singularity Containers are used to provide the machine learning components essential to this workflow.
+Singularity Containers enable highly reproducible and portable software components.
+However, using Singularity Containers can pose challenges for script development by domain scientists.
+Conda Environments are used for the domain scientist scripts included in this workflow.
 
 ### Hardware Requirements
 Minimally the workflow requires 1 CPU, 5 GB memory, and 20 GB disk space.
 A Linux machine is required for this workflow to provide Singularity containerization.
+
+
 
 ### Install Workflow Runner
 To run the workflow [snakemake](https://snakemake.readthedocs.io/en/stable/index.html) with [mamba](https://mamba.readthedocs.io/en/latest/) must be installed.
