@@ -1,18 +1,18 @@
 cff-version: 1.0.0
 date-released: "2023-05-23"
 authors:
-- family-names: Balk
-  given-names: Meghan
-  orcid: "https://orcid.org/0000-0003-2699-3066"
-- family-names: Bradley
-  given-names: John
-  orcid: "https://orcid.org/0000-0003-3858-848X"
-- family-names: Tabarin
-  given-names: Thibault
-  orcid: "https://orcid.org/0000-0003-4256-849X"
-- family-names: Lapp
-  given-names: Hilmar
-  orcid: "https://orcid.org/0000-0001-9107-0714"
+  - family-names: Balk
+    given-names: Meghan
+    orcid: "https://orcid.org/0000-0003-2699-3066"
+  - family-names: Bradley
+    given-names: John
+    orcid: "https://orcid.org/0000-0003-3858-848X"
+  - family-names: Tabarin
+    given-names: Thibault
+    orcid: "https://orcid.org/0000-0003-4256-849X"
+  - family-names: Lapp
+    given-names: Hilmar
+    orcid: "https://orcid.org/0000-0001-9107-0714"
 identifiers:
 - description: "This repository serves as a case study of an automated workflow and extraction of morphological traits using machine learning on image data. We use a segmentation model to extract traits from minnows (Family: Cyprinidae). We expand upon work already done by BGNN, including metadata collection by the Tulane Team and the Drexel Team (see Leipzig et al. 2021, Pepper et al. 2021, and Narnani et al. 2022), and a segmentation model developed by the Virginia Tech Team. We developed morphology extraction tools (Morphology-analysis) with the help of the Tulane Team. We incorporate these tools into BGNN_Core_Workflow. Finally, with the help of the Duke Team, we create an automated workflow."
   type: doi
@@ -25,82 +25,82 @@ license: MIT
 message: "If you use this software, please cite it using these metadata."
 references:
   authors:
-  - family-names: Tabarin
-    given-names: Thibault
-  - family-names: Bradley
-    given-names: John
-  - family-names: Balk
-    given-names: Meghan
-  - family-names: Lapp
-    given-names: Hilmar
+    - family-names: Tabarin
+      given-names: Thibault
+    - family-names: Bradley
+      given-names: John
+    - family-names: Balk
+      given-names: Meghan
+    - family-names: Lapp
+      given-names: Hilmar
   doi: 10.5281/zenodo.7987705
   repository-code: "https://github.com/hdr-bgnn/BGNN_Core_Workflow"
   title: BGNN_Core_Workflow
   type: software
   version: 1.0.1
   authors:
-  - family-names: Karnani
-    given-names: Kevin
-  - family-names: Pepper
-    given-names: Joel
-  - family-names: Bakis
-    given-names: Yasin
-  - family-names: Wang
-    given-names: Xiaojun
-  - family-names: "Bart, Jr."
-    given-names: Henry
-  - family-names: Breen
-    given-names: "David E"
-  - family-names: Greenberg
-    given-names: Jane
+    - family-names: Karnani
+      given-names: Kevin
+    - family-names: Pepper
+      given-names: Joel
+    - family-names: Bakis
+      given-names: Yasin
+    - family-names: Wang
+      given-names: Xiaojun
+    - family-names: "Bart, Jr."
+      given-names: Henry
+    - family-names: Breen
+      given-names: "David E"
+    - family-names: Greenberg
+      given-names: Jane
   doi: 10.57967/hf/0904
   repository-code: "https://github.com/hdr-bgnn/drexel_metadata"
   title: Drexel-metadata-generator
   type: software
   version: 0.6
   authors:
-  - family-names: Tabarin
-    given-names: Thibault
-  - family-names: Bradley
-    given-names: John
-  - family-names: Lapp
-    given-names: Hilmar
+    - family-names: Tabarin
+      given-names: Thibault
+    - family-names: Bradley
+      given-names: John
+    - family-names: Lapp
+      given-names: Hilmar
   doi: 10.5281/zenodo.7987576
   repository-code: "https://github.com/hdr-bgnn/drexel_metadata_formatter"
   title: drexel_metadata_formatter
   type: software
   version: 0.0.1
   authors:
-  - family-names: Tabarin
-    given-names: Thibault
-  - family-names: Bradley
-    given-names: John
-  - family-names: Lapp
-    given-names: Hilmar
+    - family-names: Tabarin
+      given-names: Thibault
+    - family-names: Bradley
+      given-names: John
+    - family-names: Lapp
+      given-names: Hilmar
   doi: 10.5281/zenodo.7987485
   repository-code: "https://github.com/hdr-bgnn/Crop_image"
   title: Crop_Image
   type: software
   version: 0.0.4
   authors:
-  - family-names: Maruf
-    given-names: "M."
-  - family-names: Karpatne
-    given-names: Anuj
+    - family-names: Maruf
+      given-names: "M."
+    - family-names: Karpatne
+      given-names: Anuj
   doi: 10.57967/hf/0832
   repository-code: "https://github.com/hdr-bgnn/BGNN-trait-segmentation"
   title: BGNN-trait-segmentation
   type: software
   version: 0.0.7
   authors:
-  - family-names: Tabarin
-    given-names: Thibault
-  - family-names: Bradley
-    given-names: John
-  - family-names: Balk
-    given-names: Meghan
-  - family-names: Lapp
-    given-names: Hilmar
+    - family-names: Tabarin
+      given-names: Thibault
+    - family-names: Bradley
+      given-names: John
+    - family-names: Balk
+      given-names: Meghan
+    - family-names: Lapp
+      given-names: Hilmar
   doi: 10.5281/zenodo.7987697
   repository-code: "https://github.com/hdr-bgnn/Morphology-analysis"
   title: Morphology-analysis
@@ -109,26 +109,26 @@ references:
   authors:
   family-names: Burress
   given-names: "E.D."
-  - family-names: Holcomb
-    given-names: "J.M."
-  - family-names: Tan
-    given-names: "M."
-  - family-names: Armbruster
-    given-names: "J.W."
+    - family-names: Holcomb
+      given-names: "J.M."
+    - family-names: Tan
+      given-names: "M."
+    - family-names: Armbruster
+      given-names: "J.W."
   doi: 10.1111/jeb.13024
   title: "Ecological diversification associated with the benthic-to-pelagic transition by North American minnows"
   type: paper
   authors:
-  - family-names: "Bart, Jr."
-    given-names: "Henry L."
-  - family-names: Bakis
-    given-names: Yasin
-  - family-names: Altintas
-    given-names: Bahadir
-  - family-names: Wang
-    given-names: Xiaojun
-  - family-names: Jebbia
-    given-names: Dom
+    - family-names: "Bart, Jr."
+      given-names: "Henry L."
+    - family-names: Bakis
+      given-names: Yasin
+    - family-names: Altintas
+      given-names: Bahadir
+    - family-names: Wang
+      given-names: Xiaojun
+    - family-names: Jebbia
+      given-names: Dom
   repository-code: "https://fishair.org/"
   title: "Fish-AIR"
   type: data
