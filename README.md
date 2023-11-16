@@ -137,67 +137,72 @@ We created a heat map to show the success of the segmentation to detect traits f
 
 Figures are in the folder "Results".
 
-
 ## Running the Workflow
+Instructions are provided for running the workflow on a single computer or a [SLURM cluster](https://slurm.schedmd.com/).
 
-This workflow requires R, conda, and docker to run.
+### Software Requirements
+To run the workflow [conda](https://docs.conda.io/projects/conda/en/stable/) and [singularity (aka Apptainer)](https://apptainer.org/) must to be installed.
 
-### Installing snakemake
+#### Component Software Dependencies
+This workflow will automatically download and setup the software dependencies required by the workflow components.
+These dependencies are provided using either Singularity Containers or Conda Environments.
+Singularity Containers are used to provide the machine learning components essential to this workflow.
+Singularity Containers enable highly reproducible and portable software components.
+However, using Singularity Containers can pose challenges for script development by domain scientists.
+Conda Environments are used for the domain scientist scripts included in this workflow.
 
-To run the workflow we use snakemake.
-See the [official instructions for installing snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html).
+### Hardware Requirements
+Minimally the workflow requires 1 CPU, 5 GB memory, and 20 GB disk space.
+A Linux machine is required for this workflow to provide Singularity containerization.
 
-To install snakemake on the OSC cluster run:
+
+
+### Install Workflow Runner
+To run the workflow [snakemake](https://snakemake.readthedocs.io/en/stable/index.html) with [mamba](https://mamba.readthedocs.io/en/latest/) must be installed.
+To handle this we create a new conda environment named "snakemake".
+
+If you are running the workflow on a cluster that provides a conda environment module you should load that module
+(eg. `module load miniconda3`).
+
+Run the following command to create a conda environment named "snakemake" with the required workflow dependencies.
+```console
+conda create -c conda-forge -c bioconda -n snakemake snakemake mamba
 ```
-module load miniconda3
-conda create -n snakemake -c bioconda -c conda-forge -c r snakemake r-essentials r-xml -y
-```
+Enter "Y" when prompted to install snakemake and mamba.
 
-where `-n` designates the name, "snakemake", and `-c` designates the channel(s): "bioconda", "conda-forge", and "r".
+If you loaded an environment module you should unload it (eg. `module purge`).
 
-To check that the environment was made:
-```
-conda info -e
-```
-
-### Installing R packages
-
-The R packages required by the pipeline must be installed into the `Library` directory that is created.
-This can be accomplished by running `Rscript dependencies.R`.
-
-On the OSC cluster this can be done like so:
-
-```
-mkdir Library
-module load cmake #defaukts to version on node
-module load R/4.2.1-gnu11.2
-Rscript dependencies.R
-```
+See the [official instructions for installing snakemake](https://snakemake.readthedocs.io/en/stable/getting_started/installation.html) for more options.
 
 ### Limit images
 
-In the config.yml file, the user can limit the number of images for a test run by change the integer under ```limit_images```, or run them all by entering ```""```.
+In the [config/config.yaml](config/config.yaml) file, the user can limit the number of images for a test run by change the integer under ```limit_images```, or run them all by entering ```""```.
 
-### Running snakemake
+### Run snakemake
 
-Activate snakemake:
-
+Run the following commands to activate the conda environment and run the workflow:
+```console
+source activate snakemake
+snakemake --jobs 1 --use-singularity --use-conda
 ```
+The `--jobs` argument specifies how many processes the snakemake can run at a time.
+
+### Run snakemake on a SLURM Cluster
+Running the workflow on a SLURM cluster enables scaling beyond a single machine.
+The [run-workflow.sh](run-workflow.sh) sbatch script is provided to run the workflow using sbatch and will process up to 20 jobs simultaneously.
+
+If your SLURM cluster provides a conda environment module you should load that module before running the next step(eg. `module load miniconda3`).
+
+Run the following commmand to activate the snakemake conda environment:
+```console
 source activate snakemake
 ```
 
-To run on a local computer:
-
-After activating R and snakemake the pipeline can be run using `snakemake --cores 1`.
-
-To run on the OSC cluster:
-
-```
+Running on the workflow in the background:
+```console
 sbatch run-workflow.sh
 ```
+Then you can monitor the job progress as you would with any SLURM background job.
+Some SLURM clusters require providing `sbatch` a SLURM account name via the `--account` command line argument.
 
-To check the status of the job:
-
-```
-squeue -u $USER
-```
+See the [Run-on-OSC wiki article](https://github.com/hdr-bgnn/Minnow_Segmented_Traits/wiki/Run-on-OSC) for the commands used to run the workflow on OSC.
