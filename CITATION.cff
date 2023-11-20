@@ -1,5 +1,6 @@
 cff-version: 1.0.0
 date-released: "2023-05-23"
+abstract: "This repository serves as a case study of an automated workflow and extraction of morphological traits using machine learning on image data. We use a segmentation model to extract traits from minnows (Family: Cyprinidae). We expand upon work already done by BGNN, including metadata collection by the Tulane Team and the Drexel Team (see Leipzig et al. 2021, Pepper et al. 2021, and Narnani et al. 2022), and a segmentation model developed by the Virginia Tech Team. We developed morphology extraction tools (Morphology-analysis) with the help of the Tulane Team. We incorporate these tools into BGNN_Core_Workflow. Finally, with the help of the Duke Team, we create an automated workflow."
 authors:
   - family-names: Balk
     given-names: Meghan
@@ -14,7 +15,7 @@ authors:
     given-names: Hilmar
     orcid: "https://orcid.org/0000-0001-9107-0714"
 identifiers:
-  - description: "This repository serves as a case study of an automated workflow and extraction of morphological traits using machine learning on image data. We use a segmentation model to extract traits from minnows (Family: Cyprinidae). We expand upon work already done by BGNN, including metadata collection by the Tulane Team and the Drexel Team (see Leipzig et al. 2021, Pepper et al. 2021, and Narnani et al. 2022), and a segmentation model developed by the Virginia Tech Team. We developed morphology extraction tools (Morphology-analysis) with the help of the Tulane Team. We incorporate these tools into BGNN_Core_Workflow. Finally, with the help of the Duke Team, we create an automated workflow."
+  - description: "Snapshot of Minnow_Segmented_Traits Version 1.0.0"
     type: doi
     value: 10.5281/zenodo.7963343
 keywords:
@@ -134,4 +135,4 @@ references:
     type: data
 repository-code: "https://github.com/hdr-bgnn/Minnow_Segmented_Traits"
 title: "Minnow Segmented Traits"
-version: 1.0.2
+version: 1.0.0
