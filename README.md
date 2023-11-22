@@ -49,7 +49,7 @@ The [Previous_Measurements](Files/Previous%20Fish%20Measurements%20-%20Burress%2
 
 The Fish-AIR input files will be downloaded from the [Fish-AIR API](https://fishair.org/).
 This requires a [Fish-AIR API key](https://fishair.org/) be added to `Fish_AIR_API_Key` in `config/config.yaml`.
-Alternatively you can download the Fish-AIR input files from Dryad and place them in the `Files/Fish-AIR/Tulane` directory.
+Alternatively you can download the Fish-AIR input files from [Zenodo](https://doi.org/10.5281/zenodo.8233380) and place them in the `Files/Fish-AIR/Tulane` directory.
 
 ### Components
 
