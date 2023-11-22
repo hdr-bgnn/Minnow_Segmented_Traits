@@ -140,6 +140,8 @@ Figures are in the folder "Results".
 ## Running the Workflow
 Instructions are provided for running the workflow on a single computer or a [SLURM cluster](https://slurm.schedmd.com/).
 
+The run time for 20 images is about 45 minutes and the run time for all the images is about 2 hours.
+
 ### Software Requirements
 To run the workflow [conda](https://docs.conda.io/projects/conda/en/stable/) and [singularity (aka Apptainer)](https://apptainer.org/) must to be installed.
 
@@ -152,9 +154,8 @@ However, using Singularity Containers can pose challenges for script development
 Therefore, we use Conda Environments for the domain scientist scripts included in this workflow.
 
 ### Hardware Requirements
-Minimally the workflow requires 1 CPU, 5 GB memory, and 20 GB disk space.
+Minimally the workflow requires 1 CPU, 5 GB memory, and 30 GB disk space.
 A Linux machine is required for this workflow to provide Singularity containerization.
-
 
 
 ### Install Workflow Runner
