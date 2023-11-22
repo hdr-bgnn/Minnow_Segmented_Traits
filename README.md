@@ -149,7 +149,7 @@ These dependencies are provided using either Singularity Containers or Conda Env
 Singularity Containers are used to provide the machine learning components essential to this workflow.
 Singularity Containers enable highly reproducible and portable software components.
 However, using Singularity Containers can pose challenges for script development by domain scientists.
-Conda Environments are used for the domain scientist scripts included in this workflow.
+Therefore, we use Conda Environments for the domain scientist scripts included in this workflow.
 
 ### Hardware Requirements
 Minimally the workflow requires 1 CPU, 5 GB memory, and 20 GB disk space.
@@ -176,7 +176,7 @@ See the [official instructions for installing snakemake](https://snakemake.readt
 
 ### Limit images
 
-In the [config/config.yaml](config/config.yaml) file, the user can limit the number of images for a test run by change the integer under ```limit_images```, or run them all by entering ```""```.
+In the [config/config.yaml](config/config.yaml) file, the user can limit the number of images for a test run by change the integer under ```limit_images```, or run them all by entering ```""```. Be aware that downloading all the images and running the workflow takes a couple of hours.
 
 ### Run snakemake
 
