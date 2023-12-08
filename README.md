@@ -207,3 +207,7 @@ Then you can monitor the job progress as you would with any SLURM background job
 Some SLURM clusters require providing `sbatch` a SLURM account name via the `--account` command line argument.
 
 See the [Run-on-OSC wiki article](https://github.com/hdr-bgnn/Minnow_Segmented_Traits/wiki/Run-on-OSC) for the commands used to run the workflow on OSC.
+
+### Run on Docker
+In some cases it is possible to run the workflow using Docker.
+See the [experimental Docker Instructions](https://github.com/hdr-bgnn/Minnow_Segmented_Traits/wiki/Docker-Instructions-(experimental)) for more details.
