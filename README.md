@@ -159,7 +159,7 @@ A Linux machine is required for this workflow to provide Singularity containeriz
 
 
 ### Install Workflow Runner
-To run the workflow [snakemake](https://snakemake.readthedocs.io/en/stable/index.html) (version 7) with [mamba](https://mamba.readthedocs.io/en/latest/) must be installed.
+To run the workflow [Snakemake v7](https://snakemake.readthedocs.io/en/v7.32.3/) with [mamba](https://mamba.readthedocs.io/en/latest/) must be installed. (_The workflow definition is not compatible with Snakemake v8+._)
 To handle this we create a new conda environment named "snakemake".
 
 If you are running the workflow on a cluster that provides a conda environment module you should load that module
