@@ -13,7 +13,7 @@ Image_Quality_Metadata: Files/Fish-AIR/Tulane/imageQualityMetadata.csv
 Burress: Files/Previous Fish Measurements - Burress et al. 2016.csv
 
 # Input settings
-limit_images: 20 #if "" will run all, otherwise must input in integer
+limit_images: 20 #if "" will run all images, otherwise must input in integer to limit number of images
 
 # Output paths
 Minnow_Filtered: Results/minnow.filtered.from.iqm.csv
