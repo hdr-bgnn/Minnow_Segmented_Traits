@@ -143,7 +143,7 @@ Instructions are provided for running the workflow on a single computer or a [SL
 The run time for 20 images is about 45 minutes and the run time for all the images is about 2 hours.
 
 ### Software Requirements
-To run the workflow [conda](https://docs.conda.io/projects/conda/en/stable/) and [singularity (aka Apptainer)](https://apptainer.org/) must to be installed.
+To run the workflow [conda](https://docs.conda.io/projects/conda/en/stable/) and [Singularity (now Apptainer)](https://apptainer.org/) must to be installed.
 
 #### Component Software Dependencies
 This workflow will automatically download and setup the software dependencies required by the workflow components.
