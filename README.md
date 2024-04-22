@@ -60,7 +60,7 @@ All weights and dependencies for all components of the workflow are uploaded to 
 * Metadata by Drexel Team
   - Object detection of fish and rule from fish images
   - [Repository](https://github.com/hdr-bgnn/drexel_metadata)
-  - [Model Archive](https://doi.10.57967/hf/0904)
+  - [Model Archive](https://doi.org/10.57967/hf/0904)
   
 * Reformatting of metadata
   - Trim metadata output from Metadata step to only the values necessary for this project
